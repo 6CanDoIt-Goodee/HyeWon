@@ -132,7 +132,7 @@
                 </div>
             </div>  
             <button id="eventCancelBtn" onclick="eventCancelBtn();">취소</button>
-            <button id="eventInsertBtn"  onclick="eventInsertBtn();">등록</button>
+            <button id="eventInsertBtn"  onclick="eventInsertBtn(); disabled">등록</button>
         </div>
 
         <div id="form-section2" class="form-section">
@@ -177,35 +177,12 @@
                 </div>
             </div>
             <button id="eventCancelBtn" onclick="eventCancelBtn();">취소</button>
-            <button id="eventInsertBtn"  onclick="eventInsertBtn();">등록</button>
+            <button id="eventInsertBtn"  onclick="eventInsertBtn(); disabled">등록</button>
         </div> 
     </form>
 
     <script src="../js/eventCreate.js"></script> 
-    <!-- <script>
-    	if(form.eventimage1.value){ 
-			const val = form.eventimage1.value;
-			const idx = val.lastIndexOf('.');
-			const type = val.substring(idx+1,val.length);
-			if(type == 'jpg' || type == 'jpeg' || type == "png"){
-				form.submit();
-			} else{
-				alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.");
-				form.eventimage1.value = '';
-			}
-    	}
-		
-    	if(form.eventimage2.value){ 
-	   		const val = form.eventimage2.value;
-	   		const idx = val.lastIndexOf('.');
-	   		const type = val.substring(idx+1,val.length);
-	   		if(type == 'jpg' || type == 'jpeg' || type == "png"){
-	   			form.submit();
-	   		} else{
-	   			alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.");
-	   			form.eventimage2.value = '';
-	   		}
-    	}
-    </script> -->
+	<script> 
+    </script> 
 </body>
 </html>

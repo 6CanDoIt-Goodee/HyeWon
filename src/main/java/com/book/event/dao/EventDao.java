@@ -62,6 +62,8 @@ public class EventDao {
 			if(option.getEv_title() != null) {
 				sql += " WHERE board_title LIKE CONCAT('%', '" +  option.getEv_title() + "', '%')";
 			}
+			sql += " LIMIT "+option.getLimitPageNo()+", "+option.getNumPerPage();
+			
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -89,4 +91,68 @@ public class EventDao {
 		System.out.println(list);
 		return list;
 	}
+	
+	public int selectEventCount(Event option, Connection conn) { 
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT COUNT(*) AS cnt FROM `events`";
+			if(option.getEv_title() != null) {
+				sql += " WHERE event_title LIKE CONCAT('%','"+option.getEv_title()+"','%')";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("cnt");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result; 
+	}
+	
+	
+	public Event selectEventByNo(int eventNo, Connection conn) {
+        Event event = null; 
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {  
+            String sql = "SELECT * FROM events WHERE event_no = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, eventNo);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                event = new Event(rs.getInt("event_no"),
+                                  rs.getInt("event_category_no"),
+                                  rs.getString("event_title"),
+                                  rs.getString("event_content"),
+                                  rs.getInt("event_form"),
+                                  rs.getString("event_regdate"),
+                                  rs.getString("event_progress"),
+                                  rs.getString("event_start"),
+                                  rs.getString("event_end"),
+                                  rs.getString("event_ori_image"),
+                                  rs.getString("event_new_image"),
+                                  rs.getInt("event_quota"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+            close(conn);
+        }
+
+        return event;
+    }
+	
 }

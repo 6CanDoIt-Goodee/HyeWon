@@ -1,8 +1,8 @@
 package com.book.event.vo;
 
-import java.util.Date;
+import com.book.common.Paging;
 
-public class Event {
+public class Event extends Paging{
 	private int event_no;
 	private int event_category; 
 	private String ev_title;

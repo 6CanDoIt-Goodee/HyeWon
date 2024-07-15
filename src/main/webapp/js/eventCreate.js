@@ -5,97 +5,139 @@ function showFormSection() {
     });
 
     const selectedOption = document.getElementById('eventType').value;
-    if (selectedOption) {
-        document.getElementById('form-section' + selectedOption.slice(-1)).style.display = 'block';
-    }
+    document.getElementById('form-section' + selectedOption).style.display = 'block';
+    
+    validateForm(); // 선택된 섹션을 표시한 후 폼을 유효성 검사합니다.
 }
 
 function toggleEndDate(section) {
     const startDate = document.getElementById('startDate' + section).value;
     const endDate = document.getElementById('endDate' + section);
+
     if (startDate) {
         endDate.disabled = false;
+        endDate.min = startDate;
     } else {
         endDate.disabled = true;
+        endDate.value = '';
     }
-}
- 
-document.addEventListener('DOMContentLoaded', () => {
-    showFormSection();
-    toggleEndDate(1); 
-    toggleEndDate(2); 
-    setMinDateTime();
-
-    document.getElementById('startDate2').addEventListener('change', setMinValue);
-    document.getElementById('endDate2').addEventListener('change', setMinValue);
-});
-
-function previewImage(event, section) {
-    const input = event.target;
-    const reader = new FileReader();
-    reader.onload = function() {
-        const imgElement = document.getElementById('imagePreview' + section);
-        imgElement.src = reader.result;
-        imgElement.style.display = 'block';
-        document.getElementById('imageBox' + section).classList.remove('default');
-        document.getElementById('deleteButton' + section).style.display = 'block';
-    };
-    if (input.files && input.files[0]) {
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-function setMinDateTime() {
-    const now = new Date();
-    const offset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(now.getTime() - offset).toISOString().slice(0, -8); // 초를 제외하고 분까지만
-
-    const startDate2 = document.getElementById('startDate2');
-    const endDate2 = document.getElementById('endDate2');
-
-    startDate2.value = localISOTime;
-    startDate2.setAttribute('min', localISOTime);
-    endDate2.setAttribute('min', localISOTime);
+    
+    validateForm(); // 종료 날짜 필드를 변경한 후 폼을 유효성 검사합니다.
 }
 
 function setMinValue() {
     const startDate2 = document.getElementById('startDate2');
     const endDate2 = document.getElementById('endDate2');
 
-    const now = new Date();
-    const offset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(now.getTime() - offset).toISOString().slice(0, -5);
-
-    // 현재 시간 이전의 날짜는 설정할 수 없도록 하는 로직
-    if (startDate2.value < localISOTime) {
-        alert('현재 시간보다 이전의 날짜는 설정할 수 없습니다.');
-        startDate2.value = localISOTime;
-    }
-
-    // startDate2에 값이 입력되면 endDate2 활성화
     if (startDate2.value) {
         endDate2.disabled = false;
+        endDate2.min = startDate2.value;
     } else {
         endDate2.disabled = true;
+        endDate2.value = '';
+    }
+    
+    validateForm(); // 모집 종료 날짜 필드를 변경한 후 폼을 유효성 검사합니다.
+}
+
+function previewImage(event, section) {
+    const inputFile = event.target;
+    const file = inputFile.files[0];
+    const fileType = file.type;
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    
+    if (!validImageTypes.includes(fileType)) {
+        alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.");
+        inputFile.value = '';
+        return;
     }
 
-    // endDate2가 startDate2보다 빠른 경우 경고 메시지
-    if (endDate2.value && endDate2.value < startDate2.value) {
-        alert('시작일보다 이전의 날짜는 설정할 수 없습니다.');
-        endDate2.value = startDate2.value;
+    const reader = new FileReader();
+    reader.onload = function() {
+        const preview = document.getElementById('imagePreview' + section);
+        preview.src = reader.result;
+        preview.style.display = 'block';
+
+        const imageBox = document.getElementById('imageBox' + section);
+        imageBox.classList.remove('default');
+
+        const deleteButton = document.getElementById('deleteButton' + section);
+        deleteButton.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+    
+    validateForm(); // 이미지 파일을 변경한 후 폼을 유효성 검사합니다.
+}
+
+function deleteImage(section) {
+    const preview = document.getElementById('imagePreview' + section);
+    preview.src = '';
+    preview.style.display = 'none';
+
+    const imageBox = document.getElementById('imageBox' + section);
+    imageBox.classList.add('default');
+
+    const deleteButton = document.getElementById('deleteButton' + section);
+    deleteButton.style.display = 'none';
+
+    const inputFile = document.getElementById('eventimage' + section);
+    inputFile.value = '';
+    
+    validateForm(); // 이미지 파일을 삭제한 후 폼을 유효성 검사합니다.
+}
+
+function validateForm() {
+    const eventType = document.getElementById('eventType').value;
+    let isValid = true;
+
+    if (eventType === '1') { // 기본 이벤트
+        const title = document.getElementById('eventTitle1').value.trim();
+        const startDate = document.getElementById('startDate1').value.trim();
+        const content = document.getElementById('eventContent1').value.trim();
+        const image = document.getElementById('eventimage1').value.trim();
+
+        if (!title || !startDate || !content || !image) {
+            isValid = false;
+        }
+    } else if (eventType === '2') { // 선착순 이벤트
+        const title = document.getElementById('eventTitle2').value.trim();
+        const startDate = document.getElementById('startDate2').value.trim();
+        const endDate = document.getElementById('endDate2').value.trim();
+        const progressDate = document.getElementById('progressDate2').value.trim();
+        const quota = document.getElementById('eventQuota2').value.trim();
+        const content = document.getElementById('eventContent2').value.trim();
+        const image = document.getElementById('eventimage2').value.trim();
+
+        if (!title || !startDate || !endDate || !progressDate || !quota || !content || !image) {
+            isValid = false;
+        }
+
+        if (progressDate && endDate && progressDate <= endDate) {
+            isValid = false;
+            alert('이벤트 진행일은 모집 종료일 이후여야 합니다.');
+        }
+    }
+
+    const insertBtn = document.getElementById('eventInsertBtn');
+    if (isValid) {
+        insertBtn.disabled = false;
+        insertBtn.classList.add('enabled');
+    } else {
+        insertBtn.disabled = true;
+        insertBtn.classList.remove('enabled');
     }
 }
+
 
 function eventInsertBtn() { 
     const form = document.create_evnt_form;
     form.submit();
 }
 
-function deleteImage(section) {
-    const imgElement = document.getElementById('imagePreview' + section);
-    imgElement.src = '';
-    imgElement.style.display = 'none';
-    document.getElementById('imageBox' + section).classList.add('default');
-    document.getElementById('deleteButton' + section).style.display = 'none';
-    document.getElementById('eventimage' + section).value = '';
-}
+document.addEventListener('DOMContentLoaded', function() {
+    showFormSection();
+    document.querySelectorAll('input, textarea, select').forEach(element => {
+        element.addEventListener('input', validateForm);
+        element.addEventListener('change', validateForm);
+    });
+});

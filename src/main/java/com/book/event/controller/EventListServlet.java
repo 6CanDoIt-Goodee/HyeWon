@@ -26,21 +26,34 @@ public class EventListServlet extends HttpServlet {
     }
  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-		String title = request.getParameter("eventTitle1");
-	    Event option = new Event();
-	    option.setEv_title(title);
+		String title1 = request.getParameter("eventTitle1");
+        String title2 = request.getParameter("eventTitle2");
+        String title = title1 != null ? title1 : title2;
+        
+        Event option = new Event();
+        option.setEv_title(title);
 	  
-	    Connection conn = getConnection();
+        Connection conn = getConnection();
+        
+        String nowPage = request.getParameter("nowPage");
+		if(nowPage != null) {
+			option.setNowPage(Integer.parseInt(nowPage));
+		}
+		// 전체 목록 개수 -> 페이징바 구성
+		option.setTotalData(new EventDao().selectEventCount(option, conn)); 
+		
 	    List<Event> list = new EventDao().selectEventList(option, conn); 
         close(conn); 
         
-        System.out.println("list : " + list);
+        request.setAttribute("paging", option);
 	    request.setAttribute("resultList", list);
-	    RequestDispatcher view = request.getRequestDispatcher("/views/event/eventList.jsp");
-	    view.forward(request, response); 
+	     
+	    RequestDispatcher rd = request.getRequestDispatcher("/views/event/eventList.jsp");
+	    rd.forward(request, response); 
 	      
 	}
  
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
 		doGet(request, response);
 	}
