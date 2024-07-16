@@ -30,7 +30,7 @@ public class EventListServlet extends HttpServlet {
 		String title1 = request.getParameter("eventTitle1");
         String title2 = request.getParameter("eventTitle2");
         String title = title1 != null ? title1 : title2;
-        
+         
         Event option = new Event();
         option.setEv_title(title);
 	  

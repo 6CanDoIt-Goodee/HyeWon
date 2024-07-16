@@ -28,6 +28,11 @@
     	 	background-color: rgb(255, 232, 186); 
     	 	border-radius : 15px;
     	 	padding : 1% 1.2% 0.7% 1.2%; 
+    	 	margin-right : 2%;  
+    	}
+    	
+    	#event_category { 
+    		background-color: rgba(0,0,0,0);    
     	}
         .eventDeatil_main { 
             padding: 2% 4%;
@@ -90,12 +95,12 @@
                  <% } else if (event.getEv_form() == 2) { %>
                      선착순
                  <% } %>
-                </span>
+                </span> 
+                <span id="event_category"><%= event.getEv_category_name() %></span>
                  
                 <div class="event_header">
                     <h2 id="event_title"><%= event.getEv_title() %></h2>
                     <p id="event_regdate"><%= event.getEv_regdate().substring(0, 10) %></p>
-                    <p id="event_category"><strong>카테고리:</strong> <%= event.getEv_category_name() %></p>
                 </div>
 
                 <% if (event.getEv_form() == 2) { %>
