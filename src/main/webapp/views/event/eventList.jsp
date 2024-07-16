@@ -125,10 +125,11 @@
 						List<Event> list = (List<Event>) request.getAttribute("resultList");
 						for (int i = 0; i < list.size(); i++) {
 						%>
-						<tr>
+						
+						
+						<tr style="cursor: pointer;" onclick="location.href='/event/detail?eventNo=<%=list.get(i).getEvent_no()%>'">
 							<td><%=startNo + i%></td>
-							<td>
-								<a href="/event/detail?eventNo=<%=list.get(i).getEvent_no()%>"><%=list.get(i).getEv_title()%></a></td>
+							<td><%=list.get(i).getEv_title()%></a></td>
 							<%
 							// 기존의 날짜 및 시간 형식
 							String originalDateTime = list.get(i).getEv_regdate(); // "2024-07-15 11:28:30"
