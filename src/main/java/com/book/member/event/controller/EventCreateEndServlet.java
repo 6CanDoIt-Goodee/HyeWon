@@ -1,4 +1,4 @@
-package com.book.event.controller;
+package com.book.member.event.controller;
 
 import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.book.event.dao.EventDao;
-import com.book.event.vo.Event;
+import com.book.member.event.dao.EventDao;
+import com.book.member.event.vo.Event;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
@@ -74,7 +74,7 @@ public class EventCreateEndServlet extends HttpServlet {
             int result = new EventDao().createEvent(event, conn);
             close(conn); 
 
-            RequestDispatcher view = request.getRequestDispatcher("/views/event/eventList.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("/views/member/event/eventList.jsp");
             
             if (result > 0) {
             	System.out.println("success");

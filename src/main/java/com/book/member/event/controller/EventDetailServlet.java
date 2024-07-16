@@ -1,4 +1,4 @@
-package com.book.event.controller;
+package com.book.member.event.controller;
 
 import static com.book.common.sql.JDBCTemplate.getConnection;
 
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.book.event.dao.EventDao;
-import com.book.event.vo.Event;
+import com.book.member.event.dao.EventDao;
+import com.book.member.event.vo.Event;
 
 @WebServlet("/event/detail")
 public class EventDetailServlet extends HttpServlet {
@@ -32,7 +32,7 @@ public class EventDetailServlet extends HttpServlet {
         Event event = eventDao.selectEventByNo(eventNo, conn);  
  
         request.setAttribute("event", event);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/event/eventDetail.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/member/event/eventDetail.jsp");
         dispatcher.forward(request, response);
 	}
  

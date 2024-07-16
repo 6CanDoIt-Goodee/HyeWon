@@ -1,4 +1,4 @@
-package com.book.event.controller;
+package com.book.member.event.controller;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ public class EventCreateServlet extends HttpServlet {
     }
  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-		RequestDispatcher view = request.getRequestDispatcher("/views/event/eventCreate.jsp");
+		RequestDispatcher view = request.getRequestDispatcher("/views/member/event/eventCreate.jsp");
 		view.forward(request, response);
 	}
  

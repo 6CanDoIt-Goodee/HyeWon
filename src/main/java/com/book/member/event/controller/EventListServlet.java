@@ -1,4 +1,4 @@
-package com.book.event.controller;
+package com.book.member.event.controller;
 
 import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
@@ -6,6 +6,7 @@ import static com.book.common.sql.JDBCTemplate.getConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,8 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.book.event.dao.EventDao;
-import com.book.event.vo.Event;
+import com.book.member.event.dao.EventDao;
+import com.book.member.event.vo.Event;
  
 @WebServlet("/event/list")
 public class EventListServlet extends HttpServlet {
@@ -42,13 +43,14 @@ public class EventListServlet extends HttpServlet {
 		// 전체 목록 개수 -> 페이징바 구성
 		option.setTotalData(new EventDao().selectEventCount(option, conn)); 
 		
-	    List<Event> list = new EventDao().selectEventList(option, conn); 
+		List<Map<String, String>> list = new EventDao().selectEventList(option, conn); 
         close(conn); 
         
         request.setAttribute("paging", option);
 	    request.setAttribute("resultList", list);
+	    System.out.println("결과 : " + list);
 	     
-	    RequestDispatcher rd = request.getRequestDispatcher("/views/event/eventList.jsp");
+	    RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/eventList.jsp");
 	    rd.forward(request, response); 
 	      
 	}

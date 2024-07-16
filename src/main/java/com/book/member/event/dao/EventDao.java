@@ -1,14 +1,17 @@
-package com.book.event.dao;
+package com.book.member.event.dao;
 
 import static com.book.common.sql.JDBCTemplate.close;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.book.event.vo.Event;
+import com.book.member.event.vo.Event;
 
 public class EventDao {
 	public int createEvent(Event event, Connection conn) {
@@ -53,44 +56,51 @@ public class EventDao {
 		return result;
 	}
 	
-	public List<Event> selectEventList(Event option, Connection conn) {
-		List<Event> list = new ArrayList<Event>();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try { 
-			String sql = "SELECT * FROM `events`";
-			if(option.getEv_title() != null) {
-				sql += " WHERE board_title LIKE CONCAT('%', '" +  option.getEv_title() + "', '%')";
-			}
-			sql += " LIMIT "+option.getLimitPageNo()+", "+option.getNumPerPage();
-			
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				Event resultVo = new Event(rs.getInt("event_no"),
-						rs.getInt("event_category_no"),
-						rs.getString("event_title"),
-						rs.getString("event_content"),
-						rs.getInt("event_form"),
-						rs.getString("event_regdate"),
-						rs.getString("event_progress"),
-						rs.getString("event_start"),
-						rs.getString("event_end"),
-						rs.getString("event_ori_image"),
-						rs.getString("event_new_image"), 
-						rs.getInt("event_quota"));
-				list.add(resultVo);
-			}
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			close(rs);
-			close(pstmt);
-		}
-		System.out.println(list);
-		return list;
+	public List<Map<String, String>> selectEventList(Event option, Connection conn) {
+	    List<Map<String, String>> list = new ArrayList<>();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    try { 
+	        String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_regdate AS 등록일, e.event_form AS 유형, c.event_category_name AS 카테고리명 " +
+	                     "FROM `events` e " +
+	                     "JOIN `event_category` c ON e.event_category_no = c.event_category_no";
+	        if(option.getEv_title() != null) {
+	            sql += " WHERE e.event_title LIKE CONCAT('%', ?, '%')";
+	        }
+	        sql += " ORDER BY e.event_no ASC LIMIT ?, ?";
+	        
+	        pstmt = conn.prepareStatement(sql);
+	        int paramIndex = 1;
+	        if (option.getEv_title() != null) {
+	            pstmt.setString(paramIndex++, option.getEv_title());
+	        }
+	        pstmt.setInt(paramIndex++, option.getLimitPageNo());
+	        pstmt.setInt(paramIndex, option.getNumPerPage());
+
+	        rs = pstmt.executeQuery();
+	        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        
+	        while (rs.next()) {
+	            Map<String, String> row = new HashMap<>();
+	            row.put("event_no", rs.getString("번호"));
+	            row.put("event_title", rs.getString("제목"));
+	            row.put("event_regdate", outputFormat.format(originalFormat.parse(rs.getString("등록일"))));
+	            row.put("event_form", rs.getString("유형"));
+	            row.put("event_category_name", rs.getString("카테고리명"));
+	            list.add(row);
+	        } 
+	        
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(rs);
+	        close(pstmt);
+	    }
+	    return list;
 	}
+
+
 	
 	public int selectEventCount(Event option, Connection conn) { 
 		int result = 0;
@@ -123,7 +133,10 @@ public class EventDao {
         ResultSet rs = null;
 
         try {  
-            String sql = "SELECT * FROM events WHERE event_no = ?";
+            String sql = "SELECT e.*, c.event_category_name " +
+                         "FROM events e " +
+                         "JOIN event_category c ON e.event_category_no = c.event_category_no " +
+                         "WHERE e.event_no = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, eventNo);
 
@@ -141,7 +154,8 @@ public class EventDao {
                                   rs.getString("event_end"),
                                   rs.getString("event_ori_image"),
                                   rs.getString("event_new_image"),
-                                  rs.getInt("event_quota"));
+                                  rs.getInt("event_quota"),
+                                  rs.getString("event_category_name"));
             }
 
         } catch (Exception e) {

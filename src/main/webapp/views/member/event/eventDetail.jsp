@@ -1,7 +1,7 @@
 <%@ page import="java.util.Date"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<%@ page import="com.book.event.vo.Event" %>
+<%@ page import="com.book.member.event.vo.Event" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,7 +76,7 @@
     </style>
 </head>
 <body>
-    <%@ include file="../include/header.jsp" %>
+	<%@ include file="../../include/header.jsp" %>
 
     <section id="detail_box">
         <main>
@@ -95,6 +95,7 @@
                 <div class="event_header">
                     <h2 id="event_title"><%= event.getEv_title() %></h2>
                     <p id="event_regdate"><%= event.getEv_regdate().substring(0, 10) %></p>
+                    <p id="event_category"><strong>카테고리:</strong> <%= event.getEv_category_name() %></p>
                 </div>
 
                 <% if (event.getEv_form() == 2) { %>
@@ -114,7 +115,7 @@
                 <div class="event_content">
                     <%= event.getEv_content() %>
                     <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
-                </div>
+                </div> 
             </div>
         </main>
     </section>

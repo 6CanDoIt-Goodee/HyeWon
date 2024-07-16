@@ -85,7 +85,7 @@
 </style>
 </head>
 <body>
-	<%@ include file="../include/header.jsp" %>
+	<%@ include file="../../include/header.jsp" %>
 	 
 	<form name="create_evnt_form" action="/event/createEnd" method="post" enctype="multipart/form-data">
         <div class="form-group">
