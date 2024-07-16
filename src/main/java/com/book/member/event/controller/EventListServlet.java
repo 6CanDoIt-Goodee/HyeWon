@@ -17,47 +17,54 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.book.member.event.dao.EventDao;
 import com.book.member.event.vo.Event;
- 
+
 @WebServlet("/event/list")
 public class EventListServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-        
+    private static final long serialVersionUID = 1L;
+
     public EventListServlet() {
-        super(); 
+        super();
     }
- 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-		String title1 = request.getParameter("eventTitle1");
-        String title2 = request.getParameter("eventTitle2");
-        String title = title1 != null ? title1 : title2;
-         
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // 이벤트 제목 파라미터 처리
+        String evTitle = request.getParameter("evTitle");
+
+        // 카테고리 파라미터 처리
+        String categoryParam = request.getParameter("listCategory");
+        int categoryNo = 0;
+        if (categoryParam != null && !categoryParam.isEmpty()) {
+            categoryNo = Integer.parseInt(categoryParam);
+        }
+
         Event option = new Event();
-        option.setEv_title(title);
-	  
+        option.setEv_title(evTitle);
+        option.setEvent_category(categoryNo);
+
         Connection conn = getConnection();
-        
+
         String nowPage = request.getParameter("nowPage");
-		if(nowPage != null) {
-			option.setNowPage(Integer.parseInt(nowPage));
-		}
-		// 전체 목록 개수 -> 페이징바 구성
-		option.setTotalData(new EventDao().selectEventCount(option, conn)); 
-		
-		List<Map<String, String>> list = new EventDao().selectEventList(option, conn); 
-        close(conn); 
-        
+        if (nowPage != null) {
+            option.setNowPage(Integer.parseInt(nowPage));
+        }
+
+        option.setTotalData(new EventDao().selectEventCount(option, conn));
+
+        List<Map<String, String>> list = new EventDao().selectEventList(option, conn);
+
+        close(conn);
+
         request.setAttribute("paging", option);
-	    request.setAttribute("resultList", list);
-	    System.out.println("결과 : " + list);
-	     
-	    RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/eventList.jsp");
-	    rd.forward(request, response); 
-	      
-	}
- 
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-		doGet(request, response);
-	}
+        request.setAttribute("resultList", list);
+
+        RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/eventList.jsp");
+        rd.forward(request, response);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 
 }

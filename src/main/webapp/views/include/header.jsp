@@ -87,7 +87,7 @@
 <section class="main_header">
      <header>
          <nav id="header_nav">
-             <a href="#" id="main_logo">Knock Book</a>
+             <a href="/" id="main_logo">Knock Book</a>
              <ul>
                  <li><a href="#" class="header_list">도서 목록</a></li>
                  <li><a href="/event/list" class="header_list">이벤트</a></li>
