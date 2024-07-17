@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+ol {
+	list-style: none;
+}
+
+#main_logo {
+	font-size: 30px;
+	color: rgb(146, 136, 107);
+	text-decoration: none;
+	font-family: 'NanumSquare', sans-serif;
+}
+
+.header_list {
+	text-decoration: none;
+	color: #000000;
+	font-size: 15px;
+	font-weight: 800;
+}
+
+header {
+	padding: 0 20px;
+}
+
+nav {
+	width: 100%;
+	height: 80px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#header_nav>a {
+	font-weight: 900;
+	padding: 0 30px;
+}
+
+#header_nav>ul {
+	display: flex;
+}
+
+#header_nav>ul li {
+	padding: 0 20px;
+}
+
+#header_join {
+	color: rgb(0, 0, 0);
+	border: 1px solid #858585;
+	border-radius: 10px;
+	padding: 5px 15px;
+}
+
+/* 하단 content */
+main {
+	display: flex;
+	justify-content: center;
+	padding-top: 60px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+#right {
+	display: flex;
+}
+
+#main_div label {
+	width: 120px;
+}
+
+#main_div input[type="text"], #main_div input[type="password"] {
+	background-color: #8585857e;
+	margin-bottom: 50px;
+	height: 40px;
+}
+
+#main_div button:first-child {
+	margin-left: 0;
+}
