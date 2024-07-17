@@ -181,7 +181,7 @@
         </div> 
     </form>
 
-    <script src="../js/eventCreate.js"></script> 
+    <script src="../../../resources/js/eventCreate.js"></script> 
     <script>
 	    document.addEventListener('DOMContentLoaded', function() {
 	        // 페이지 로드 시 startDate2의 기본 min 값을 내일로 설정
@@ -304,6 +304,8 @@
 	        const form = document.create_event_form;
 	        form.submit();
 	    }
+	    
+	    
 	     
 </script>
 

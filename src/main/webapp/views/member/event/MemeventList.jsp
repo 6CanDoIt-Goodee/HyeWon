@@ -113,8 +113,7 @@
 </style>
 <body>
     <%@ include file="../../include/header.jsp" %>
-    <li><a href="/event/list" class="header_list">목록</a></li>
-    <li><a href="/event/create" class="header_list">등록</a></li> 
+    <li><a href="/event/list" class="header_list">목록</a></li> 
     <section>
     	<main>
 	        <div id="section_wrap" class="container">
