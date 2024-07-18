@@ -231,7 +231,7 @@
 	            "participate_state": participateState 
 	        },
 	        success: function(response) {
-	            // 성공적으로 서버에서 응답을 받은 후에 버튼 상태를 업데이트합니다.
+	            // 버튼 상태 업데이트
 	            if (action === "등록") {
 	                button.text("참여 취소");
 	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
