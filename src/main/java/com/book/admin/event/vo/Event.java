@@ -16,13 +16,16 @@ public class Event extends Paging{
 	private String new_image; 
 	private int event_quota;
 	private String ev_category_name;
+	private int event_registered;
+	private int event_waiting;
 	
 	public Event() {
 		super(); 
 	}
 
 	public Event(int event_no, int event_category, String ev_title, String ev_content, int ev_form, String ev_regdate,
-			String ev_progress, String ev_start, String ev_end, String ori_image, String new_image, int event_quota, String ev_category_name) {
+			String ev_progress, String ev_start, String ev_end, String ori_image, String new_image, int event_quota,
+			String ev_category_name, int event_registered, int event_waiting) {
 		super();
 		this.event_no = event_no;
 		this.event_category = event_category;
@@ -37,13 +40,32 @@ public class Event extends Paging{
 		this.new_image = new_image;
 		this.event_quota = event_quota;
 		this.ev_category_name = ev_category_name;
+		this.event_registered = event_registered;
+		this.event_waiting = event_waiting;
+	} 
+	
+	public Event(int event_no, int event_category, String ev_title, String ev_content, int ev_form,
+        String ev_progress, String ev_start, String ev_end, String ori_image, String new_image, int event_quota) {
+		super();
+		this.event_no = event_no;
+		this.event_category = event_category;
+		this.ev_title = ev_title;
+		this.ev_content = ev_content;
+		this.ev_form = ev_form;
+		this.ev_progress = ev_progress;
+		this.ev_start = ev_start;
+		this.ev_end = ev_end;
+		this.ori_image = ori_image;
+		this.new_image = new_image;
+		this.event_quota = event_quota;
+		this.ev_category_name = null;
+		this.event_registered = 0;
+		this.event_waiting = 0;
 	}
-
-	 
 	public int getEvent_no() {
 		return event_no;
 	}
- 
+
 	public int getEvent_category() {
 		return event_category;
 	}
@@ -87,20 +109,23 @@ public class Event extends Paging{
 	public int getEvent_quota() {
 		return event_quota;
 	}
-	 
+
 	public String getEv_category_name() {
 		return ev_category_name;
 	}
 
-	public void setEv_category_name(String ev_category_name) {
-		this.ev_category_name = ev_category_name;
+	public int getEvent_registered() {
+		return event_registered;
+	}
+
+	public int getEvent_waiting() {
+		return event_waiting;
 	}
 
 	public void setEvent_no(int event_no) {
 		this.event_no = event_no;
 	}
 
-	
 	public void setEvent_category(int event_category) {
 		this.event_category = event_category;
 	}
@@ -145,15 +170,27 @@ public class Event extends Paging{
 		this.event_quota = event_quota;
 	}
 
+	public void setEv_category_name(String ev_category_name) {
+		this.ev_category_name = ev_category_name;
+	}
+
+	public void setEvent_registered(int event_registered) {
+		this.event_registered = event_registered;
+	}
+
+	public void setEvent_waiting(int event_waiting) {
+		this.event_waiting = event_waiting;
+	}
+
 	@Override
 	public String toString() {
 		return "Event [event_no=" + event_no + ", event_category=" + event_category + ", ev_title=" + ev_title
 				+ ", ev_content=" + ev_content + ", ev_form=" + ev_form + ", ev_regdate=" + ev_regdate
 				+ ", ev_progress=" + ev_progress + ", ev_start=" + ev_start + ", ev_end=" + ev_end + ", ori_image="
 				+ ori_image + ", new_image=" + new_image + ", event_quota=" + event_quota + ", ev_category_name="
-				+ ev_category_name + "]";
+				+ ev_category_name + ", event_registered=" + event_registered + ", event_waiting=" + event_waiting
+				+ "]";
 	}
 
- 
+	
 }
-

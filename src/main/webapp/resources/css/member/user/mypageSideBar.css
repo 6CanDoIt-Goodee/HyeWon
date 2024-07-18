@@ -1,8 +1,19 @@
-@charset "UTF-8";
-.sidebar {
-    width: 100%
+/* 나의 정보 form */
+.main_content {
+    max-width: 1300px; 
+    height: 750px;
+    margin: 5rem auto;
+    background-color: rgb(247, 247, 247);
+    display: flex;
+    flex-direction: row;
 }
-
+/* 사이드바 */
+.section1{
+    width: 20%;
+    margin-right: 2rem;
+    height: 100%;
+    background-color: white;
+}
 .menu {
     list-style-type: none;
     padding: 0;
@@ -67,7 +78,15 @@
     display: block;
     transition: background-color 0.3s ease;
 }
-
 .submenu li a:hover {
-    background-color: rgb(247, 247, 247);
+    background-color: white;
+}
+/* 나의 정보 form */
+.section2{
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }

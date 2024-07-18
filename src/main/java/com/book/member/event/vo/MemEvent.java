@@ -3,157 +3,133 @@ package com.book.member.event.vo;
 import com.book.common.Paging;
 
 public class MemEvent extends Paging{
-	private int event_no;
-	private int event_category; 
-	private String ev_title;
-	private String ev_content;
-	private int ev_form;
-	private String ev_regdate;
-	private String ev_progress;
-	private String ev_start;
-	private String ev_end;
-	private String ori_image;
-	private String new_image; 
-	private int event_quota;
-	private String ev_category_name;
+    private int eventNo;
+    private String evTitle;
+    private String evContent;
+    private String evRegdate;
+    private int evForm;
+    private int evCategoryName; 
+    private int evProgress;
+    private int evStart;
+    private int evEnd;
+    private int eventQuota;
+    private int userNo;
 	
 	public MemEvent() {
 		super(); 
 	}
 
-	public MemEvent(int event_no, int event_category, String ev_title, String ev_content, int ev_form, String ev_regdate,
-			String ev_progress, String ev_start, String ev_end, String ori_image, String new_image, int event_quota, String ev_category_name) {
+	public MemEvent(int eventNo, String evTitle, String evContent, String evRegdate, int evForm, int evCategoryName,
+			int evProgress, int evStart, int evEnd, int eventQuota, int userNo) {
 		super();
-		this.event_no = event_no;
-		this.event_category = event_category;
-		this.ev_title = ev_title;
-		this.ev_content = ev_content;
-		this.ev_form = ev_form;
-		this.ev_regdate = ev_regdate;
-		this.ev_progress = ev_progress;
-		this.ev_start = ev_start;
-		this.ev_end = ev_end;
-		this.ori_image = ori_image;
-		this.new_image = new_image;
-		this.event_quota = event_quota;
-		this.ev_category_name = ev_category_name;
+		this.eventNo = eventNo;
+		this.evTitle = evTitle;
+		this.evContent = evContent;
+		this.evRegdate = evRegdate;
+		this.evForm = evForm;
+		this.evCategoryName = evCategoryName; 
+		this.evProgress = evProgress;
+		this.evStart = evStart;
+		this.evEnd = evEnd;
+		this.eventQuota = eventQuota;
+		this.userNo = userNo;
 	}
 
-	 
-	public int getEvent_no() {
-		return event_no;
-	}
- 
-	public int getEvent_category() {
-		return event_category;
+	public int getEventNo() {
+		return eventNo;
 	}
 
-	public String getEv_title() {
-		return ev_title;
+	public String getEvTitle() {
+		return evTitle;
 	}
 
-	public String getEv_content() {
-		return ev_content;
+	public String getEvContent() {
+		return evContent;
 	}
 
-	public int getEv_form() {
-		return ev_form;
+	public String getEvRegdate() {
+		return evRegdate;
 	}
 
-	public String getEv_regdate() {
-		return ev_regdate;
+	public int getEvForm() {
+		return evForm;
 	}
 
-	public String getEv_progress() {
-		return ev_progress;
+	public int getEvCategoryName() {
+		return evCategoryName;
+	} 
+
+	public int getEvProgress() {
+		return evProgress;
 	}
 
-	public String getEv_start() {
-		return ev_start;
+	public int getEvStart() {
+		return evStart;
 	}
 
-	public String getEv_end() {
-		return ev_end;
+	public int getEvEnd() {
+		return evEnd;
 	}
 
-	public String getOri_image() {
-		return ori_image;
+	public int getEventQuota() {
+		return eventQuota;
 	}
 
-	public String getNew_image() {
-		return new_image;
+	public int getUserNo() {
+		return userNo;
 	}
 
-	public int getEvent_quota() {
-		return event_quota;
-	}
-	 
-	public String getEv_category_name() {
-		return ev_category_name;
+	public void setEventNo(int eventNo) {
+		this.eventNo = eventNo;
 	}
 
-	public void setEv_category_name(String ev_category_name) {
-		this.ev_category_name = ev_category_name;
+	public void setEvTitle(String evTitle) {
+		this.evTitle = evTitle;
 	}
 
-	public void setEvent_no(int event_no) {
-		this.event_no = event_no;
+	public void setEvContent(String evContent) {
+		this.evContent = evContent;
 	}
 
-	
-	public void setEvent_category(int event_category) {
-		this.event_category = event_category;
+	public void setEvRegdate(String evRegdate) {
+		this.evRegdate = evRegdate;
 	}
 
-	public void setEv_title(String ev_title) {
-		this.ev_title = ev_title;
+	public void setEvForm(int evForm) {
+		this.evForm = evForm;
 	}
 
-	public void setEv_content(String ev_content) {
-		this.ev_content = ev_content;
+	public void setEvCategoryName(int evCategoryName) {
+		this.evCategoryName = evCategoryName;
+	} 
+
+	public void setEvProgress(int evProgress) {
+		this.evProgress = evProgress;
 	}
 
-	public void setEv_form(int ev_form) {
-		this.ev_form = ev_form;
+	public void setEvStart(int evStart) {
+		this.evStart = evStart;
 	}
 
-	public void setEv_regdate(String ev_regdate) {
-		this.ev_regdate = ev_regdate;
+	public void setEvEnd(int evEnd) {
+		this.evEnd = evEnd;
 	}
 
-	public void setEv_progress(String ev_progress) {
-		this.ev_progress = ev_progress;
+	public void setEventQuota(int eventQuota) {
+		this.eventQuota = eventQuota;
 	}
 
-	public void setEv_start(String ev_start) {
-		this.ev_start = ev_start;
-	}
-
-	public void setEv_end(String ev_end) {
-		this.ev_end = ev_end;
-	}
-
-	public void setOri_image(String ori_image) {
-		this.ori_image = ori_image;
-	}
-
-	public void setNew_image(String new_image) {
-		this.new_image = new_image;
-	}
-
-	public void setEvent_quota(int event_quota) {
-		this.event_quota = event_quota;
+	public void setUserNo(int userNo) {
+		this.userNo = userNo;
 	}
 
 	@Override
 	public String toString() {
-		return "Event [event_no=" + event_no + ", event_category=" + event_category + ", ev_title=" + ev_title
-				+ ", ev_content=" + ev_content + ", ev_form=" + ev_form + ", ev_regdate=" + ev_regdate
-				+ ", ev_progress=" + ev_progress + ", ev_start=" + ev_start + ", ev_end=" + ev_end + ", ori_image="
-				+ ori_image + ", new_image=" + new_image + ", event_quota=" + event_quota + ", ev_category_name="
-				+ ev_category_name + "]";
+		return "MemEvent [eventNo=" + eventNo + ", evTitle=" + evTitle + ", evContent=" + evContent + ", evRegdate="
+				+ evRegdate + ", evForm=" + evForm + ", evCategoryName=" + evCategoryName + ", evProgress=" + evProgress
+				+ ", evStart=" + evStart + ", evEnd=" + evEnd + ", eventQuota=" + eventQuota + ", userNo=" + userNo
+				+ "]";
 	}
-
  
 }
 

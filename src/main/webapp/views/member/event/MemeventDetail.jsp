@@ -1,3 +1,4 @@
+<%@page import="java.io.Console"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="com.book.admin.event.vo.Event" %>
@@ -9,7 +10,7 @@
     <meta charset="UTF-8">
     <title>이벤트 상세 정보</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'LINESeedKR-Bd';
@@ -121,9 +122,13 @@
         <main>
             <div class="eventDeatil_main">
                 <span id="event_Type">
-                    <%
-                        Event event = (Event)request.getAttribute("event");  
-                    %>
+                    <% 
+					    Event event = (Event) request.getAttribute("event");  
+					    User user_event = (User) session.getAttribute("user");
+					    boolean isRegistered = (boolean) request.getAttribute("isRegistered");
+					    int registeredCount = event.getEvent_registered();
+					    int participateState = (int) request.getAttribute("participateState"); // participateState 값을 JSP에서 받음
+					%>
                     <% if (event.getEv_form() == 1) { %>
                          기본
                      <% } else if (event.getEv_form() == 2) { %>
@@ -159,18 +164,40 @@
                 <% } %>
                 <hr>
                 <div class="event_content"> 
-                <pre id="content_area"><%= event.getEv_content() %></pre>
-                    <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
-                </div> 
-            </div>
-            <% 
-                User user_event = (User) session.getAttribute("user");
-                if (user_event != null) {
-            %>
-            <button type="button" id="event_btn" onclick="registerEvent('<%= user.getUser_id() %>')">등록</button>
-            <% } %>
+				    <pre id="content_area"><%= event.getEv_content() %></pre>
+				    <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
+				
+					<!-- 참여 버튼 -->
+				    <%
+					    System.out.println("등록 인원: " + registeredCount);
+					    System.out.println("정원: " + event.getEvent_quota());
+					%>
+					<% if (user_event != null && event.getEv_form() == 2) { %>
+					    <button id="event_btn" type="button"
+					        <% if (isRegistered) { %>
+					            style="display:block;"
+					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
+					            style="display:block;"
+					        <% } else { %>
+					            style="display:block;"
+					        <% } %>
+					        onclick="toggleRegistration(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>, <%= participateState %>);">
+					        <% if (isRegistered) { %>
+					            참여 취소
+					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
+					            대기 취소
+					        <% } else if (registeredCount >= event.getEvent_quota()) { %>
+					            대기
+					        <% } else { %>
+					            등록
+					        <% } %>
+					    </button>
+					<% } %> 
+				</div>
+            </div> 
         </main>
     </section>
+    
  
     <%!
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -186,12 +213,47 @@
             }
         }
     %>
- 
+
+
+	<script> 
+	    // 참여 등록 및 취소 함수
+	    function toggleRegistration(eventNo, userNo, participateState) {
+	        var button = $("#event_btn");
+	        var action = button.text().trim();
+	
+	        $.ajax({
+	            type: "POST",
+	            url: "<%=request.getContextPath()%>/user/event/par",
+	            data: { 
+	                "event_no": eventNo, 
+	                "user_no": userNo, 
+	                "action": action,
+	                "participate_state": participateState 
+	            },
+	            success: function(response) {
+	                alert(action === "등록" ? "참여 성공" : action === "참여 취소" ? "취소 성공" : "대기 성공");
+	                location.reload(); // 페이지 새로고침
+	            }
+	        });
+	    }
+    
+	    $(document).ready(function() {
+	        // 콘솔 출력
+	        console.log("registeredCount:", <%= registeredCount %>);
+	        console.log("event_quota:", <%= event.getEvent_quota() %>);
+	    });
+	</script>
+
+        
+        
+        $(document).ready(function() {
+            // 콘솔 출력
+            console.log("registeredCount:", <%= registeredCount %>);
+            console.log("event_quota:", <%= event.getEvent_quota() %>); 
+        });
+         
+    </script>
+
+
 </body>
-<script>
-        function registerEvent(userId) {
-            console.log("사용자 번호: " + userId);
-            console.log("등록 성공");
-        }
- </script>
 </html>

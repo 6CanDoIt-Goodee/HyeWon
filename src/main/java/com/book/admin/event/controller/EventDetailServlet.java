@@ -1,5 +1,6 @@
 package com.book.admin.event.controller;
 
+import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
 
 import java.io.IOException;
@@ -30,10 +31,11 @@ public class EventDetailServlet extends HttpServlet {
 		 
         EventDao eventDao = new EventDao();
         Event event = eventDao.selectEventByNo(eventNo, conn);  
- 
+        
         request.setAttribute("event", event);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/views/admin/event/eventDetail.jsp");
         dispatcher.forward(request, response);
+        close(conn);
 	}
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

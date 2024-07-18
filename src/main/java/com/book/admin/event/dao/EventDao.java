@@ -202,7 +202,9 @@ public class EventDao {
                         rs.getString("event_ori_image"),
                         rs.getString("event_new_image"),
                         rs.getInt("event_quota"),
-                        rs.getString("event_category_name")); 
+                        rs.getString("event_category_name"),
+                        rs.getInt("event_registered"),
+                        rs.getInt("event_waiting")); 
             }
 
         } catch (Exception e) {
@@ -297,7 +299,7 @@ public class EventDao {
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, eventNo);
 
-            result = pstmt.executeUpdate(); // Use executeUpdate() instead of executeQuery()
+            result = pstmt.executeUpdate();  
 
         } catch (Exception e) {
             e.printStackTrace();

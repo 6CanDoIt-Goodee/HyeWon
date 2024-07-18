@@ -1,67 +1,204 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6캔두잇</title> 
-	<link href="../../../resources/css/header.css" rel="stylesheet" type="text/css">
-	<link href="../../../resources/css/mypageSideBar.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="../../../resources/javascript/mypage.js"></script>
-</head>
-
-<body>
-    <section class="main_header">
-        <header>
-            <nav id="header_nav">
-                <a href="#" id="main_logo">Knock Book</a>
-                <ul>
-                    <li><a href="#" class="header_list">도서 목록</a></li>
-                    <li><a href="#" class="header_list">이벤트</a></li>
-                    <li><a href="#" class="header_list" id="header_join">로그인</a></li>
-                    <li><a href="#" class="header_list" id="header_join">회원가입</a></li> 
-                </ul>
-            </nav>
-        </header>
-    </section> 
-
-    <section class="main_content">
-        <main>
-            <!-- 이 선 위는 변경 X -->
-            <!-- 아래에 추가 --> 
-            <section class="sec1">
-                <div class="section1">
-                    <div class="sidebar">
-                        <ul class="menu">
-                            <li class="menu-item"><a href="#">나의 정보</a></li>
-                            <li class="menu-item"><a href="#">팔로잉 목록</a></li>
-                            <li class="menu-item">
-                                <a href="#">독후감 목록</a>
-                                <ul class="submenu">
-                                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 작성된 독후감</a></li>
-                                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item"><a href="#">이벤트 참여 내역</a></li>
-                            <li class="menu-item"><a href="#">도서 신청</a></li>
-                            <li class="menu-item">
-                                <a href="#">문의 사항</a>
-                                <ul class="submenu">
-                                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 작성</a></li>
-                                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 목록</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section> 
-            <!-- 여기까지 사이드 바 코드 -->
-            <section class="sec2">
-               	<div class="section 안 요소2 1"></div>
-                <div class="section 안 요소2 2"></div>
-            </section> 
-        </main>
-    </section>
+    <title>마이페이지 사이드바</title>   
+	<script src="../../../resources/js/mypageSidebar.js"></script>  
+	<style>
+		@charset "UTF-8";
+		.sidebar {
+		    width: 100%
+		}
+		
+		.menu {
+		    list-style-type: none;
+		    padding: 0;
+		    height: 600px;
+		    background-color: white;
+		}
+		
+		.menu-item {
+		    width: 100%;
+		    background-color: white;
+		}
+		
+		.menu-item a {
+		    color: black;
+		    text-decoration: none;
+		    display: block;
+		    padding: 20px;
+		    padding-left: 30px;
+		    background-color: white;
+		    transition: background-color 0.3s ease;
+		}
+		
+		.menu-item a:hover {
+		    background-color: rgb(247, 247, 247);
+		}
+		@keyframes slide-down {
+		    0% {
+		        opacity: 0;
+		        transform: translateY(-10px);
+		    }
+		    100% {
+		        opacity: 1;
+		        transform: translateY(0);
+		    }
+		}
+		
+		@keyframes slide-up {
+		    0% {
+		        opacity: 1;
+		        height: auto;
+		    }
+		    100% {
+		        opacity: 0;
+		        height: 0;
+		        padding: 0;
+		        margin: 0;
+		        border: 0;
+		    }
+		}
+		.submenu {
+		    display: none;
+		    list-style-type: none;
+		    padding: 0;
+		    margin-top: 5px;
+		    overflow: hidden;
+		}
+		
+		.submenu li a {
+		    color: black;
+		    text-decoration: none;
+		    padding: 20px;
+		    display: block;
+		    transition: background-color 0.3s ease;
+		}
+		
+		.submenu li a:hover {
+		    background-color: rgb(247, 247, 247);
+		}
+		
+		/* 나의 정보 form */
+		.main_content {
+		    max-width: 1300px; 
+		    height: 750px;
+		    margin: 5rem auto;
+		    background-color: rgb(247, 247, 247);
+		    display: flex;
+		    flex-direction: row;
+		}
+		/* 사이드바 */
+		.section1{
+		    width: 20%;
+		    margin-right: 2rem;
+		    height: 100%;
+		    background-color: white;
+		}
+		.menu {
+		    list-style-type: none;
+		    padding: 0;
+		    height: 600px;
+		    background-color: white;
+		}
+		
+		.menu-item {
+		    width: 100%;
+		    background-color: white;
+		}
+		
+		.menu-item a {
+		    color: black;
+		    text-decoration: none;
+		    display: block;
+		    padding: 20px;
+		    padding-left: 30px;
+		    background-color: white;
+		    transition: background-color 0.3s ease;
+		}
+		
+		.menu-item a:hover {
+		    background-color: rgb(247, 247, 247);
+		}
+		@keyframes slide-down {
+		    0% {
+		        opacity: 0;
+		        transform: translateY(-10px);
+		    }
+		    100% {
+		        opacity: 1;
+		        transform: translateY(0);
+		    }
+		}
+		
+		@keyframes slide-up {
+		    0% {
+		        opacity: 1;
+		        height: auto;
+		    }
+		    100% {
+		        opacity: 0;
+		        height: 0;
+		        padding: 0;
+		        margin: 0;
+		        border: 0;
+		    }
+		}
+		.submenu {
+		    display: none;
+		    list-style-type: none;
+		    padding: 0;
+		    margin-top: 5px;
+		    overflow: hidden;
+		}
+		
+		.submenu li a {
+		    color: black;
+		    text-decoration: none;
+		    padding: 20px;
+		    display: block;
+		    transition: background-color 0.3s ease;
+		}
+		.submenu li a:hover {
+		    background-color: white;
+		}
+		/* 나의 정보 form */
+		.section2{
+		    width: 100%;
+		    background-color: white;
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: flex-start;
+		    align-items: center;
+		}
+		
+	</style>
+<body> 
+    <%@ include file="../../include/header.jsp" %>
+    <div class="main_content">
+        <div class="section1">
+            <ul class="menu">
+                <li class="menu-item"><a href="#">나의 정보</a></li>
+                <li class="menu-item"><a href="#">팔로잉 목록</a></li>
+                <li class="menu-item">
+                    <a href="#">독후감 목록</a>
+                    <ul class="submenu">
+                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 작성된 독후감</a></li>
+                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a href="#">이벤트 참여 내역</a></li>
+                <li class="menu-item"><a href="#">도서 신청</a></li>
+                <li class="menu-item">
+                    <a href="#">문의 사항</a>
+                    <ul class="submenu">
+                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 작성</a></li>
+                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 목록</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="section2">
+			<!-- 여기에 파일을 넣으세요. -->
+        </div> 
+    </div>
 </body> 
 </html>

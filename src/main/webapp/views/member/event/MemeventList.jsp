@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이벤트 목록</title>
+<title>이벤트 목록</title> 
 </head>
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -19,16 +19,16 @@
 	body { 
             font-family: 'LINESeedKR-Bd';
             background-color: rgb(247, 247, 247);  
-        }
-        
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 1rem 1rem; 
-            background-color: white; 
-            box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-        }
+     }
+     
+     main {
+         max-width: 1200px;
+         margin: 2rem auto;
+         padding: 1rem 1rem; 
+         background-color: white; 
+         box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+         border-radius: 20px;
+     }
 	/* Heading styling */
 	.event_list table tbody td a {
 	    text-decoration: none; /* 밑줄 제거 */
@@ -114,6 +114,7 @@
 <body>
     <%@ include file="../../include/header.jsp" %>
     <li><a href="/event/list" class="header_list">목록</a></li> 
+    <li><a href="/event/create" class="header_list">등록</a></li> 
     <section>
     	<main>
 	        <div id="section_wrap" class="container">

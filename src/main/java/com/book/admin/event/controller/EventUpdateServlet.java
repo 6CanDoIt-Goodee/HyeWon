@@ -58,8 +58,8 @@ public class EventUpdateServlet extends HttpServlet {
         if (form == 2) {
             quota = Integer.parseInt(request.getParameter("eventQuota"));
         } 
-        Event event = new Event(eventNo, category, title, content, form, null, progress, start, end, oriImage,
-                newImage, quota, null);
+        
+        Event event = new Event(eventNo, category, title, content, form, progress, start, end, oriImage, newImage, quota);
  
         Connection conn = getConnection();
         int result = new EventDao().updateEvent(event, conn);

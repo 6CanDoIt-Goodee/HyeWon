@@ -1,5 +1,6 @@
 package com.book.admin.event.controller;
 
+import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class EventDeleteServlet extends HttpServlet {
 	                Connection conn = getConnection();
 	                EventDao eventDao = new EventDao();
 	                int isDeleted = eventDao.deleteEvent(eventNo, conn);
-
+	                close(conn);
 	                if (isDeleted > 0) {   
 	                	response.setContentType("text/html; charset=UTF-8");
 	                    response.getWriter().write("<script>alert('이벤트가 성공적으로 삭제되었습니다.'); window.location.href = '" + request.getContextPath() + "/event/list';</script>");

@@ -1,6 +1,7 @@
 package com.book.member.event.dao;
 
 import static com.book.common.sql.JDBCTemplate.close;
+import static com.book.common.sql.JDBCTemplate.getConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,41 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.book.admin.event.vo.Event;
+import com.book.member.event.vo.MemEvent;
 
 public class MemEventDao {
-
-    // 이벤트 생성 메서드
-    public int createEvent(Event event, Connection conn) {
-        PreparedStatement pstmt = null;
-        int result = 0;
-
-        try {
-            String sql = "INSERT INTO events (event_title, event_content, event_form, event_progress, event_start, event_end, event_ori_image, event_new_image, event_category_no, event_quota) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, event.getEv_title());
-            pstmt.setString(2, event.getEv_content());
-            pstmt.setInt(3, event.getEv_form());
-            pstmt.setString(4, event.getEv_progress());
-            pstmt.setString(5, event.getEv_start());
-            pstmt.setString(6, event.getEv_end());
-            pstmt.setString(7, event.getOri_image());
-            pstmt.setString(8, event.getNew_image());
-            pstmt.setInt(9, event.getEvent_category());
-            if (event.getEv_form() == 2) {
-                pstmt.setInt(10, event.getEvent_quota());
-            } else {
-                pstmt.setNull(10, java.sql.Types.INTEGER);
-            }
-            result = pstmt.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(pstmt);
-        }
-        return result;
-    }
-
+ 
     // 이벤트 목록 조회 메서드
     public List<Map<String, String>> selectEventList(Event option, Connection conn) {
         List<Map<String, String>> list = new ArrayList<>();
@@ -202,7 +172,9 @@ public class MemEventDao {
                         rs.getString("event_ori_image"),
                         rs.getString("event_new_image"),
                         rs.getInt("event_quota"),
-                        rs.getString("event_category_name")); 
+                        rs.getString("event_category_name"),
+                        rs.getInt("event_registered"),
+                        rs.getInt("event_waiting")); 
             }
 
         } catch (Exception e) {
@@ -214,97 +186,65 @@ public class MemEventDao {
 
         return event;
     }
-
-    public int updateEvent(Event event, Connection conn) {
-        PreparedStatement pstmt = null;
-        int result = 0;
-
-        try {
-            StringBuilder query = new StringBuilder("UPDATE events SET ");
-            query.append("event_title=?, ");
- 
-            if (event.getEv_start() != null && !event.getEv_start().isEmpty()) {
-                query.append("event_start=?, ");
-            }
- 
-            if (event.getEv_end() != null && !event.getEv_end().isEmpty()) {
-                query.append("event_end=?, ");
-            }
- 
-            if (event.getEv_progress() != null && !event.getEv_progress().isEmpty()) {
-                query.append("event_progress=?, ");
-            }
-
-            query.append("event_content=?, event_category_no=?, event_quota=?");
- 
-            if (event.getOri_image() != null && !event.getOri_image().isEmpty()) {
-                query.append(", event_ori_image=?");
-            }
- 
-            if (event.getNew_image() != null && !event.getNew_image().isEmpty()) {
-                query.append(", event_new_image=?");
-            }
-
-            query.append(" WHERE event_no=?");
-
-            pstmt = conn.prepareStatement(query.toString());
-
-            int index = 1;
-            pstmt.setString(index++, event.getEv_title());
- 
-            if (event.getEv_start() != null && !event.getEv_start().isEmpty()) {
-                pstmt.setString(index++, event.getEv_start());
-            }
- 
-            if (event.getEv_end() != null && !event.getEv_end().isEmpty()) {
-                pstmt.setString(index++, event.getEv_end());
-            }
- 
-            if (event.getEv_progress() != null && !event.getEv_progress().isEmpty()) {
-                pstmt.setString(index++, event.getEv_progress());
-            }
-
-            pstmt.setString(index++, event.getEv_content());
-            pstmt.setInt(index++, event.getEvent_category());
-            pstmt.setInt(index++, event.getEvent_quota());
- 
-            if (event.getOri_image() != null && !event.getOri_image().isEmpty()) {
-                pstmt.setString(index++, event.getOri_image());
-            }
- 
-            if (event.getNew_image() != null && !event.getNew_image().isEmpty()) {
-                pstmt.setString(index++, event.getNew_image());
-            }
-
-            pstmt.setInt(index++, event.getEvent_no());
-
-            result = pstmt.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(pstmt);
-        }
-
-        return result;
-    }
-
     
-    public int deleteEvent(int eventNo, Connection conn) {
+    // 이벤트 참여 여부 확인
+    public boolean checkRegistration(int eventNo, int userNo, Connection conn) {
         PreparedStatement pstmt = null;
-        int result = 0;
+        ResultSet rs = null;
+        boolean isRegistered = false;
+
         try {
-            String sql = "DELETE FROM events WHERE event_no = ?";
+            String sql = "SELECT COUNT(*) FROM participates WHERE event_no = ? AND user_no = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, eventNo);
+            pstmt.setInt(2, userNo);
+            rs = pstmt.executeQuery();
 
-            result = pstmt.executeUpdate(); // Use executeUpdate() instead of executeQuery()
-
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                if (count > 0) {
+                    isRegistered = true;
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            close(rs);
             close(pstmt);
         }
-        return result;
+ 
+        return isRegistered;
     }
+ 
+    // 이벤트 참여자 추가
+	public void registerForEvent(int eventNo, int userNo) {
+	        String sql = "INSERT INTO participates (user_no, event_no) VALUES (?, ?)";
+	        
+	        try (Connection conn = getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setInt(1, userNo);
+	            pstmt.setInt(2, eventNo);
+	            pstmt.executeUpdate();
+	            close(conn); 
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	
+	// 이벤트 참여자 삭제
+    public void cancelRegistration(int eventNo, int userNo) {
+        String sql = "DELETE FROM participates WHERE event_no = ? AND user_no = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, eventNo);
+            pstmt.setInt(2, userNo);
+            pstmt.executeUpdate();
+            close(conn); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 
 }
