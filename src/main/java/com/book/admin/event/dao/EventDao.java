@@ -5,6 +5,8 @@ import static com.book.common.sql.JDBCTemplate.close;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -307,7 +309,7 @@ public class EventDao {
         return result;
     }
 
-    // 참여자 내역
+    // 전체 이벤트 참여자
     public List<Map<String, String>> getEventParticipations(Connection conn) {
         List<Map<String, String>> events = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -341,5 +343,109 @@ public class EventDao {
         }
         return events;
     }
+    
+    // 제목별 참여자 목록
+    public List<Map<String, String>> getEventParticipationsByTitle(String eventTitle, Connection conn) {
+        List<Map<String, String>> events = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT e.event_no AS 번호, u.user_name AS 이름, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
+                         "FROM events e " +
+                         "JOIN participates p ON e.event_no = p.event_no " +
+                         "JOIN users u ON u.user_no = p.user_no " +
+                         "WHERE e.event_title = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, eventTitle);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, String> event = new HashMap<>();
+                event.put("event_no", rs.getString("번호"));
+                event.put("event_title", rs.getString("제목"));
+                event.put("event_progress", rs.getString("진행일"));
+                event.put("participate_date", rs.getString("참여등록일"));
+                event.put("user_name", rs.getString("이름"));
+                event.put("participate_state", rs.getString("상태"));  
+                events.add(event);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return events;
+    }
+    
+    // 진행중, 진행 예정 제목
+    public List<Map<String, String>> getEventTitles(Connection conn) {
+        List<Map<String, String>> eventTitles = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String sql = "SELECT DISTINCT e.event_title, e.event_progress " +
+                         "FROM events e " +
+                         "WHERE DATE(e.event_progress) >= ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, currentDate.format(formatter));
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, String> event = new HashMap<>();
+                event.put("event_title", rs.getString("event_title"));
+                event.put("event_progress", rs.getString("event_progress"));
+                eventTitles.add(event);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return eventTitles;
+    }
+
+    public Map<String, String> getEventInfoByTitle(String eventTitle, Connection conn) {
+        Map<String, String> eventInfo = new HashMap<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT event_title, event_start, event_quota, event_end, event_registered, event_waiting " + // 빈 칸 추가
+                         "FROM events " +
+                         "WHERE event_title = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, eventTitle);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                eventInfo.put("event_title", rs.getString("event_title"));
+                eventInfo.put("event_start", rs.getString("event_start"));
+                eventInfo.put("event_quota", rs.getString("event_quota"));
+                eventInfo.put("event_end", rs.getString("event_end"));
+                eventInfo.put("event_registered", rs.getString("event_registered"));
+                eventInfo.put("event_waiting", rs.getString("event_waiting"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return eventInfo;
+    }
+
+ 
+            
     
 }

@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map"%>
+<%@ page import="java.time.LocalDate"%>
+<%@ page import="java.time.format.DateTimeFormatter"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,9 +27,45 @@
 	                <h3>사용자 이벤트 참여 내역</h3>
 	            </div>
 	            <br>
+	            <!-- Select Box 추가 -->
+	            <div>
+	                <form action="/event/parList" method="post">
+	                    <label for="eventTitle">이벤트 제목 선택:</label>
+	                    <select name="eventTitle" id="eventTitle">
+	                        <option value="">전체</option>
+	                        <% 
+	                            LocalDate currentDate = LocalDate.now();
+	                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	                            List<Map<String, String>> eventTitles = (List<Map<String, String>>) request.getAttribute("eventTitles");
+	                            for (Map<String, String> event : eventTitles) {
+	                                LocalDate eventDate = LocalDate.parse(event.get("event_progress").substring(0, 10), formatter);
+	                                if (eventDate.isAfter(currentDate) || eventDate.isEqual(currentDate)) {
+	                        %>
+	                        <option value="<%=event.get("event_title")%>"><%=event.get("event_title")%></option>
+	                        <% 
+	                                }
+	                            }
+	                        %>
+	                    </select>
+	                    <input type="submit" value="검색">
+	                </form>
+	            </div> 
+
+	            <div class="event_info">
+				    <% if (request.getAttribute("selectedEvent") != null) { %>
+				        <h4>선택된 이벤트 정보</h4>
+				        <% Map<String, String> selectedEvent = (Map<String, String>) request.getAttribute("selectedEvent"); %>
+				        <p>이벤트 제목: <%= selectedEvent.get("event_title") %></p>
+				        <p>모집 기간: <%= selectedEvent.get("event_start").substring(0, 10) %> ~ <%= selectedEvent.get("event_end").substring(0, 10) %></p>
+				        <p>참여 현황: <%= selectedEvent.get("event_registered") %> / <%= selectedEvent.get("event_quota") %></p>
+				        <p>대기 인원: <%= selectedEvent.get("event_waiting") %></p>
+				    <% } %>
+				</div>
+
+	             
 	            <div class="event_list">
 	                <% if (request.getAttribute("userEvents") == null || ((List<Map<String, String>>) request.getAttribute("userEvents")).isEmpty()) { %>
-	                    <p id="list_empty">참여한 이벤트가 없습니다.</p>
+	                    <p id="list_empty">참여자가 존재하지 않습니다.</p>
 	                <% } else { %>
 	                    <table class="table table-striped table-bordered">
 	                        <thead class="table-light">
@@ -41,12 +79,12 @@
 	                            </tr>
 	                        </thead>
 	                        <tbody>
-	                            <%
+	                            <% 
 	                                List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("userEvents"); 
 	                                for (int i = 0; i < list.size(); i++) {
 	                                    Map<String, String> row = list.get(i);
 	                            %>
-	                            <tr style="cursor: pointer;" onclick="location.href='/event/detail?eventNo=<%=row.get("event_no")%>'">
+	                            <tr>
 	                                <td><%=i + 1%></td>
 	                                <td><%=row.get("user_name")%></td>
 	                                <td><%=row.get("event_title")%></td>
