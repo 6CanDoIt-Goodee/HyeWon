@@ -42,7 +42,7 @@ public class MemEventDao {
                 sql += " AND e.event_title LIKE CONCAT('%', ?, '%')";
             }
 
-            sql += " ORDER BY e.event_no ASC LIMIT ?, ?";
+            sql += " ORDER BY e.event_regdate ASC LIMIT ?, ?";
 
             pstmt = conn.prepareStatement(sql);
             int paramIndex = 1;
@@ -269,7 +269,7 @@ public class MemEventDao {
     // 취소 후 대기자 자동 등록 처리 메서드
     private void autoPromoteWaitingParticipant(int eventNo) {
         String updateSql = "UPDATE participates " +
-                           "SET participate_state = 0 " +
+                           "SET participate_state = 0, participate_date = CURRENT_TIMESTAMP " +
                            "WHERE participate_state = 1 AND event_no = ? " +
                            "ORDER BY participate_date ASC " +
                            "LIMIT 1";
@@ -288,7 +288,7 @@ public class MemEventDao {
         }
     }
 
-    // 이벤트 테이블의 event_registered 및 event_waiting 업데이트 메서드
+    // 이벤트 테이블의 event_registered 및 event_waiting 업데이트 
     private void updateEventCounts(int eventNo, Connection conn) {
         String updateEventSql = "UPDATE events " +
                                 "SET event_registered = event_registered + 1, " +
@@ -331,6 +331,42 @@ public class MemEventDao {
             e.printStackTrace();
         }
     }
+
+    // 참여 이벤트 조회
+    public List<Map<String, String>> getUserEventParticipations(int userNo, Connection conn) {
+        List<Map<String, String>> events = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
+                         "FROM events e " +
+                         "JOIN participates p ON e.event_no = p.event_no " +
+                         "WHERE p.user_no = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userNo);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, String> event = new HashMap<>(); 
+                event.put("event_no", rs.getString("번호"));
+                event.put("event_title", rs.getString("제목"));
+                event.put("event_progress", rs.getString("참여등록일"));
+                event.put("participate_date", rs.getString("진행일"));
+                event.put("participate_state", rs.getString("상태"));
+                events.add(event);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return events;
+    }
+
 
 
 }

@@ -27,8 +27,7 @@ public class MemEventListServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // 이벤트 제목 파라미터 처리
+            throws ServletException, IOException { 
         String evTitle = request.getParameter("evTitle");
 
         // 카테고리 파라미터 처리

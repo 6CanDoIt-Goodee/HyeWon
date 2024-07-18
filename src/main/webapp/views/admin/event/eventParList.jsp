@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>사용자 이벤트 참여 내역</title>
+<title>참여자 목록</title>
 </head>
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -33,6 +33,7 @@
 	                        <thead class="table-light">
 	                            <tr>
 	                                <th scope="col">번호</th>
+	                                <th scope="col">이름</th>
 	                                <th scope="col">제목</th>
 	                                <th scope="col">진행일</th>
 	                                <th scope="col">참여 등록일</th>
@@ -41,14 +42,13 @@
 	                        </thead>
 	                        <tbody>
 	                            <%
-	                                List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("userEvents");
-		                            User user_par = (User) session.getAttribute("user");
-		                            int userNo = user_par.getUser_no();
+	                                List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("userEvents"); 
 	                                for (int i = 0; i < list.size(); i++) {
 	                                    Map<String, String> row = list.get(i);
 	                            %>
-	                            <tr style="cursor: pointer;" onclick="location.href='/user/event/detail?eventNo=<%=row.get("event_no")%>'">
+	                            <tr style="cursor: pointer;" onclick="location.href='/event/detail?eventNo=<%=row.get("event_no")%>'">
 	                                <td><%=i + 1%></td>
+	                                <td><%=row.get("user_name")%></td>
 	                                <td><%=row.get("event_title")%></td>
 	                                <td><%=row.get("event_progress").substring(0, 10)%></td>
 	                                <td><%=row.get("participate_date")%></td>

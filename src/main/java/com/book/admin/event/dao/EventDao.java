@@ -72,7 +72,7 @@ public class EventDao {
                 sql += " AND e.event_title LIKE CONCAT('%', ?, '%')";
             }
 
-            sql += " ORDER BY e.event_no ASC LIMIT ?, ?";
+            sql += " ORDER BY e.event_regdate ASC LIMIT ?, ?";
 
             pstmt = conn.prepareStatement(sql);
             int paramIndex = 1;
@@ -115,9 +115,7 @@ public class EventDao {
         }
         return list;
     }
-
-
-
+ 
     // 선택된 카테고리에 따라 전체 이벤트 개수 조회 메서드
     public int selectEventCount(Event option, Connection conn) {
         int result = 0;
@@ -309,4 +307,39 @@ public class EventDao {
         return result;
     }
 
+    // 참여자 내역
+    public List<Map<String, String>> getEventParticipations(Connection conn) {
+        List<Map<String, String>> events = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT e.event_no AS 번호, u.user_name AS 이름, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
+                         "FROM events e " +
+                         "JOIN participates p ON e.event_no = p.event_no " +
+                         "JOIN users u ON u.user_no = p.user_no";
+
+            pstmt = conn.prepareStatement(sql); 
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, String> event = new HashMap<>(); 
+                event.put("event_no", rs.getString("번호"));
+                event.put("event_title", rs.getString("제목"));
+                event.put("event_progress", rs.getString("참여등록일"));
+                event.put("participate_date", rs.getString("진행일"));
+                event.put("user_name", rs.getString("이름"));
+                event.put("participate_state", rs.getString("상태"));
+                events.add(event);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return events;
+    }
+    
 }

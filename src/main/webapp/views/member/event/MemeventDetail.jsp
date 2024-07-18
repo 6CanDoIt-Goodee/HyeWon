@@ -181,7 +181,7 @@
 					        <% } else { %>
 					            style="display:block;"
 					        <% } %>
-					        onclick="toggleRegistration(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>, <%= participateState %>);">
+					        	onclick="toggleRegistration(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>, <%= participateState %>);">
 					        <% if (participateState == 0) { %>
 					            참여 취소
 					        <% } else if (participateState == 1) { %>

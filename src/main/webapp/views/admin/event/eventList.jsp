@@ -19,16 +19,16 @@
 	body { 
             font-family: 'LINESeedKR-Bd';
             background-color: rgb(247, 247, 247);  
-        }
-        
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 1rem 1rem; 
-            background-color: white; 
-            box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-        }
+    }
+    
+    main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem 1rem; 
+        background-color: white; 
+        box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+    }
 	/* Heading styling */
 	.event_list table tbody td a {
 	    text-decoration: none; /* 밑줄 제거 */
@@ -162,7 +162,8 @@
 	                            <tr style="cursor: pointer;" onclick="location.href='/event/detail?eventNo=<%=row.get("event_no")%>&eventType=<%=row.get("event_form")%>'">
 	                                <td><%=startNo + i%></td>
 	                                <td><%=row.get("event_title")%></td>
-	                                <td><%=row.get("event_regdate")%></td>
+	                                <td><%=row.get("event_regdate").substring(0, 10)%></td>
+	                                
 	                                <td>
 	                                    <%
 	                                        int evForm = Integer.parseInt(row.get("event_form"));
