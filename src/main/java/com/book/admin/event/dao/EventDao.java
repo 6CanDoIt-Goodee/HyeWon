@@ -322,7 +322,7 @@ public class EventDao {
                          "JOIN participates p ON e.event_no = p.event_no " +
                          "JOIN users u ON u.user_no = p.user_no " +
                          "WHERE DATE(e.event_progress) >= CURDATE() " +
-                         "ORDER BY event_start " +
+                         "ORDER BY e.event_progress DESC " +
                          "LIMIT ?, ?";
             
             pstmt = conn.prepareStatement(sql);
@@ -350,6 +350,7 @@ public class EventDao {
         return events;
     }
 
+    // 참여 이벤트 수
     public int selectParEventCount(String eventTitle, Connection conn) {
         int result = 0;
         PreparedStatement pstmt = null;

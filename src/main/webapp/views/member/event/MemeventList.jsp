@@ -197,7 +197,7 @@
 	
 	            if (paging.isPrev()) {
 	        %>
-	            <a href="/event/list?listCategory=<%=listCategory%>&nowPage=<%=(paging.getPageBarStart() - 1)%>">
+	            <a href="/user/event/list?listCategory=<%=listCategory%>&nowPage=<%=(paging.getPageBarStart() - 1)%>">
 	                &laquo;
 	            </a>
 	        <%
@@ -205,7 +205,7 @@
 	
 	            for (int i = paging.getPageBarStart(); i <= paging.getPageBarEnd(); i++) {
 	        %>
-	            <a href="/event/list?listCategory=<%=listCategory%>&nowPage=<%=i%>"
+	            <a href="/user/event/list?listCategory=<%=listCategory%>&nowPage=<%=i%>"
 	                <%=paging.getNowPage() == i ? "class='active'" : ""%>> <%=i%>
 	            </a>
 	        <%
@@ -213,7 +213,7 @@
 	
 	            if (paging.isNext()) {
 	        %>
-	            <a href="/event/list?listCategory=<%=listCategory%>&nowPage=<%=(paging.getPageBarEnd() + 1)%>">&raquo;</a>
+	            <a href="/user/event/list?listCategory=<%=listCategory%>&nowPage=<%=(paging.getPageBarEnd() + 1)%>">&raquo;</a>
 	        <%
 	            }
 	        %>

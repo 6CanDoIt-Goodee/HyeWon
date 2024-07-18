@@ -331,9 +331,35 @@ public class MemEventDao {
             e.printStackTrace();
         }
     }
+    
+    // 참여 이벤트 수 
+    public int selectParEventCount(int userNo, Connection conn) {
+        int result = 0;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            String sql = "SELECT COUNT(*) AS cnt FROM participates WHERE user_no = ?";
+            
+            pstmt = conn.prepareStatement(sql); 
+            pstmt.setInt(1, userNo);
+            rs = pstmt.executeQuery();
 
-    // 참여 이벤트 조회
-    public List<Map<String, String>> getUserEventParticipations(int userNo, Connection conn) {
+            if (rs.next()) {
+                result = rs.getInt("cnt");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return result;
+    }
+
+
+    // 참여 이벤트 조회 
+    public List<Map<String, String>> getUserEventParticipations(int userNo, int startRow, int numPerPage, Connection conn) {
         List<Map<String, String>> events = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -342,14 +368,17 @@ public class MemEventDao {
             String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
                          "FROM events e " +
                          "JOIN participates p ON e.event_no = p.event_no " +
-                         "WHERE p.user_no = ? ORDER BY p.participate_date DESC";
+                         "WHERE p.user_no = ? ORDER BY p.participate_date DESC " +
+                         "LIMIT ?, ?";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, userNo);
+            pstmt.setInt(2, startRow);
+            pstmt.setInt(3, numPerPage);
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                Map<String, String> event = new HashMap<>(); 
+                Map<String, String> event = new HashMap<>();
                 event.put("event_no", rs.getString("번호"));
                 event.put("event_title", rs.getString("제목"));
                 event.put("event_progress", rs.getString("참여등록일"));
@@ -366,7 +395,6 @@ public class MemEventDao {
         }
         return events;
     }
-
-
+ 
 
 }

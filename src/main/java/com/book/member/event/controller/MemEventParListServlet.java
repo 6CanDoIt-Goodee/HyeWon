@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.book.admin.event.dao.EventDao;
+import com.book.admin.event.vo.Event;
 import com.book.member.event.dao.MemEventDao;
 import com.book.member.user.vo.User;
  
@@ -27,23 +29,48 @@ public class MemEventParListServlet extends HttpServlet {
         super(); 
     }
  
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  
-		HttpSession session = request.getSession(false); 
-		int userNo = 0;
-		User u = new User();
-		if(session != null) {
-			u =(User)session.getAttribute("user");  
-			userNo = u.getUser_no();
-		}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        int userNo = 0;
+        User user = null;
+        
+        if (session != null) {
+            user = (User) session.getAttribute("user");
+            if (user != null) {
+                userNo = user.getUser_no();
+            }
+        }
+
+        int nowPage = 1;
+        if (request.getParameter("nowPage") != null) {
+            nowPage = Integer.parseInt(request.getParameter("nowPage"));
+        }
+ 
+        int numPerPage = 10;
+
         Connection conn = getConnection();
-        List<Map<String, String>> userEvents = new MemEventDao().getUserEventParticipations(userNo, conn);
+        MemEventDao memEventDao = new MemEventDao();
+
+        int totalData = memEventDao.selectParEventCount(userNo, conn);
+ 
+        int startRow = (nowPage - 1) * numPerPage;
+        int endRow = startRow + numPerPage - 1;
+        List<Map<String, String>> userEvents = memEventDao.getUserEventParticipations(userNo, startRow, numPerPage, conn);
+
         close(conn);
 
+        Event paging = new Event();
+        paging.setNowPage(nowPage);
+        paging.setNumPerPage(numPerPage);
+        paging.setTotalData(totalData);
+
+        request.setAttribute("paging", paging);
         request.setAttribute("userEvents", userEvents);
 
         RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/MemParticipateList.jsp");
         rd.forward(request, response);
-	}
+    }
+
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
 		doGet(request, response);

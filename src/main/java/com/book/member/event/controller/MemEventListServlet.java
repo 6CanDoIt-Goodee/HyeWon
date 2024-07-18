@@ -29,8 +29,7 @@ public class MemEventListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException { 
         String evTitle = request.getParameter("evTitle");
-
-        // 카테고리 파라미터 처리
+ 
         String categoryParam = request.getParameter("listCategory");
         int categoryNo = 0;
         if (categoryParam != null && !categoryParam.isEmpty()) {
