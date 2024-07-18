@@ -127,7 +127,7 @@
 					    User user_event = (User) session.getAttribute("user");
 					    boolean isRegistered = (boolean) request.getAttribute("isRegistered");
 					    int registeredCount = event.getEvent_registered();
-					    int participateState = (int) request.getAttribute("participateState"); // participateState 값을 JSP에서 받음
+					    int participateState = (int) request.getAttribute("participateState");  
 					%>
                     <% if (event.getEv_form() == 1) { %>
                          기본
@@ -173,7 +173,7 @@
 					    System.out.println("정원: " + event.getEvent_quota());
 					%>
 					<% if (user_event != null && event.getEv_form() == 2) { %>
-					    <button id="event_btn" type="button"
+					    <button id="event_btn" type="button" style="display:block;"
 					        <% if (isRegistered) { %>
 					            style="display:block;"
 					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
@@ -182,9 +182,9 @@
 					            style="display:block;"
 					        <% } %>
 					        onclick="toggleRegistration(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>, <%= participateState %>);">
-					        <% if (isRegistered) { %>
+					        <% if (participateState == 0) { %>
 					            참여 취소
-					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
+					        <% } else if (participateState == 1) { %>
 					            대기 취소
 					        <% } else if (registeredCount >= event.getEvent_quota()) { %>
 					            대기
@@ -218,41 +218,46 @@
 	<script> 
 	    // 참여 등록 및 취소 함수
 	    function toggleRegistration(eventNo, userNo, participateState) {
-	        var button = $("#event_btn");
-	        var action = button.text().trim();
+	    var button = $("#event_btn");
+	    var action = button.text().trim();
 	
-	        $.ajax({
-	            type: "POST",
-	            url: "<%=request.getContextPath()%>/user/event/par",
-	            data: { 
-	                "event_no": eventNo, 
-	                "user_no": userNo, 
-	                "action": action,
-	                "participate_state": participateState 
-	            },
-	            success: function(response) {
-	                alert(action === "등록" ? "참여 성공" : action === "참여 취소" ? "취소 성공" : "대기 성공");
-	                location.reload(); // 페이지 새로고침
+	    $.ajax({
+	        type: "POST",
+	        url: "<%=request.getContextPath()%>/user/event/par",
+	        data: { 
+	            "event_no": eventNo, 
+	            "user_no": userNo, 
+	            "action": action,
+	            "participate_state": participateState 
+	        },
+	        success: function(response) {
+	            // 성공적으로 서버에서 응답을 받은 후에 버튼 상태를 업데이트합니다.
+	            if (action === "등록") {
+	                button.text("참여 취소");
+	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
+	            } else if (action === "참여 취소") {
+	                button.text("등록");
+	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
+	            } else if (action === "대기") {
+	                button.text("대기 취소");
+	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
+	            } else if (action === "대기 취소") {
+	                button.text("대기");
+	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
 	            }
-	        });
-	    }
+	            alert(action + " 성공");
+	            location.reload(); // 페이지 새로고침
+	        }
+	    });
+	}
+
     
 	    $(document).ready(function() {
 	        // 콘솔 출력
-	        console.log("registeredCount:", <%= registeredCount %>);
-	        console.log("event_quota:", <%= event.getEvent_quota() %>);
+	        console.log("등록 인원:", <%= registeredCount %>);
+	        console.log("정원:", <%= event.getEvent_quota() %>); 
 	    });
-	</script>
-
-        
-        
-        $(document).ready(function() {
-            // 콘솔 출력
-            console.log("registeredCount:", <%= registeredCount %>);
-            console.log("event_quota:", <%= event.getEvent_quota() %>); 
-        });
-         
-    </script>
+	</script> 
 
 
 </body>

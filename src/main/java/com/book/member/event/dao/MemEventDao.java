@@ -218,21 +218,71 @@ public class MemEventDao {
  
     // 이벤트 참여자 추가
 	public void registerForEvent(int eventNo, int userNo) {
-	        String sql = "INSERT INTO participates (user_no, event_no) VALUES (?, ?)";
-	        
-	        try (Connection conn = getConnection();
-	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setInt(1, userNo);
-	            pstmt.setInt(2, eventNo);
-	            pstmt.executeUpdate();
-	            close(conn); 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
+        String sql = "INSERT INTO participates (user_no, event_no) VALUES (?, ?)";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userNo);
+            pstmt.setInt(2, eventNo);
+            pstmt.executeUpdate();
+            close(conn); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	// 이벤트 참여자 삭제
     public void cancelRegistration(int eventNo, int userNo) {
+        String sql = "DELETE FROM participates WHERE event_no = ? AND user_no = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, eventNo);
+            pstmt.setInt(2, userNo);
+            pstmt.executeUpdate();
+            close(conn); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // 이벤트 등록, 대기 상태 조회
+    public int getParticipateState(int userNo, int eventNo, Connection conn) {
+        int state = -1;
+        String query = "SELECT participate_state FROM participates WHERE user_no = ? AND event_no = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userNo);
+            ps.setInt(2, eventNo);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    state = rs.getInt("participate_state");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return state;
+    }
+    
+    // 이벤트 대기 등록
+    public void waitForEvent(int eventNo, int userNo) {
+    	String sql = "INSERT INTO participates (user_no, event_no, participate_state) VALUES (?, ?, ?)";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userNo);
+            pstmt.setInt(2, eventNo);
+            pstmt.setInt(3, 1);
+            pstmt.executeUpdate();
+            close(conn); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // 이벤트 대기 취소
+    public void cancelWaiting(int eventNo, int userNo) {
         String sql = "DELETE FROM participates WHERE event_no = ? AND user_no = ?";
         
         try (Connection conn = getConnection();

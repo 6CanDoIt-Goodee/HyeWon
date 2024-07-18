@@ -28,29 +28,30 @@ public class MemEventDetailServlet extends HttpServlet {
  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int eventNo = Integer.parseInt(request.getParameter("eventNo"));
-
         Connection conn = getConnection();
-
         MemEventDao memEventDao = new MemEventDao();
         Event event = memEventDao.selectEventByNo(eventNo, conn);
-
         
         // 세션에서 사용자 정보 가져오기
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
   
         boolean isRegistered = false;
+        int participateState = -1;
         if (user != null) {
             int userNo = user.getUser_no();
             isRegistered = memEventDao.checkRegistration(eventNo, userNo, conn);
+            participateState = memEventDao.getParticipateState(userNo, eventNo, conn);
         }
  
         System.out.println("사용자 번호: " + (user != null ? user.getUser_no() : "로그인되지 않음"));
         System.out.println("이벤트 번호: " + eventNo);
         System.out.println("참여 여부: " + isRegistered);
+        System.out.println("참여 상태: " + participateState);
  
         request.setAttribute("event", event);
-        request.setAttribute("isRegistered", isRegistered); 
+        request.setAttribute("isRegistered", isRegistered);
+        request.setAttribute("participateState", participateState);
         
         RequestDispatcher dispatcher = request.getRequestDispatcher("/views/member/event/MemeventDetail.jsp");
         dispatcher.forward(request, response);

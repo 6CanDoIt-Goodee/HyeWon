@@ -17,40 +17,42 @@ import com.book.member.event.vo.MemEvent;
 
 @WebServlet("/user/event/par")
 public class MemEventParServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public MemEventParServlet() {
-        super();
-    }
+	public MemEventParServlet() {
+		super();
+	}
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doPost(request, response);
+	}
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // 사용자가 전송한 데이터 가져오기
-    	 int eventNo = Integer.parseInt(request.getParameter("event_no"));
-         int userNo = Integer.parseInt(request.getParameter("user_no"));
-         String action = request.getParameter("action");
- 
-        // 참여 이벤트 객체 생성
-        MemEvent memevent = new MemEvent();
-        memevent.setEventNo(eventNo);
-        memevent.setUserNo(userNo);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 사용자가 전송한 데이터 가져오기
+		int eventNo = Integer.parseInt(request.getParameter("event_no"));
+		int userNo = Integer.parseInt(request.getParameter("user_no"));
+		String action = request.getParameter("action");
 
-        boolean result = false;
+		// 참여 이벤트 객체 생성
+		MemEvent memevent = new MemEvent();
+		memevent.setEventNo(eventNo);
+		memevent.setUserNo(userNo);
 
-        MemEventDao memEventDao = new MemEventDao();
-        if ("등록".equals(action)) {
-        	memEventDao.registerForEvent(eventNo, userNo);
-        } else if ("참여 취소".equals(action)) {
-        	memEventDao.cancelRegistration(eventNo, userNo);
-		} /*
-			 * else if ("대기".equals(action)) { // 대기 처리 로직을 추가합니다.
-			 * memEventDao.waitForEvent(eventNo, userNo); }
-			 */
- 
-    }
+		boolean result = false;
+
+		MemEventDao memEventDao = new MemEventDao();
+		if ("등록".equals(action)) {
+			memEventDao.registerForEvent(eventNo, userNo);
+		} else if ("참여 취소".equals(action)) {
+			memEventDao.cancelRegistration(eventNo, userNo);
+		}else if ("대기".equals(action)) {
+            memEventDao.waitForEvent(eventNo, userNo);
+        } else if ("대기 취소".equals(action)) {
+            memEventDao.cancelWaiting(eventNo, userNo);
+        }
+
+		
+	}
 }
