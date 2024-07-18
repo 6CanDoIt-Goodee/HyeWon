@@ -1,20 +1,59 @@
+<%@page import="com.book.common.Paging"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map"%>
 <%@ page import="java.time.LocalDate"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
+<%@ page import="com.book.admin.event.vo.Event" %> 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>참여자 목록</title>
+<title>참여자 목록</title> 
 </head>
 <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
     crossorigin="anonymous">
+<style>
+	/* paging */
+	@charset "UTF-8";
+	
+	.center {
+	    text-align: center;
+	}
+	
+	.pagination {
+	    display: inline-block;
+	}
+	
+	.pagination a {
+	    color: black;
+	    float: left;
+	    padding: 8px 16px;
+	    text-decoration: none;
+	    transition: background-color .3s;
+	    margin: 0 4px;
+	}
+	
+	.pagination a.active {
+	    background-color: #A5A5A5;
+	    color: white;
+	    border: 1px solid #A5A5A5;
+	}
+	
+	.pagination a:hover:not(.active) {
+	    background-color: #ddd;
+	}
+	
+	#list_empty {
+		text-align: center;
+		padding : 10%;
+	}
+</style>
+
 <body>
 <%@ include file="../../include/header.jsp" %>
     <li><a href="/event/list" class="header_list">목록</a></li> 
@@ -111,5 +150,36 @@
 	        </div>
 	      </main>
     </section>
+   <div class="center">
+    	<div class="pagination">
+        	<% 
+	            Paging paging = (Paging) request.getAttribute("paging");
+	            if (paging != null) {
+	                int nowPage = paging.getNowPage();
+	                int totalPage = paging.getTotalPage();
+	                int pageBlock = 5;  
+	                int startPage = ((nowPage - 1) / pageBlock) * pageBlock + 1;
+	                int endPage = startPage + pageBlock - 1;
+	                if (endPage > totalPage) {
+	                    endPage = totalPage;
+	                }
+	        %> 
+                <% if (startPage > 1) { %> 
+                    <a href="/event/parList?nowPage=<%= startPage - 1 %>">&laquo;</a> 
+                <% } %>
+                <% for (int i = startPage; i <= endPage; i++) { %>
+	                 <a href="/event/parList?nowPage=<%= i %>"
+		                <%=paging.getNowPage() == i ? "class='active'" : ""%>> <%=i%>
+		            </a> 
+                <% } %>
+                <% if (endPage < totalPage) { %> 
+                	<a href="/event/parList?nowPage=<%= endPage + 1 %>">&raquo;</a> 
+                <% } %>
+            </ul>
+        </nav>
+        <% } %>
+    </div>
+</div>
+
 </body>
 </html>

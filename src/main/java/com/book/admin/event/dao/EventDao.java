@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.book.admin.event.vo.Event;
+import com.book.common.Paging;
 
 public class EventDao {
 
@@ -290,7 +291,7 @@ public class EventDao {
         return result;
     }
 
-    
+    // 이벤트 삭세
     public int deleteEvent(int eventNo, Connection conn) {
         PreparedStatement pstmt = null;
         int result = 0;
@@ -309,29 +310,34 @@ public class EventDao {
         return result;
     }
 
-    // 전체 이벤트 참여자
-    public List<Map<String, String>> getEventParticipations(Connection conn) {
+    // 전체 이벤트 참여자 목록 가져오기 (진행 중이거나 진행 예정인 이벤트)
+    public List<Map<String, String>> getEventParticipations(Paging paging, Connection conn) {
         List<Map<String, String>> events = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            String sql = "SELECT e.event_no AS 번호, u.user_name AS 이름, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
+            String sql = "SELECT e.event_no, u.user_name, e.event_title, e.event_progress, p.participate_date, p.participate_state " +
                          "FROM events e " +
                          "JOIN participates p ON e.event_no = p.event_no " +
-                         "JOIN users u ON u.user_no = p.user_no";
-
-            pstmt = conn.prepareStatement(sql); 
+                         "JOIN users u ON u.user_no = p.user_no " +
+                         "WHERE DATE(e.event_progress) >= CURDATE() " +
+                         "ORDER BY event_start " +
+                         "LIMIT ?, ?";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, paging.getLimitPageNo());
+            pstmt.setInt(2, paging.getNumPerPage());
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Map<String, String> event = new HashMap<>(); 
-                event.put("event_no", rs.getString("번호"));
-                event.put("event_title", rs.getString("제목"));
-                event.put("event_progress", rs.getString("참여등록일"));
-                event.put("participate_date", rs.getString("진행일"));
-                event.put("user_name", rs.getString("이름"));
-                event.put("participate_state", rs.getString("상태"));
+                event.put("event_no", rs.getString("event_no"));
+                event.put("user_name", rs.getString("user_name"));
+                event.put("event_title", rs.getString("event_title"));
+                event.put("event_progress", rs.getString("event_progress"));
+                event.put("participate_date", rs.getString("participate_date"));
+                event.put("participate_state", rs.getString("participate_state"));
                 events.add(event);
             }
 
@@ -343,32 +349,70 @@ public class EventDao {
         }
         return events;
     }
+
+    public int selectParEventCount(String eventTitle, Connection conn) {
+        int result = 0;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            String sql = "SELECT COUNT(*) AS cnt FROM events e " +
+                         "JOIN participates p ON e.event_no = p.event_no " +
+                         "WHERE DATE(e.event_progress) >= CURDATE()";
+            if (eventTitle != null && !eventTitle.isEmpty()) {
+                sql += " AND e.event_title LIKE ?";
+            }
+            
+            pstmt = conn.prepareStatement(sql);
+            if (eventTitle != null && !eventTitle.isEmpty()) {
+                pstmt.setString(1, "%" + eventTitle + "%");
+            }
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                result = rs.getInt("cnt");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+        }
+        return result;
+    }
     
     // 제목별 참여자 목록
-    public List<Map<String, String>> getEventParticipationsByTitle(String eventTitle, Connection conn) {
+    public List<Map<String, String>> getEventParticipationsByTitle(String eventTitle, Paging paging, Connection conn) {
         List<Map<String, String>> events = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        try {
-            String sql = "SELECT e.event_no AS 번호, u.user_name AS 이름, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
+        try { 
+            int offset = (paging.getNowPage() - 1) * paging.getNumPerPage();
+
+            String sql = "SELECT e.event_no, u.user_name, e.event_title, e.event_progress, p.participate_date, p.participate_state " +
                          "FROM events e " +
                          "JOIN participates p ON e.event_no = p.event_no " +
                          "JOIN users u ON u.user_no = p.user_no " +
-                         "WHERE e.event_title = ?";
+                         "WHERE DATE(e.event_progress) >= CURDATE() AND e.event_title LIKE ? " +
+                         "ORDER BY event_start " +
+                         "LIMIT ? OFFSET ?";
 
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, eventTitle);
+            pstmt.setString(1, "%" + eventTitle + "%");
+            pstmt.setInt(2, paging.getNumPerPage());
+            pstmt.setInt(3, offset);
+
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Map<String, String> event = new HashMap<>();
-                event.put("event_no", rs.getString("번호"));
-                event.put("event_title", rs.getString("제목"));
-                event.put("event_progress", rs.getString("진행일"));
-                event.put("participate_date", rs.getString("참여등록일"));
-                event.put("user_name", rs.getString("이름"));
-                event.put("participate_state", rs.getString("상태"));  
+                event.put("event_no", rs.getString("event_no"));
+                event.put("user_name", rs.getString("user_name"));
+                event.put("event_title", rs.getString("event_title"));
+                event.put("event_progress", rs.getString("event_progress"));
+                event.put("participate_date", rs.getString("participate_date"));
+                event.put("participate_state", rs.getString("participate_state"));
                 events.add(event);
             }
 
@@ -380,7 +424,7 @@ public class EventDao {
         }
         return events;
     }
-    
+ 
     // 진행중, 진행 예정 제목
     public List<Map<String, String>> getEventTitles(Connection conn) {
         List<Map<String, String>> eventTitles = new ArrayList<>();
@@ -392,7 +436,8 @@ public class EventDao {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String sql = "SELECT DISTINCT e.event_title, e.event_progress " +
                          "FROM events e " +
-                         "WHERE DATE(e.event_progress) >= ?";
+                         "WHERE DATE(e.event_progress) >= ?" +
+                         "ORDER BY event_start";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, currentDate.format(formatter));
@@ -414,13 +459,14 @@ public class EventDao {
         return eventTitles;
     }
 
+    // 이벤트 정보
     public Map<String, String> getEventInfoByTitle(String eventTitle, Connection conn) {
         Map<String, String> eventInfo = new HashMap<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            String sql = "SELECT event_title, event_start, event_quota, event_end, event_registered, event_waiting " + // 빈 칸 추가
+            String sql = "SELECT event_title, event_start, event_quota, event_end, event_registered, event_waiting " +  
                          "FROM events " +
                          "WHERE event_title = ?";
             pstmt = conn.prepareStatement(sql);
@@ -444,8 +490,6 @@ public class EventDao {
         }
         return eventInfo;
     }
-
  
-            
     
 }

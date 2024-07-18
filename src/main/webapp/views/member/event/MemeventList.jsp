@@ -162,7 +162,7 @@
 	                            <tr style="cursor: pointer;" onclick="location.href='/user/event/detail?eventNo=<%=row.get("event_no")%>&eventType=<%=row.get("event_form")%>'">
 	                                <td><%=startNo + i%></td>
 	                                <td><%=row.get("event_title")%></td>
-	                                <td><%=row.get("event_regdate")%></td>
+	                                <td><%=row.get("event_regdate").substring(0, 10)%></td>
 	                                <td>
 	                                    <%
 	                                        int evForm = Integer.parseInt(row.get("event_form"));

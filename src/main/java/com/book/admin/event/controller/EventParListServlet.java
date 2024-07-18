@@ -14,10 +14,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.book.admin.event.dao.EventDao;
-import com.book.member.user.vo.User;
+import com.book.common.Paging;
  
 @WebServlet("/event/parList")
 public class EventParListServlet extends HttpServlet {
@@ -28,31 +27,40 @@ public class EventParListServlet extends HttpServlet {
     }
  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {   
-		Connection conn = getConnection();
-		
-		// 진행 중, 진행 예정이벤트 제목
+	 	Connection conn = getConnection();
+        
+        Paging paging = new Paging();
+        
+        String eventTitle = request.getParameter("eventTitle");
+        String nowPageStr = request.getParameter("nowPage");
+        int nowPage = nowPageStr == null ? 1 : Integer.parseInt(nowPageStr);
+
+        paging.setNowPage(nowPage);
+        paging.setNumPerPage(10); // 페이징당 목록 수 
+        
         List<Map<String, String>> eventTitles = new EventDao().getEventTitles(conn);
         List<Map<String, String>> userEvents;
-  
-        String eventTitle = request.getParameter("eventTitle");
-
+        
+        int totalData = new EventDao().selectParEventCount(eventTitle, conn);  
+        paging.setTotalData(totalData);
+        
         if (eventTitle != null && !eventTitle.isEmpty()) {
-            userEvents = new EventDao().getEventParticipationsByTitle(eventTitle, conn);
+            userEvents = new EventDao().getEventParticipationsByTitle(eventTitle, paging, conn);
         } else {
-            userEvents = new EventDao().getEventParticipations(conn);
+            userEvents = new EventDao().getEventParticipations(paging, conn);
         }
 
-        // 선택된 이벤트 정보 설정
         Map<String, String> selectedEvent = null;
         if (eventTitle != null && !eventTitle.isEmpty()) {
             selectedEvent = new EventDao().getEventInfoByTitle(eventTitle, conn);
         }
-        
+
         close(conn);
 
         request.setAttribute("eventTitles", eventTitles);
         request.setAttribute("userEvents", userEvents);
         request.setAttribute("selectedEvent", selectedEvent); 
+        request.setAttribute("paging", paging);
 
         RequestDispatcher rd = request.getRequestDispatcher("/views/admin/event/eventParList.jsp");
         rd.forward(request, response);

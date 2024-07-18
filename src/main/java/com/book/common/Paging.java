@@ -87,7 +87,7 @@ public class Paging {
 	}
 
 	// 전체 게시글 개수 set 해줬을때 동작할 메소드
-	private void calcPaging() {
+	public void calcPaging() {
 		// 2번 페이지(11~20) -> 10,10
 		// 3번 페이지(21~30) -> 20,10
 		limitPageNo = (nowPage-1)*numPerPage;

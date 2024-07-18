@@ -342,7 +342,7 @@ public class MemEventDao {
             String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
                          "FROM events e " +
                          "JOIN participates p ON e.event_no = p.event_no " +
-                         "WHERE p.user_no = ?";
+                         "WHERE p.user_no = ? ORDER BY p.participate_date DESC";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, userNo);
