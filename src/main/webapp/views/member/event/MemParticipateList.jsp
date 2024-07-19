@@ -3,6 +3,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map"%>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.Date"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,6 +65,15 @@
 	                <h3>사용자 이벤트 참여 내역</h3>
 	            </div>
 	            <br>
+	            <form action="/user/event/parList" method="get">
+	                <div class="input-group mb-3">
+	                    <input type="text" class="form-control" name="searchKeyword" placeholder="이벤트 제목 검색">
+	                    <button class="btn btn-outline-secondary" type="submit">검색</button>
+	                </div>
+	            </form>
+	            <form action="/user/event/parList" method="get" class="mb-3"> 
+                    <button class="btn btn-outline-secondary" type="submit">전체</button>
+                </form>
 	            <div class="event_list">
 	                <% if (request.getAttribute("userEvents") == null || ((List<Map<String, String>>) request.getAttribute("userEvents")).isEmpty()) { %>
 	                    <p id="list_empty">참여한 이벤트가 없습니다.</p>
@@ -84,14 +95,20 @@
                                     User user_par = (User) session.getAttribute("user");
                                     int userNo = user_par.getUser_no();
                                     int startRow = (paging.getNowPage() - 1) * paging.getNumPerPage(); // 시작 로우 계산
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date currentDate = new Date();
                                     for (int i = 0; i < list.size(); i++) {
                                         Map<String, String> row = list.get(i);
+                                        String eventEndDateStr = row.get("event_end");
+                                        Date eventEndDate = sdf.parse(eventEndDateStr);
+                                        long diffInMillies = Math.abs(currentDate.getTime() - eventEndDate.getTime());
+                                        long diffInDays = diffInMillies / (24 * 60 * 60 * 1000);
                                 %>
-                                <tr style="cursor: pointer;" onclick="location.href='/user/event/detail?eventNo=<%=row.get("event_no")%>'">
+                                <tr style="cursor: pointer;" onclick="checkEventEndDate('<%=row.get("event_no")%>', <%=diffInDays%>)">
                                     <td><%=startRow + i + 1%></td>
 	                                <td><%=row.get("event_title")%></td>
 	                                <td><%=row.get("event_progress").substring(0, 10)%></td>
-	                                <td><%=row.get("participate_date")%></td>
+	                                <td><%=row.get("participate_date").substring(0, 10)%></td>
 	                                <td>
 	                                    <%
 	                                        String participateState = row.get("participate_state");
@@ -99,9 +116,7 @@
 	                                            out.print("등록");
 	                                        } else if ("1".equals(participateState)) {
 	                                            out.print("대기");
-	                                        } else {
-	                                            out.print("알 수 없음");
-	                                        }
+	                                        }  
 	                                    %>
 	                                </td>
 	                            </tr>
@@ -147,5 +162,14 @@
 	<%
 	    }
 	%>
+	<script>
+	    function checkEventEndDate(eventNo, diffInDays) {
+	        if (diffInDays > 30) {
+	            alert("종료된 이벤트입니다.");
+	        } else {
+	            location.href = '/user/event/detail?eventNo=' + eventNo;
+	        }
+	    }
+	</script>
 </body>
 </html>

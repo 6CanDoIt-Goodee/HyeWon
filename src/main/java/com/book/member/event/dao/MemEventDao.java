@@ -469,20 +469,30 @@ public class MemEventDao {
     }
     
     // 참여 이벤트 수 
-    public int selectParEventCount(int userNo, Connection conn) {
-        int result = 0;
+    public int selectParEventCount(int userNo, String searchKeyword, Connection conn) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        
-        try {
-            String sql = "SELECT COUNT(*) AS cnt FROM participates WHERE user_no = ?";
-            
-            pstmt = conn.prepareStatement(sql); 
-            pstmt.setInt(1, userNo);
-            rs = pstmt.executeQuery();
+        int result = 0;
 
+        // SQL 쿼리 문자열을 수정하여 events 테이블과 조인합니다.
+        String sql = "SELECT COUNT(*) " +
+                     "FROM participates p " +
+                     "JOIN events e ON p.event_no = e.event_no " +
+                     "WHERE p.user_no = ?";
+
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            sql += " AND e.event_title LIKE ?";
+        }
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userNo);
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                pstmt.setString(2, "%" + searchKeyword + "%");
+            }
+            rs = pstmt.executeQuery();
             if (rs.next()) {
-                result = rs.getInt("cnt");
+                result = rs.getInt(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -495,31 +505,47 @@ public class MemEventDao {
 
 
     // 참여 이벤트 조회 
-    public List<Map<String, String>> getUserEventParticipations(int userNo, int startRow, int numPerPage, Connection conn) {
+    public List<Map<String, String>> getUserEventParticipations(int userNo, int startRow, int numPerPage, String searchKeyword, Connection conn) {
         List<Map<String, String>> events = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_progress AS 진행일, p.participate_date AS 참여등록일, p.participate_state AS 상태 " +
-                         "FROM events e " +
-                         "JOIN participates p ON e.event_no = p.event_no " +
-                         "WHERE p.user_no = ? ORDER BY p.participate_date DESC " +
-                         "LIMIT ?, ?";
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_progress AS 진행일, ")
+               .append("p.participate_date AS 참여등록일, p.participate_state AS 상태, e.event_end AS 종료일 ")
+               .append("FROM events e ")
+               .append("JOIN participates p ON e.event_no = p.event_no ")
+               .append("WHERE p.user_no = ? ");
 
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, userNo);
-            pstmt.setInt(2, startRow);
-            pstmt.setInt(3, numPerPage);
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                sql.append("AND e.event_title LIKE ? ");
+            }
+
+            sql.append("ORDER BY p.participate_date DESC ")
+               .append("LIMIT ?, ?");
+
+            pstmt = conn.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            pstmt.setInt(paramIndex++, userNo);
+
+            if (searchKeyword != null && !searchKeyword.isEmpty()) {
+                pstmt.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
+
+            pstmt.setInt(paramIndex++, startRow);
+            pstmt.setInt(paramIndex++, numPerPage);
+
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Map<String, String> event = new HashMap<>();
                 event.put("event_no", rs.getString("번호"));
                 event.put("event_title", rs.getString("제목"));
-                event.put("event_progress", rs.getString("참여등록일"));
-                event.put("participate_date", rs.getString("진행일"));
+                event.put("participate_date", rs.getString("참여등록일"));
+                event.put("event_progress", rs.getString("진행일"));
                 event.put("participate_state", rs.getString("상태"));
+                event.put("event_end", rs.getString("종료일"));
                 events.add(event);
             }
 
@@ -531,6 +557,7 @@ public class MemEventDao {
         }
         return events;
     }
+
  
 
 }

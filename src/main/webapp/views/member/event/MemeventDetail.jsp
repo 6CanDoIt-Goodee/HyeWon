@@ -1,16 +1,15 @@
-<%@page import="java.io.Console"%>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="com.book.admin.event.vo.Event" %>
-<%@ page import = "com.book.member.user.vo.User" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.Date"%>
+<%@ page import="com.book.admin.event.vo.Event"%>
+<%@ page import="com.book.member.user.vo.User"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>이벤트 상세 정보</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'LINESeedKR-Bd';
@@ -179,7 +178,7 @@
 					    System.out.println("정원: " + event.getEvent_quota());
 					%>
 					<% if (user_event != null && event.getEv_form() == 2) { %>
-					    <button id="event_btn" type="button" style="display:none;"
+					    <button id="event_btn" type="button"
 					        <% if (isRegistered) { %>
 					            style="display:block;"
 					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
@@ -220,44 +219,38 @@
         }
     %>
 
-
-	<script> 
+	<script>
 	    // 참여 등록 및 취소 함수
 	    function toggleRegistration(eventNo, userNo, participateState) {
-	    var button = $("#event_btn");
-	    var action = button.text().trim();
-	
-	    $.ajax({
-	        type: "POST",
-	        url: "<%=request.getContextPath()%>/user/event/par",
-	        data: { 
-	            "event_no": eventNo, 
-	            "user_no": userNo, 
-	            "action": action,
-	            "participate_state": participateState 
-	        },
-	        success: function(response) {
-	            // 버튼 상태 업데이트
-	            if (action === "등록") {
-	                button.text("참여 취소");
-	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
-	            } else if (action === "참여 취소") {
-	                button.text("등록");
-	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
-	            } else if (action === "대기") {
-	                button.text("대기 취소");
-	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
-	            } else if (action === "대기 취소") {
-	                button.text("대기");
-	                button.attr("onclick", `toggleRegistration(${eventNo}, ${userNo}, ${participateState})`);
-	            }
-	            alert(action + " 성공");
-	            location.reload(); // 페이지 새로고침
-	        }
-	    });
-	}
+	        var button = $("#event_btn");
+	        var action = button.text().trim();
 
-    
+	        $.ajax({
+	            type: "POST",
+	            url: "<%=request.getContextPath()%>/user/event/par",
+	            data: { 
+	                "event_no": eventNo, 
+	                "user_no": userNo, 
+	                "action": action,
+	                "participate_state": participateState 
+	            },
+	            success: function(response) {
+	                // 버튼 상태 업데이트
+	                if (action === "등록") {
+	                    button.text("참여 취소");
+	                } else if (action === "참여 취소") {
+	                    button.text("등록");
+	                } else if (action === "대기") {
+	                    button.text("대기 취소");
+	                } else if (action === "대기 취소") {
+	                    button.text("대기");
+	                }
+	                alert(action + " 성공");
+	                location.reload(); // 페이지 새로고침
+	            }
+	        });
+	    }
+
 	    $(document).ready(function() {
 	        // 콘솔 출력
 	        console.log("등록 인원:", <%= registeredCount %>);
@@ -268,17 +261,21 @@
 	        var eventEnd = new Date("<%= event.getEv_end() %>");
 	        var currentDate = new Date();
 
-	        // 이벤트 유형이 2인 경우 모집 기간에만 버튼 표시
-	        if (<%= event.getEv_form() %> === 2) {
-	            if (currentDate >= eventStart && currentDate <= eventEnd) {
-	                $("#event_btn").show();
-	            } else {
-	                $("#event_btn").hide();
+	        // 버튼 상태 확인
+	        var eventButton = $("#event_btn");
+	        if (currentDate < eventStart) {
+	            eventButton.text("모집 예정");
+	            eventButton.prop("disabled", true);
+	        } else if (currentDate > eventEnd) {
+	            eventButton.text("모집 종료");
+	            eventButton.prop("disabled", true);
+	        } else if (currentDate >= eventStart && currentDate <= eventEnd) {
+	            if (<%= event.getEv_form() %> === 2) {
+	                eventButton.show();
 	            }
 	        }
 	    });
 	</script> 
-
 
 </body>
 </html>

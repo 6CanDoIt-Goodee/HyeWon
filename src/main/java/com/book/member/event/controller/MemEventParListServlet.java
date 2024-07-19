@@ -30,46 +30,48 @@ public class MemEventParListServlet extends HttpServlet {
     }
  
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        int userNo = 0;
-        User user = null;
-        
-        if (session != null) {
-            user = (User) session.getAttribute("user");
-            if (user != null) {
-                userNo = user.getUser_no();
-            }
-        }
+    	 HttpSession session = request.getSession(false);
+         int userNo = 0;
+         User user = null;
 
-        int nowPage = 1;
-        if (request.getParameter("nowPage") != null) {
-            nowPage = Integer.parseInt(request.getParameter("nowPage"));
-        }
- 
-        int numPerPage = 10;
+         if (session != null) {
+             user = (User) session.getAttribute("user");
+             if (user != null) {
+                 userNo = user.getUser_no();
+             }
+         }
 
-        Connection conn = getConnection();
-        MemEventDao memEventDao = new MemEventDao();
+         int nowPage = 1;
+         if (request.getParameter("nowPage") != null) {
+             nowPage = Integer.parseInt(request.getParameter("nowPage"));
+         }
 
-        int totalData = memEventDao.selectParEventCount(userNo, conn);
- 
-        int startRow = (nowPage - 1) * numPerPage;
-        int endRow = startRow + numPerPage - 1;
-        List<Map<String, String>> userEvents = memEventDao.getUserEventParticipations(userNo, startRow, numPerPage, conn);
+         String searchKeyword = request.getParameter("searchKeyword");
 
-        close(conn);
+         int numPerPage = 10;
 
-        Event paging = new Event();
-        paging.setNowPage(nowPage);
-        paging.setNumPerPage(numPerPage);
-        paging.setTotalData(totalData);
+         Connection conn = getConnection();
+         MemEventDao memEventDao = new MemEventDao();
 
-        request.setAttribute("paging", paging);
-        request.setAttribute("userEvents", userEvents);
+         int totalData = memEventDao.selectParEventCount(userNo, searchKeyword, conn);
 
-        RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/MemParticipateList.jsp");
-        rd.forward(request, response);
-    }
+         int startRow = (nowPage - 1) * numPerPage;
+         int endRow = startRow + numPerPage - 1;
+         List<Map<String, String>> userEvents = memEventDao.getUserEventParticipations(userNo, startRow, numPerPage, searchKeyword, conn);
+
+         close(conn);
+
+         Event paging = new Event();
+         paging.setNowPage(nowPage);
+         paging.setNumPerPage(numPerPage);
+         paging.setTotalData(totalData);
+
+         request.setAttribute("paging", paging);
+         request.setAttribute("userEvents", userEvents);
+
+         RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/MemParticipateList.jsp");
+         rd.forward(request, response);
+     }
 
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 

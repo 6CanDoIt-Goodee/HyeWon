@@ -128,7 +128,7 @@ body {
             long daysRemaining = (eventEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
             String dday = (daysRemaining >= 0) ? "D-" + daysRemaining : "모집 기간 종료";
             String eventNo = row.get("event_no");
-            String eventEndDateStr = format.format(eventEnd); // 종료일 문자열 
+            String eventEndDateStr = format.format(eventEnd); 
     %>
 		<div class="event-item">
 			<a href="javascript:void(0);"

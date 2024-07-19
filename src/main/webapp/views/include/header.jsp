@@ -182,7 +182,7 @@
 				<li>
 					<a href="/board/create"class="header_list" id="header_join">게시글 등록</a>
 				</li>
-				<li><a href="/user/event/list" class="header_list">이벤트</a></li>
+				<li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li>
 				<li><a href="/user/event/parList" class="header_list">참여 목록</a></li>
 				<li>
 					<%=u.getUser_id()+"님 환영합니다." %>
