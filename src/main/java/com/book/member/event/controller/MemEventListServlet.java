@@ -29,36 +29,44 @@ public class MemEventListServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException { 
-        String evTitle = request.getParameter("evTitle");
- 
-        String categoryParam = request.getParameter("listCategory");
-        int categoryNo = 0;
-        if (categoryParam != null && !categoryParam.isEmpty()) {
-            categoryNo = Integer.parseInt(categoryParam);
-        }
+    	 String evTitle = request.getParameter("evTitle");
+         String categoryParam = request.getParameter("listCategory");
+         String status = request.getParameter("status");
+         if (status == null || status.isEmpty()) {
+             status = "ongoing"; // 기본값 설정
+         }
+  
+         Event option = new Event();
+         option.setEv_title(evTitle); 
 
-        Event option = new Event();
-        option.setEv_title(evTitle);
-        option.setEvent_category(categoryNo);
+         Connection conn = getConnection();
 
-        Connection conn = getConnection();
+         String nowPage = request.getParameter("nowPage");
+         if (nowPage != null) {
+             option.setNowPage(Integer.parseInt(nowPage));
+         } 
+         
+         MemEventDao dao = new MemEventDao();
+         List<Map<String, String>> list = null;
 
-        String nowPage = request.getParameter("nowPage");
-        if (nowPage != null) {
-            option.setNowPage(Integer.parseInt(nowPage));
-        }
+         if ("ongoing".equals(status)) {
+        	 option.setTotalData(new MemEventDao().selectOngoingCount(option, conn));
+             list = dao.selectOngoingEvents(option, conn);
+         } else if ("ended".equals(status)) {
+        	 option.setTotalData(new MemEventDao().selectEndedCount(option, conn));
+             list = dao.selectEndedEvents(option, conn);
+         } else {
+             list = dao.selectEventList(option, conn);
+         }
 
-        option.setTotalData(new MemEventDao().selectEventCount(option, conn));
+         close(conn);
 
-        List<Map<String, String>> list = new MemEventDao().selectEventList(option, conn);
+         request.setAttribute("paging", option);
+         request.setAttribute("resultList", list);
+         request.setAttribute("status", status); 
 
-        close(conn);
-
-        request.setAttribute("paging", option);
-        request.setAttribute("resultList", list);
-
-        RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/MemeventList.jsp");
-        rd.forward(request, response);
+         RequestDispatcher rd = request.getRequestDispatcher("/views/member/event/MemeventList.jsp");
+         rd.forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

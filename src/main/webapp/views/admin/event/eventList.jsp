@@ -224,15 +224,20 @@
 	%>
 	<div class="center">
 	    <div class="pagination">
-	        <%
-	            String listCategory = request.getParameter("listCategory");
-	            if (listCategory == null) {
-	                listCategory = "";
-	            }
-	
-	            if (paging.isPrev()) {
-	        %>
-	            <a href="/event/list?listCategory=<%=listCategory%>&nowPage=<%=(paging.getPageBarStart() - 1)%>">
+	         <%
+                    String listCategory = request.getParameter("listCategory");
+                    if (listCategory == null) {
+                        listCategory = "";
+                    }
+ 
+                    int totalPages = paging.getTotalPage();
+                     
+                    int pageStart = Math.max(1, paging.getNowPage() - 4);
+                    int pageEnd = Math.min(totalPages, paging.getNowPage() + 4);
+ 
+                    if (paging.isPrev()) {
+             %>
+	            <a href="/event/list?nowPage=<%=(paging.getPageBarStart() - 1)%>">
 	                &laquo;
 	            </a>
 	        <%
@@ -240,7 +245,7 @@
 	
 	            for (int i = paging.getPageBarStart(); i <= paging.getPageBarEnd(); i++) {
 	        %>
-	            <a href="/event/list?listCategory=<%=listCategory%>&nowPage=<%=i%>"
+	            <a href="/event/list?nowPage=<%=i%>"
 	                <%=paging.getNowPage() == i ? "class='active'" : ""%>> <%=i%>
 	            </a>
 	        <%
@@ -248,7 +253,7 @@
 	
 	            if (paging.isNext()) {
 	        %>
-	            <a href="/event/list?listCategory=<%=listCategory%>&nowPage=<%=(paging.getPageBarEnd() + 1)%>">&raquo;</a>
+	            <a href="/event/list?nowPage=<%=(paging.getPageBarEnd() + 1)%>">&raquo;</a>
 	        <%
 	            }
 	        %>

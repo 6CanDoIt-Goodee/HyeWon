@@ -169,7 +169,7 @@
              <ul>
              	 <li><a href="/event/parList" class="header_list">참여자 목록</a></li>
                  <li><a href="#" class="header_list">도서 목록</a></li>
-                 <li><a href="/user/event/list" class="header_list">이벤트</a></li>
+                 <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li>
                  <li><a href="/user/login" class="header_list" id="header_join">로그인</a></li>
                  <li><a href="/user/create" class="header_list" id="header_join">회원가입</a></li> 
              </ul>
