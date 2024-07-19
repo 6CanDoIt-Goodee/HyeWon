@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map"%>
@@ -132,7 +133,28 @@
 	                    <option value="4" <%= (request.getParameter("listCategory") != null && request.getParameter("listCategory").equals("4")) ? "selected" : "" %>>독서 마라톤</option>
 	                    <option value="5" <%= (request.getParameter("listCategory") != null && request.getParameter("listCategory").equals("5")) ? "selected" : "" %>>챌린지</option>
 	                    <option value="6" <%= (request.getParameter("listCategory") != null && request.getParameter("listCategory").equals("6")) ? "selected" : "" %>>작가 초청</option>
-	                </select> 
+	                </select>  
+	                
+	                <label for="year">년도:</label>
+				    <select name="year" id="year">
+				    	<option value="">전체</option>
+				        <% 
+				            int currentYear = LocalDate.now().getYear();
+				            for (int year = currentYear; year >= 2023; year--) { 
+				        %>
+				            <option value="<%= year %>" <%= (request.getParameter("year") != null && request.getParameter("year").equals(String.valueOf(year))) ? "selected" : "" %>><%= year %></option>
+				        <% } %>
+				    </select>
+				    <label for="month">월:</label>
+				    <select name="month" id="month">
+				        <option value="">전체</option>
+				        <% 
+				            for (int month = 1; month <= 12; month++) { 
+				        %>
+				            <option value="<%= String.format("%02d", month) %>" <%= (request.getParameter("month") != null && request.getParameter("month").equals(String.format("%02d", month))) ? "selected" : "" %>><%= month %></option>
+				        <% } %>
+				    </select>
+    
 	                <input type="text" id="evTitle" name="evTitle">
 	                <button type="submit">검색</button>
 	            </form>
@@ -148,6 +170,8 @@
 	                                <th scope="col">등록일</th>
 	                                <th scope="col">유형</th>
 	                                <th scope="col">카테고리명</th>
+	                                <th scope="col">참여 현황</th>
+	                                <th scope="col">대기 인원</th>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
@@ -175,6 +199,16 @@
 	                                    %>
 	                                </td>
 	                                <td><%=row.get("event_category_name")%></td>
+	                                <% 
+									    if (evForm == 1) {
+									%>
+									    <td>-</td>  
+									    <td>-</td>  
+									<% } else { %>
+									    <td><%=row.get("event_registered")%> / <%=row.get("event_quota")%></td>
+									    <td><%=row.get("event_waiting")%></td>
+									<% } %>
+
 	                            </tr>
 	                            <% } %>
 	                        </tbody>

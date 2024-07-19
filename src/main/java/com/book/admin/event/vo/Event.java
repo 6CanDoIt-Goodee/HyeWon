@@ -18,6 +18,8 @@ public class Event extends Paging{
 	private String ev_category_name;
 	private int event_registered;
 	private int event_waiting;
+	private int find_year;
+	private int find_month;
 	
 	public Event() {
 		super(); 
@@ -44,6 +46,29 @@ public class Event extends Paging{
 		this.event_waiting = event_waiting;
 	} 
 	
+	public Event(int event_no, int event_category, String ev_title, String ev_content, int ev_form, String ev_regdate,
+			String ev_progress, String ev_start, String ev_end, String ori_image, String new_image, int event_quota,
+			String ev_category_name, int event_registered, int event_waiting, int find_year, int find_month) {
+		super();
+		this.event_no = event_no;
+		this.event_category = event_category;
+		this.ev_title = ev_title;
+		this.ev_content = ev_content;
+		this.ev_form = ev_form;
+		this.ev_regdate = ev_regdate;
+		this.ev_progress = ev_progress;
+		this.ev_start = ev_start;
+		this.ev_end = ev_end;
+		this.ori_image = ori_image;
+		this.new_image = new_image;
+		this.event_quota = event_quota;
+		this.ev_category_name = ev_category_name;
+		this.event_registered = event_registered;
+		this.event_waiting = event_waiting;
+		this.find_year = find_year;
+		this.find_month = find_month;
+	}
+
 	public Event(int event_no, int event_category, String ev_title, String ev_content, int ev_form,
         String ev_progress, String ev_start, String ev_end, String ori_image, String new_image, int event_quota) {
 		super();
@@ -180,6 +205,22 @@ public class Event extends Paging{
 
 	public void setEvent_waiting(int event_waiting) {
 		this.event_waiting = event_waiting;
+	}
+
+	public int getFind_year() {
+		return find_year;
+	}
+
+	public int getFind_month() {
+		return find_month;
+	}
+
+	public void setFind_year(int find_year) {
+		this.find_year = find_year;
+	}
+
+	public void setFind_month(int find_month) {
+		this.find_month = find_month;
 	}
 
 	@Override

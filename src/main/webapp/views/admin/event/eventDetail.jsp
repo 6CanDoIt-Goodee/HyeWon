@@ -1,6 +1,9 @@
+<%@page import="com.book.common.Paging"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="com.book.admin.event.vo.Event" %>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -92,6 +95,41 @@
         #content_area {
         	font-size : 1vw;
         }
+
+		/* paging */
+		@charset "UTF-8";
+		
+		.center {
+		    text-align: center;
+		}
+		
+		.pagination {
+		    display: inline-block;
+		}
+		
+		.pagination a {
+		    color: black;
+		    float: left;
+		    padding: 8px 16px;
+		    text-decoration: none;
+		    transition: background-color .3s;
+		    margin: 0 4px;
+		}
+		
+		.pagination a.active {
+		    background-color: #A5A5A5;
+		    color: white;
+		    border: 1px solid #A5A5A5;
+		}
+		
+		.pagination a:hover:not(.active) {
+		    background-color: #ddd;
+		}
+		
+		#list_empty {
+			text-align: center;
+			padding : 10%;
+		} 
     </style>
 </head>
 <body>
@@ -151,6 +189,85 @@
             </div>
         </main>
     </section>
+    <% if (event.getEv_form() == 2) { %>
+   	 	<main id="parUser_box"> 
+	        <div class="partic_list">
+	            <% 
+		        List<Map<String, String>> parUserList = (List<Map<String, String>>) request.getAttribute("parUserList");
+		        if (parUserList == null || parUserList.isEmpty()) { 
+		    %>
+		        <p id="list_empty">참여자가 존재하지 않습니다.</p>
+	            <% } else { %>
+	                <table class="table table-striped table-bordered">
+	                    <thead class="table-light">
+	                        <tr>
+	                            <th scope="col">번호</th>
+	                            <th scope="col">이름</th>  
+	                            <th scope="col">참여 등록일</th>
+	                            <th scope="col">등록 상태</th>
+	                        </tr>
+	                    </thead>
+	                    <tbody> 
+	                        <% 
+	                            List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("parUserList"); 
+	                            int pageSize = 3; // 한 페이지에 표시할 항목 수
+	                            int nowPage = request.getParameter("nowPage") == null ? 1 : Integer.parseInt(request.getParameter("nowPage"));
+	                            int startNo = (nowPage - 1) * pageSize + 1;
+	                            for (int i = 0; i < list.size(); i++) {
+	                                Map<String, String> row = list.get(i);
+	                        %>
+	                        <tr>
+	                            <td><%= startNo + i %></td>
+	                            <td><%= row.get("user_name") %></td> 
+	                            <td><%= row.get("participate_date") %></td>
+	                            <td>
+	                                <%
+	                                    String participateState = row.get("participate_state");
+	                                    if ("0".equals(participateState)) {
+	                                        out.print("등록");
+	                                    } else if ("1".equals(participateState)) {
+	                                        out.print("대기");
+	                                    }  
+	                                %>
+	                            </td>
+	                        </tr>
+	                        <% } %>
+	                    </tbody>
+	                </table>
+	            <% } %>
+	        </div>  
+	        <div class="center">
+	            <div class="pagination">
+	                <% 
+	                    Paging paging = (Paging) request.getAttribute("paging");
+	                    if (paging != null) {
+	                        int nowPage = paging.getNowPage();
+	                        int totalPage = paging.getTotalPage();
+	                        int pageBlock = 5;  
+	                        int startPage = ((nowPage - 1) / pageBlock) * pageBlock + 1;
+	                        int endPage = startPage + pageBlock - 1;
+	                        if (endPage > totalPage) {
+	                            endPage = totalPage;
+	                        }
+	                %> 
+	                <% if (startPage > 1) { %> 
+	                    <a href="/event/detail?eventNo=<%= request.getParameter("eventNo") %>&eventType=<%= request.getParameter("eventType") %>&nowPage=<%= startPage - 1 %>">&laquo;</a> 
+	                <% } %>
+	                <% for (int i = startPage; i <= endPage; i++) { %>
+	                    <a href="/event/detail?eventNo=<%= request.getParameter("eventNo") %>&eventType=<%= request.getParameter("eventType") %>&nowPage=<%= i %>"
+	                       <%= paging.getNowPage() == i ? "class='active'" : "" %>> <%= i %>
+	                    </a> 
+	                <% } %>
+	                <% if (endPage < totalPage) { %> 
+	                    <a href="/event/detail?eventNo=<%= request.getParameter("eventNo") %>&eventType=<%= request.getParameter("eventType") %>&nowPage=<%= endPage + 1 %>">&raquo;</a> 
+	                <% } %>
+	                <% } %>
+	            </div> 
+	        </div> 
+		</main>
+	    <% } %>
+
+    
  
     <%!
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");

@@ -17,7 +17,7 @@ import com.book.common.Paging;
 
 public class EventDao {
 
-    // 이벤트 생성 메서드
+    // 이벤트 생성  
     public int createEvent(Event event, Connection conn) {
         PreparedStatement pstmt = null;
         int result = 0;
@@ -49,17 +49,17 @@ public class EventDao {
         return result;
     }
 
-    // 이벤트 목록 조회 메서드
+    // 이벤트 목록 조회  
     public List<Map<String, String>> selectEventList(Event option, Connection conn) {
         List<Map<String, String>> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
-            String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_regdate AS 등록일, e.event_form AS 유형, c.event_category_name AS 카테고리명 " +
+            String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_regdate AS 등록일, e.event_form AS 유형, c.event_category_name AS 카테고리명, e.event_quota AS 정원, e.event_registered AS 참여인원, e.event_waiting AS 대기인원 " +
                     "FROM events e " +
                     "JOIN event_category c ON e.event_category_no = c.event_category_no " +
-                    "WHERE 1=1"; // 시작 조건
+                    "WHERE 1=1";  
 
             // 카테고리 번호에 따라 필터링 조건 추가
             if (option.getEvent_category() != 0) {
@@ -70,12 +70,22 @@ public class EventDao {
                 }
             }
 
+            // 년도 필터링 조건 추가
+            if (option.getFind_year() > 0) {
+                sql += " AND YEAR(e.event_regdate) = ?";
+            }
+
+            // 월 필터링 조건 추가
+            if (option.getFind_month() > 0) {
+                sql += " AND MONTH(e.event_regdate) = ?";
+            }
+            
             // 이벤트 제목 필터링 조건 추가
             if (option.getEv_title() != null && !option.getEv_title().isEmpty()) {
                 sql += " AND e.event_title LIKE CONCAT('%', ?, '%')";
             }
 
-            sql += " ORDER BY e.event_regdate ASC LIMIT ?, ?";
+            sql += " ORDER BY e.event_regdate DESC LIMIT ?, ?";
 
             pstmt = conn.prepareStatement(sql);
             int paramIndex = 1;
@@ -85,15 +95,25 @@ public class EventDao {
                 if (option.getEvent_category() == 1 || option.getEvent_category() == 2) {
                     pstmt.setInt(paramIndex++, option.getEvent_category()); // event_form 값 설정
                 } else {
-                    pstmt.setInt(paramIndex++, option.getEvent_category()); // event_category_no 값 설정
+                    pstmt.setInt(paramIndex++, option.getEvent_category()-2); // event_category_no 값 설정
                 }
             }
 
+            // 년도 설정
+            if (option.getFind_year() > 0) {
+                pstmt.setInt(paramIndex++, option.getFind_year());
+            }
+
+            // 월 설정
+            if (option.getFind_month() > 0) {
+                pstmt.setInt(paramIndex++, option.getFind_month());
+            }
+            
             // 이벤트 제목 설정
             if (option.getEv_title() != null && !option.getEv_title().isEmpty()) {
                 pstmt.setString(paramIndex++, option.getEv_title());
-            }
-
+            } 
+            
             // LIMIT OFFSET 설정 (페이징 처리)
             pstmt.setInt(paramIndex++, option.getLimitPageNo());
             pstmt.setInt(paramIndex, option.getNumPerPage());
@@ -107,6 +127,9 @@ public class EventDao {
                 row.put("event_regdate", rs.getString("등록일"));
                 row.put("event_form", rs.getString("유형"));
                 row.put("event_category_name", rs.getString("카테고리명"));
+                row.put("event_quota", rs.getString("정원"));
+                row.put("event_registered", rs.getString("참여인원"));
+                row.put("event_waiting", rs.getString("대기인원"));
                 list.add(row);
             }
 
@@ -119,7 +142,7 @@ public class EventDao {
         return list;
     }
  
-    // 선택된 카테고리에 따라 전체 이벤트 개수 조회 메서드
+    // 선택된 카테고리에 따른 전체 이벤트 개수 조회 
     public int selectEventCount(Event option, Connection conn) {
         int result = 0;
         PreparedStatement pstmt = null;
@@ -174,7 +197,7 @@ public class EventDao {
         return result;
     }
 
-    // 이벤트 번호로 조회 메서드
+    // 이벤트 번호로 조회  
     public Event selectEventByNo(int eventNo, Connection conn) {
         Event event = null;
         PreparedStatement pstmt = null;
@@ -218,6 +241,7 @@ public class EventDao {
         return event;
     }
 
+    // 이벤트 수정
     public int updateEvent(Event event, Connection conn) {
         PreparedStatement pstmt = null;
         int result = 0;
@@ -396,7 +420,7 @@ public class EventDao {
                          "JOIN participates p ON e.event_no = p.event_no " +
                          "JOIN users u ON u.user_no = p.user_no " +
                          "WHERE DATE(e.event_progress) >= CURDATE() AND e.event_title LIKE ? " +
-                         "ORDER BY event_start " +
+                         "ORDER BY p.participate_date " +
                          "LIMIT ? OFFSET ?";
 
             pstmt = conn.prepareStatement(sql);
@@ -492,5 +516,6 @@ public class EventDao {
         return eventInfo;
     }
  
+    // 상세보기 - 참여자 목록
     
 }

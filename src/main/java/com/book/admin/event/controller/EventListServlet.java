@@ -28,18 +28,24 @@ public class EventListServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException { 
-        String evTitle = request.getParameter("evTitle");
- 
-        String categoryParam = request.getParameter("listCategory");
-        int categoryNo = 0;
-        if (categoryParam != null && !categoryParam.isEmpty()) {
-            categoryNo = Integer.parseInt(categoryParam);
-        }
+    	String evTitle = request.getParameter("evTitle");
+
+        String categoryParam = request.getParameter("listCategory"); 
+        int categoryNo = (categoryParam != null && !categoryParam.isEmpty()) ? Integer.parseInt(categoryParam) : 0;
+
+        String yearParam = request.getParameter("year");
+        int year = (yearParam != null && !yearParam.isEmpty()) ? Integer.parseInt(yearParam) : 0;
+
+        String monthParam = request.getParameter("month");
+        int month = (monthParam != null && !monthParam.isEmpty()) ? Integer.parseInt(monthParam) : 0;
 
         Event option = new Event();
         option.setEv_title(evTitle);
         option.setEvent_category(categoryNo);
-
+        option.setFind_year(year);
+        option.setFind_month(month);
+        
+        
         Connection conn = getConnection();
 
         String nowPage = request.getParameter("nowPage");

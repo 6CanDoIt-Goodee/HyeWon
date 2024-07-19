@@ -143,22 +143,28 @@
                 </div>
 
                 <% if (event.getEv_form() == 2) { %>
-                <div class="event_details">
-                    <div class="item">
-                        <strong>모집 인원:</strong> <%= event.getEvent_quota() %> 명
-                    </div>
-                    <div class="item">
-                        <strong>모집 기간:</strong> <%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %>
-                    </div>
-                    <div class="item">
-                        <strong>이벤트 진행일:</strong> <%= event.getEv_progress() %>
-                    </div>
-                </div>
+	                <div class="event_details">
+	                    <div class="item">
+	                        <strong>모집 인원:</strong> <%= event.getEvent_quota() %> 명
+	                    </div>
+	                    <div class="item">
+	                        <strong>모집 기간:</strong> <%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %>
+	                    </div>
+	                    <div class="item">
+	                        <strong>이벤트 진행일:</strong> <%= event.getEv_progress() %>
+	                    </div>
+	                </div>
                 <% } else { %>
                 <div class="event_details">
                     <%-- 기본 이벤트일 경우 등록일만 출력 --%>
-                    <div class="item">
-                        <%= event.getEv_start() %>  ~ <%= event.getEv_end() %>
+                    <div class="item"><strong>기간:</strong>
+                    	<% 
+					        if (event.getEv_start().equals(event.getEv_end())) {
+					            out.print(event.getEv_start());
+					        } else {
+					            out.print(event.getEv_start() + " ~ " + event.getEv_end());
+					        }
+					    %> 
                     </div>
                 </div>
                 <% } %>
@@ -173,7 +179,7 @@
 					    System.out.println("정원: " + event.getEvent_quota());
 					%>
 					<% if (user_event != null && event.getEv_form() == 2) { %>
-					    <button id="event_btn" type="button" style="display:block;"
+					    <button id="event_btn" type="button" style="display:none;"
 					        <% if (isRegistered) { %>
 					            style="display:block;"
 					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
@@ -256,6 +262,20 @@
 	        // 콘솔 출력
 	        console.log("등록 인원:", <%= registeredCount %>);
 	        console.log("정원:", <%= event.getEvent_quota() %>); 
+
+	        // 모집 기간 확인
+	        var eventStart = new Date("<%= event.getEv_start() %>");
+	        var eventEnd = new Date("<%= event.getEv_end() %>");
+	        var currentDate = new Date();
+
+	        // 이벤트 유형이 2인 경우 모집 기간에만 버튼 표시
+	        if (<%= event.getEv_form() %> === 2) {
+	            if (currentDate >= eventStart && currentDate <= eventEnd) {
+	                $("#event_btn").show();
+	            } else {
+	                $("#event_btn").hide();
+	            }
+	        }
 	    });
 	</script> 
 

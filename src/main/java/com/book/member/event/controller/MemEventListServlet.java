@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.book.admin.event.dao.EventDao;
 import com.book.admin.event.vo.Event;
+import com.book.member.event.dao.MemEventDao;
 
 @WebServlet("/user/event/list")
 public class MemEventListServlet extends HttpServlet {
@@ -47,9 +48,9 @@ public class MemEventListServlet extends HttpServlet {
             option.setNowPage(Integer.parseInt(nowPage));
         }
 
-        option.setTotalData(new EventDao().selectEventCount(option, conn));
+        option.setTotalData(new MemEventDao().selectEventCount(option, conn));
 
-        List<Map<String, String>> list = new EventDao().selectEventList(option, conn);
+        List<Map<String, String>> list = new MemEventDao().selectEventList(option, conn);
 
         close(conn);
 

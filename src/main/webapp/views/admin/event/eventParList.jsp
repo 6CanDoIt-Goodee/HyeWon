@@ -80,8 +80,8 @@
 	                                LocalDate eventDate = LocalDate.parse(event.get("event_progress").substring(0, 10), formatter);
 	                                if (eventDate.isAfter(currentDate) || eventDate.isEqual(currentDate)) {
 	                        %>
-	                        <option value="<%=event.get("event_title")%>"><%=event.get("event_title")%></option>
-	                        <% 
+	                        <option value="<%=event.get("event_title")%>" <%= event.get("event_title").equals(request.getAttribute("eventTitles")) ? "selected" : "" %>><%=event.get("event_title")%></option>
+	                        <%  
 	                                }
 	                            }
 	                        %>
@@ -123,7 +123,7 @@
 	                                for (int i = 0; i < list.size(); i++) {
 	                                    Map<String, String> row = list.get(i);
 	                            %>
-	                            <tr>
+	                            <tr style="cursor: pointer;" onclick="location.href='/event/detail?eventNo=<%=row.get("event_no")%>&eventType=<%=row.get("event_form")%>'">
 	                                <td><%=i + 1%></td>
 	                                <td><%=row.get("user_name")%></td>
 	                                <td><%=row.get("event_title")%></td>
@@ -136,9 +136,7 @@
 	                                            out.print("등록");
 	                                        } else if ("1".equals(participateState)) {
 	                                            out.print("대기");
-	                                        } else {
-	                                            out.print("알 수 없음");
-	                                        }
+	                                        } 
 	                                    %>
 	                                </td>
 	                            </tr>

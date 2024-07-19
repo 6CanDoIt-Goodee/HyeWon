@@ -23,10 +23,10 @@ public class MemEventDao {
         ResultSet rs = null;
 
         try {
-            String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_regdate AS 등록일, e.event_form AS 유형, c.event_category_name AS 카테고리명 " +
+            String sql = "SELECT e.event_no AS 번호, e.event_title AS 제목, e.event_regdate AS 등록일, e.event_form AS 유형, c.event_category_name AS 카테고리명, e.event_start AS 시작일, e.event_end AS 종료일, e.event_new_image AS 새이미지 " +
                     "FROM events e " +
                     "JOIN event_category c ON e.event_category_no = c.event_category_no " +
-                    "WHERE 1=1"; // 시작 조건
+                    "WHERE 1=1" ; // 시작 조건
 
             // 카테고리 번호에 따라 필터링 조건 추가
             if (option.getEvent_category() != 0) {
@@ -52,7 +52,7 @@ public class MemEventDao {
                 if (option.getEvent_category() == 1 || option.getEvent_category() == 2) {
                     pstmt.setInt(paramIndex++, option.getEvent_category()); // event_form 값 설정
                 } else {
-                    pstmt.setInt(paramIndex++, option.getEvent_category()); // event_category_no 값 설정
+                    pstmt.setInt(paramIndex++, option.getEvent_category()-2); // event_category_no 값 설정
                 }
             }
 
@@ -74,6 +74,9 @@ public class MemEventDao {
                 row.put("event_regdate", rs.getString("등록일"));
                 row.put("event_form", rs.getString("유형"));
                 row.put("event_category_name", rs.getString("카테고리명"));
+                row.put("event_start", rs.getString("시작일"));
+                row.put("event_end", rs.getString("종료일"));
+                row.put("event_new_image", rs.getString("새이미지"));
                 list.add(row);
             }
 

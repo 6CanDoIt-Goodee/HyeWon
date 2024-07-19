@@ -122,7 +122,7 @@
 	                <h3>이벤트 목록</h3>
 	            </div>
 	            <br>
-	            <form action="/event/list" method="get">
+	            <form action="/user/event/list" method="get">
 	                <label for="listCategory">카테고리:</label>
 	                <select name="listCategory" id="listCategory">
 	                    <option value="">전체</option>
@@ -144,8 +144,10 @@
 	                        <thead class="table-blight">
 	                            <tr>
 	                                <th scope="col">번호</th>
+	                                <th scope="col">이미지</th>
 	                                <th scope="col">제목</th>
 	                                <th scope="col">등록일</th>
+	                                <th scope="col">모집 기간</th>
 	                                <th scope="col">유형</th>
 	                                <th scope="col">카테고리명</th>
 	                            </tr>
@@ -161,8 +163,22 @@
 	                            %>
 	                            <tr style="cursor: pointer;" onclick="location.href='/user/event/detail?eventNo=<%=row.get("event_no")%>&eventType=<%=row.get("event_form")%>'">
 	                                <td><%=startNo + i%></td>
+	                                <td><img src="<%= request.getContextPath() %>/upload/event/<%=row.get("event_new_image")%>" alt="새 이미지" class="event-image"></td> 
 	                                <td><%=row.get("event_title")%></td>
 	                                <td><%=row.get("event_regdate").substring(0, 10)%></td>
+	                                <td>
+									    <%
+									        String eventStart = row.get("event_start").substring(0, 10);
+									        String eventEnd = row.get("event_end").substring(0, 10);
+									        
+									        if (eventStart.equals(eventEnd)) {
+									            out.print(eventStart);
+									        } else {
+									            out.print(eventStart + " ~ " + eventEnd);
+									        }
+									    %>
+									</td>
+
 	                                <td>
 	                                    <%
 	                                        int evForm = Integer.parseInt(row.get("event_form"));
