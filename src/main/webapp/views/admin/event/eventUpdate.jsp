@@ -83,8 +83,7 @@
     <%
         Event event = (Event) request.getAttribute("event");
         String formAction = "/event/update";
-        int eventType = event.getEv_form(); 
-        System.out.println("수정 2 : " + event);
+        int eventType = event.getEv_form();  
     %>
     
     
@@ -129,7 +128,7 @@
                 </div>
             </div>  
             <button id="eventCancelBtn" type="button" onclick="eventCancelBtn();">취소</button>
-            <button id="eventUpdateBtn" type="submit">수정</button>
+            <button id="eventUpdateBtn" type="button" onclick="eventUpdateBtn1();">수정</button>
         </div>
         <% } else if (eventType == 2) { %>
         <div id="form-section2" class="form-section active">
@@ -174,7 +173,7 @@
                 </div>
             </div>
             <button id="eventCancelBtn" type="button" onclick="eventCancelBtn();">취소</button>
-            <button id="eventUpdateBtn" type="submit">수정</button>
+            <button id="eventUpdateBtn" type="button" onclick="eventUpdateBtn2();">수정</button>
         </div>
         <% } %>
     </form>
@@ -197,14 +196,12 @@
 	        const progressDate2 = document.getElementById('progressDate2');
 	
 	        const today = new Date();
-	        today.setDate(today.getDate() + 1); // 현재 날짜에 1일을 더하여 내일로 설정
-	
-	        // 내일 날짜를 `datetime-local` 형식에 맞게 변환
+	        today.setDate(today.getDate() + 1); 
+
 	        const tomorrow = today.toISOString().slice(0, 16);
 	
-	        startDate2.min = tomorrow; // startDate2의 기본 min 속성을 내일 날짜로 설정
-	
-	        // 기본 설정 후, endDate2와 progressDate2의 초기 상태 설정
+	        startDate2.min = tomorrow; 
+
 	        endDate2.disabled = true;
 	        progressDate2.disabled = true;
 	    }
@@ -213,13 +210,11 @@
 	        const startDate2 = document.getElementById('startDate2');
 	        const endDate2 = document.getElementById('endDate2');
 	        const progressDate2 = document.getElementById('progressDate2');
-	
-	        // startDate2의 선택된 값으로 min 속성 업데이트
+
 	        if (startDate2.value) {
 	            endDate2.disabled = false;
 	            endDate2.min = startDate2.value;
 	
-	            // endDate2의 값이 변경될 때 progressDate2의 min 속성 업데이트
 	            endDate2.addEventListener('change', function() {
 	                if (endDate2.value) {
 	                    const endDate = new Date(endDate2.value);
@@ -239,7 +234,7 @@
 	            progressDate2.value = '';
 	        }
 	
-	        validateForm(); // 변경된 값으로 폼 유효성 검사 수행
+	        validateForm(); 
 	    }
 	
 	    function validateForm() {
@@ -273,30 +268,7 @@
 	                alert('이벤트 진행일은 모집 종료일 이후여야 합니다.');
 	            }
 	        }
-	
-	        const insertBtn = document.getElementById('eventInsertBtn');
-	        if (isValid) {
-	            insertBtn.disabled = false;
-	            insertBtn.classList.add('enabled');
-	        } else {
-	            insertBtn.disabled = true;
-	            insertBtn.classList.remove('enabled');
-	        }
-	
-	        const insertBtn2 = document.getElementById('eventInsertBtn2');
-	        if (isValid) {
-	            insertBtn2.disabled = false;
-	            insertBtn2.classList.add('enabled');
-	        } else {
-	            insertBtn2.disabled = true;
-	            insertBtn2.classList.remove('enabled');
-	        }
-	    }
-	
-	    function eventInsertBtn() {
-	        const form = document.update_event_form;
-	        form.submit();
-	    }
+	    } 
 	    
 		function previewImage(event, section) {
 	        const inputFile = event.target;
@@ -341,9 +313,54 @@
 	        const inputFile = document.getElementById('eventimage' + section);
 	        inputFile.value = '';
 	        
-	        validateForm(); // 이미지 파일을 삭제한 후 폼을 유효성 검사 
+	        validateForm(); 
 	    }
 	    
+	    function eventUpdateBtn1() {
+			let form = document.update_event_form;	
+			if(!form.eventTitle1.value){
+				alert("제목을 입력하세요.");
+				form.eventTitle1.focus();
+			} else if(!form.startDate1.value){
+				alert("모집 기간을 입력하세요.");
+				form.startDate1.focus();
+			} else if(!form.endDate1.value){
+				alert("모집 기간을 입력하세요.");
+				form.endDate1.focus();
+			} else if(!form.eventContent1.value){
+				alert("내용을 입력하세요.");
+				form.eventContent1.focus();
+			} else if (!form.eventimage1.value) {
+				alert('이미지 파일을 선택하세요.');
+				form.eventimage1.focus();	
+			}  
+		}
+	    
+	    function eventUpdateBtn2() {
+			let form = document.update_event_form;	
+			if(!form.eventTitle2.value){
+				alert("제목을 입력하세요.");
+				form.eventTitle2.focus();
+			} else if(!form.startDate2.value){
+				alert("모집 기간을 입력하세요.");
+				form.startDate2.focus();
+			} else if(!form.endDate2.value){
+				alert("모집 기간을 입력하세요.");
+				form.endDate2.focus();
+			} else if(!form.progressDate2.value){
+				alert("진행일을 입력하세요.");
+				form.progressDate2.focus();
+			} else if(!form.eventQuota2.value){
+				alert("모집 정원을 입력하세요.");
+				form.eventQuota2.focus();
+			} else if(!form.eventContent2.value){
+				alert("내용을 입력하세요.");
+				form.eventContent2.focus();
+			} else if (!form.eventimage2.value) {
+				alert('이미지 파일을 선택하세요.');
+				form.eventimage2.focus();	
+			}  
+		}
 	    
 </script>
 </body>
