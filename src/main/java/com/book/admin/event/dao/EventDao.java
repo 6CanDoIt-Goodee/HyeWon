@@ -1,10 +1,12 @@
 package com.book.admin.event.dao;
 
 import static com.book.common.sql.JDBCTemplate.close;
+import static com.book.common.sql.JDBCTemplate.getConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,7 +18,32 @@ import com.book.admin.event.vo.Event;
 import com.book.common.Paging;
 
 public class EventDao {
+	
+	// 메인페이지 이벤트
+	public static List<Event> getAllEvents(Connection conn) {
+	    List<Event> events = new ArrayList<>();
+	    String sql = "SELECT * FROM events WHERE event_end >= CURRENT_DATE";
 
+	    try (PreparedStatement stmt = conn.prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            Event event = new Event();
+	            event.setEvent_no(rs.getInt("event_no"));
+	            event.setEv_title(rs.getString("ev_title"));
+	            event.setEv_start(rs.getString("ev_start").toString());  
+	            event.setEv_end(rs.getString("ev_end").toString());   
+	            event.setEv_category_name(rs.getString("event_form"));
+	            event.setNew_image(rs.getString("new_image")); 
+	            events.add(event);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();  
+	    }
+	    return events;
+	}
+
+	
     // 이벤트 생성  
     public int createEvent(Event event, Connection conn) {
         PreparedStatement pstmt = null;
@@ -516,6 +543,46 @@ public class EventDao {
         return eventInfo;
     }
  
-    // 상세보기 - 참여자 목록
+    // 알림
+    public void setNotification(int eventNo, int userNo) {
+        String sql = "INSERT INTO event_notifications (user_no, event_no) VALUES (?, ?)";
+        try (
+    		Connection conn = getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userNo);
+            pstmt.setInt(2, eventNo);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
+    public void cancelNotification(int eventNo, int userNo) {
+        String sql = "DELETE FROM event_notifications WHERE user_no = ? AND event_no = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userNo);
+            pstmt.setInt(2, eventNo);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkNotification(int eventNo, int userNo) {
+        String sql = "SELECT COUNT(*) FROM event_notifications WHERE user_no = ? AND event_no = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userNo);
+            pstmt.setInt(2, eventNo);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

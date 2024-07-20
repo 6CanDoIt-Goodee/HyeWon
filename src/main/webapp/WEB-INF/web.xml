@@ -10,14 +10,42 @@
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
   <servlet-mapping>
-   <servlet-name>default</servlet-name>
-   <url-pattern>*.js</url-pattern>
-   <url-pattern>*.css</url-pattern>
-   <url-pattern>*.jpg</url-pattern>
-   <url-pattern>*.gif</url-pattern>
-   <url-pattern>*.png</url-pattern>
-   <url-pattern>*.ico</url-pattern>
-   <url-pattern>*.swf</url-pattern>
-   <url-pattern>*.mp3</url-pattern>
-</servlet-mapping>
+	<servlet-name>default</servlet-name>
+	<url-pattern>*.js</url-pattern>
+	<url-pattern>*.css</url-pattern>
+	<url-pattern>*.jpg</url-pattern>
+	<url-pattern>*.gif</url-pattern>
+	<url-pattern>*.png</url-pattern>
+	<url-pattern>*.ico</url-pattern>
+	<url-pattern>*.swf</url-pattern>
+	<url-pattern>*.mp3</url-pattern>
+   </servlet-mapping>
+   
+	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+	<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+		<init-param>
+			<param-name>config-file</param-name>
+			<param-value>/com/book/common/quartz.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>shutdown-on-unload</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>wait-on-shutdown</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>start-scheduler-on-load</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>APIScheduler</servlet-name>
+		<servlet-class>com.book.common.APIScheduler</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
 </web-app>
+

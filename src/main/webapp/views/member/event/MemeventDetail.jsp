@@ -140,7 +140,7 @@
                     <h2 id="event_title"><%= event.getEv_title() %></h2>
                     <p id="event_regdate">등록일 : <%= event.getEv_regdate().substring(0, 10) %></p>
                 </div>
-
+				 
                 <% if (event.getEv_form() == 2) { %>
 	                <div class="event_details">
 	                    <div class="item">
@@ -172,11 +172,14 @@
 				    <pre id="content_area"><%= event.getEv_content() %></pre>
 				    <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
 				
-					<!-- 참여 버튼 -->
-				    <%
-					    System.out.println("등록 인원: " + registeredCount);
-					    System.out.println("정원: " + event.getEvent_quota());
-					%>
+					<!-- 알림 버튼 -->
+					<% if (user_event != null) { %>
+					    <button id="notification_btn" type="button" onclick="toggleNotification(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>);">
+					        알림 설정
+					    </button>
+					<% } %>
+				
+					<!-- 참여 버튼 --> 
 					<% if (user_event != null && event.getEv_form() == 2) { %>
 					    <button id="event_btn" type="button"
 					        <% if (isRegistered) { %>
@@ -220,7 +223,7 @@
     %>
 
 	<script>
-	    // 참여 등록 및 취소 함수
+	    // 참여 등록 및 취소 
 	    function toggleRegistration(eventNo, userNo, participateState) {
 	        var button = $("#event_btn");
 	        var action = button.text().trim();
@@ -251,12 +254,8 @@
 	        });
 	    }
 
-	    $(document).ready(function() {
-	        // 콘솔 출력
-	        console.log("등록 인원:", <%= registeredCount %>);
-	        console.log("정원:", <%= event.getEvent_quota() %>); 
-
-	        // 모집 기간 확인
+	    $(document).ready(function() { 
+ 			// 모집 기간 확인
 	        var eventStart = new Date("<%= event.getEv_start() %>");
 	        var eventEnd = new Date("<%= event.getEv_end() %>");
 	        var currentDate = new Date();
@@ -274,7 +273,52 @@
 	                eventButton.show();
 	            }
 	        }
+	        
+	        /* 알림 버튼 */
+	        if (<%= user_event != null %>) {
+	            $.ajax({
+	                type: "GET",
+	                url: "<%=request.getContextPath()%>/user/event/checkNotification",
+	                data: { 
+	                    "event_no": <%= event.getEvent_no() %>, 
+	                    "user_no": <%= user_event.getUser_no() %>
+	                },
+	                success: function(response) {
+	                    if (response === "true") {
+	                        $("#notification_btn").text("알림 취소");
+	                    } else {
+	                        $("#notification_btn").text("알림 설정");
+	                    }
+	                } 
+	            });
+	        }
 	    });
+	    
+	    
+	    /* 알림 버튼 */
+	    function toggleNotification(eventNo, userNo) {
+	        var button = $("#notification_btn");
+	        var action = button.text().trim() === "알림 설정" ? "set" : "cancel";
+
+	        $.ajax({
+	            type: "POST",
+	            url: "<%=request.getContextPath()%>/user/event/notification",
+	            data: { 
+	                "event_no": eventNo, 
+	                "user_no": userNo, 
+	                "action": action
+	            },
+	            success: function(response) {
+	                if (action === "set") {
+	                    button.text("알림 취소");
+	                    alert("알림이 설정되었습니다.");
+	                } else {
+	                    button.text("알림 설정");
+	                    alert("알림이 취소되었습니다.");
+	                }
+	            } 
+	        });
+	    }
 	</script> 
 
 </body>

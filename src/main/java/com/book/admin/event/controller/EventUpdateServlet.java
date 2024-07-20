@@ -42,8 +42,7 @@ public class EventUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
-        // 파라미터에서 값을 가져옵니다.
+ 
         int eventNo = Integer.parseInt(request.getParameter("eventNo"));
         String title = request.getParameter("eventTitle");
         String content = request.getParameter("eventContent");
