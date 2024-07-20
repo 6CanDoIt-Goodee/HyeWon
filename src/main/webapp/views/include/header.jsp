@@ -5,8 +5,7 @@
 <%@ page import = "com.book.member.user.vo.User" %>
 <%@ page import="com.book.member.event.dao.MemEventDao" %>
 <%@ page import="java.util.List"%>
-<%@ page import="com.book.admin.event.vo.Event"%>
-<link href='../../resources/css/include/font.css' rel="stylesheet" type="text/css"> 
+<%@ page import="com.book.admin.event.vo.Event"%> 
 <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
@@ -121,7 +120,7 @@
 	    color: rgb(224, 195, 163);
 	}
 	
-	#header_join:hover {
+	#header_join:hover, #header_login:hover {
 	    background-color: rgb(224, 195, 163);
 	    color: rgb(254, 254, 254);
 	}
@@ -159,7 +158,7 @@
 	    background-color: rgb(255, 255, 255);
 	}
 	
-	#header_join, #header_logout {
+	#header_join, #header_logout, #header_login {
 	    color: rgb(0, 0, 0);
 	    border: 1px solid #858585;
 	    border-radius: 10px;
@@ -223,74 +222,81 @@
 </style>
 <section class="main_header">
      <header>
-     	<%
-			User user=(User)session.getAttribute("user");
-			if(user == null){
-		%>
-         <div class="header_div">
-             <a href="/" class="main_logo">Knock Book</a>
-             <ul>
-             	 <li><a href="/event/parList" class="header_list">참여자 목록</a></li>
-                 <li><a href="#" class="header_list">도서 목록</a></li>
-                 <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li>
-                 <li><a href="/user/login" class="header_list" id="header_join">로그인</a></li>
-                 <li><a href="/user/create" class="header_list" id="header_join">회원가입</a></li> 
-             </ul>
-         </div>
-         <% }else{ %>
-         <div class="header_div">
-         	<a href="/" class="main_logo">Knock Book</a>
-         	<%User u= (User)session.getAttribute("user");%>
-			<ul>
-				<li>
-					<a href="/board/create"class="header_list" id="header_join">게시글 등록</a>
-				</li>
-				<li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li>
-				<li><a href="/user/event/parList" class="header_list">참여 목록</a></li>
-				<li>
-					<%=u.getUser_id()+"님 환영합니다." %>
-				</li>
-				<li>
-					<a href="/user/logout"class="header_list" id="header_logout">로그아웃</a>
-				</li>
-				<li>
-				 	<a href="/user/checkpw"class="header_list" id="header_join">계정수정</a>
-				</li>
-				<li id="notification-icon" class="notification-icon">
-				    <i class="fas fa-bell"></i> 
-				</li>
-				
-				<!-- 알림 모달 -->
-				<div id="notification-modal" class="modal">
-				    <div class="modal-content">
-				        <span class="close">&times;</span>
-				        <h2>알림 설정된 이벤트</h2>
-				        <div id="notification-list">
-		                <%
-		                	MemEventDao notificationDAO = new MemEventDao();
-		                    List<Event> notifiedEvents = notificationDAO.getNotifiedEventsForUser(user.getUser_no());
-		                    if(notifiedEvents != null && !notifiedEvents.isEmpty()) {
-		                        for(Event event : notifiedEvents) {
-		               		 %>
-		                            <div class="notification-item">
-		                            	<a href="<%= request.getContextPath() %>/user/event/detail?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form()%>">
-		                                	<div><%= event.getEv_title() %></<div></a>
-		                            </div>
-		                	<% 
-		                        }
-		                    } else {
-		                	%>
-		                        <p>알림 설정된 이벤트가 없습니다.</p>
-		                	<%
-		                    } 
-			                %>
-			            </div>
-				    </div>
-				</div>
-			</ul>
-		</div>
-		<%} %>	
-     </header>
+	    <%
+	        User user = (User) session.getAttribute("user");
+	        if (user == null) {
+	    %>
+	        <div class="header_div">
+	            <a href="/" class="main_logo">Knock Book</a>
+	            <ul> 
+	                <li><a href="#" class="header_list">도서</a></li>
+	                <li><a href="#" class="header_list">독후감</a></li>
+	                <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li>
+	                <li><a href="/user/login" class="header_list" id="header_login">로그인</a></li>
+	                <li><a href="/user/create" class="header_list" id="header_join">회원가입</a></li>
+	            </ul>
+	        </div>
+	    <% 
+	        } else if (user.getUser_no() == 1) {
+	    %>
+	        <div class="header_div">
+	            <a href="/" class="main_logo">Knock Book</a>
+	            <ul>
+	            	<li><a href="#" class="header_list">도서</a></li> 
+	                <li><a href="/event/list" class="header_list">이벤트</a></li> 
+	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
+	                <li><a href="#" class="header_list" id="header_adminPage">관리자 페이지</a></li>
+	            </ul>
+	        </div>
+	    <% 
+	        } else { 
+	    %>
+	        <div class="header_div">
+	            <a href="/" class="main_logo">Knock Book</a>
+	            <ul>
+	                <li><a href="#" class="header_list">도서</a></li>
+	                <li><a href="#" class="header_list">독후감</a></li>
+	                <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li> 
+	                <li><%= user.getUser_nickname() + "님 환영합니다." %></li>
+	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
+	                <li><a href="/user/checkpw" class="header_list" id="header_join">계정수정</a></li>
+	                <li id="notification-icon" class="notification-icon"><i class="fas fa-bell"></i>
+	                </li>
+	
+	                <!-- 알림 모달 -->
+	                <div id="notification-modal" class="modal">
+	                    <div class="modal-content">
+	                        <span class="close">&times;</span>
+	                        <h2>알림 설정된 이벤트</h2>
+	                        <div id="notification-list">
+	                            <%
+	                                MemEventDao notificationDAO = new MemEventDao();
+	                                List<Event> notifiedEvents = notificationDAO.getNotifiedEventsForUser(user.getUser_no());
+	                                if (notifiedEvents != null && !notifiedEvents.isEmpty()) {
+	                                    for (Event event : notifiedEvents) {
+	                            %>
+	                                        <div class="notification-item">
+	                                            <a href="<%= request.getContextPath() %>/user/event/detail?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>">
+	                                                <div><%= event.getEv_title() %></div>
+	                                            </a>
+	                                        </div>
+	                            <% 
+	                                    }
+	                                } else {
+	                            %>
+	                                    <p>알림 설정된 이벤트가 없습니다.</p>
+	                            <% 
+	                                } 
+	                            %>
+	                        </div>
+	                    </div>
+	                </div>
+	            </ul>
+	        </div>
+	    <% 
+	        } 
+	    %>  
+	</header> 
 </section>  
 <script>
 	$(document).ready(function() {

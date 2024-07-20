@@ -20,7 +20,8 @@
         <main>
             <section class="event-section">
 	        <div class="event-container">
-	            <%
+	            <% 
+	                boolean isAdmin = user != null && user.getUser_no() == 1;
 	                List<Map<String, String>> events = EventDao.getAllEvents();
 	                if (events != null && !events.isEmpty()) {
 	                    for (int i = 0; i < events.size(); i++) {
@@ -31,10 +32,12 @@
 	                        String eventStart = event.get("event_start").substring(0, 10);
 	                        String eventEnd = event.get("event_end").substring(0, 10);
 	                        String eventForm = event.get("event_form"); 
+	                        String detailUrl = isAdmin ? request.getContextPath() + "/event/detail?eventNo=" + eventNo + "&eventType=" + eventForm
+		                            : request.getContextPath() + "/user/event/detail?eventNo=" + eventNo + "&eventType=" + eventForm;
 	            %> 
 	            
                     <div class="slide fade">
-                        <a href="<%= request.getContextPath() %>/user/event/detail?eventNo=<%= eventNo %>&eventType=<%= eventForm %>">
+                        <a href="<%= detailUrl %>">
                             <div class="slide-image-container"> 
                                 <img src="<%= imageUrl %>" alt="Image <%= i + 1 %>" class="slide-image">
                             </div>
