@@ -6,6 +6,39 @@
 <meta charset="UTF-8">
 <title>이벤트 수정</title>
 <style>  
+
+    body {
+        font-family: 'LINESeedKR-Bd';
+        background-color: rgb(247, 247, 247);
+    }
+
+    main {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem 1rem;
+        background-color: white;
+        box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+    }
+    
+  	select, input {
+        padding: 5px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 13px;
+        margin-right: 10px; 
+        background-color: #fff;
+        color: #333;
+        height: 30px;  
+        width : 140px; 
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #A5A5A5;
+        box-shadow: 0 0 5px rgba(165, 165, 165, 0.5);
+    }
+    
     .form-section {
         display: none;
     }
@@ -27,19 +60,29 @@
         margin-right: 3%; 
     }
     
-    #eventTitle1, #eventTitle2 {
-        width: 35%; 
-    }
+   #eventTitle1, #eventTitle2 {  
+        width : 60%;
+   }
+   
+   #startDate1, #endDate1 {
+        margin-bottom: 5px; 
+   }
+   
+   #startDate2, #endDate2 {
+        margin-bottom: 5px; 
+        width : 25%;
+   }
     
-    #startDate1, #endDate1, #startDate2, #endDate2 {
-        width: 200px; 
-    }
-    
-    #eventContent1, #eventContent2 {  
-        width: 35%;
-        height: 15em; 
-        resize: none; 
-    }
+   #eventContent1, #eventContent2 {  
+       width : 60%;
+       height: 15em; 
+       resize: none; 
+       border: 1px solid #ccc;
+	   border-radius: 4px;
+	   font-size: 13px;
+	   margin-right: 10px; 
+	   background-color: #fff;
+   } 
     
     .image-box {
         width: 10vw;
@@ -75,6 +118,45 @@
         font-size: 12px;
         font-weight: 600;
     }
+    
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+ 
+    #eventInsertBtn,
+    #eventInsertBtn2 {
+        background-color: #4CAF50;  
+        color: white;
+    }
+
+    #eventInsertBtn:disabled,
+    #eventInsertBtn2:disabled {
+        background-color: #BDBDBD; 
+        color: #9E9E9E; 
+        cursor: not-allowed;
+    }
+
+    #eventInsertBtn:hover,
+    #eventInsertBtn2:hover {
+        background-color: #45a049; 
+    }
+ 
+    #eventCancelBtn {
+        background-color: #f44336; 
+        color: white;
+        margin-left: 10px;
+    }
+
+    #eventCancelBtn:hover {
+        background-color: #e53935;  
+    }
+    
 </style>
 </head>
 <body>
@@ -86,8 +168,8 @@
         int eventType = event.getEv_form();  
     %>
     
-    
-    
+ <section>
+   <main> 
     <form name="update_event_form" action="/event/updateEnd?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="eventNo" value="<%= event.getEvent_no()%>">
         
@@ -104,7 +186,7 @@
             </div>
             <div class="form-group">
                 <label for="eventTitle1">제목</label>
-                <input type="text" id="eventTitle1" name="eventTitle1" value="<%= event.getEv_title() %>">
+                <input type="text" id="eventTitle1" name="eventTitle1" maxlength="40" value="<%= event.getEv_title() %>"> 
             </div>
             <div class="form-group">
                 <label for="startDate1">기간</label>
@@ -127,7 +209,7 @@
                     <input type="file" id="eventimage1" name="eventimage1" accept=".png,.jpg,.jpeg" onchange="previewImage(event, 1)">
                 </div>
             </div>  
-            <button id="eventCancelBtn" type="button" onclick="eventCancelBtn();">취소</button>
+            <button type="button" id="eventCancelBtn" onclick=history.back()>취소</button>
             <button id="eventUpdateBtn" type="button" onclick="eventUpdateBtn1();">수정</button>
         </div>
         <% } else if (eventType == 2) { %>
@@ -143,7 +225,7 @@
             </div>
             <div class="form-group">
                 <label for="eventTitle2">제목</label>
-                <input type="text" id="eventTitle2" name="eventTitle2" value="<%= event.getEv_title() %>"><br>
+                <input type="text" id="eventTitle2" name="eventTitle2" maxlength="40" value="<%= event.getEv_title() %>">  
             </div>
             <div class="form-group">
                 <label for="startDate2">모집 기간</label>
@@ -172,24 +254,23 @@
                     <input type="file" id="eventimage2" name="eventimage2" accept=".png,.jpg,.jpeg" onchange="previewImage(event, 2)">
                 </div>
             </div>
-            <button id="eventCancelBtn" type="button" onclick="eventCancelBtn();">취소</button>
+            <button type="button" id="eventCancelBtn" onclick=history.back()>취소</button>
             <button id="eventUpdateBtn" type="button" onclick="eventUpdateBtn2();">수정</button>
         </div>
         <% } %>
     </form>
- 
+ </main>
+ </section>
     <script>
-	    document.addEventListener('DOMContentLoaded', function() {
-	        // 페이지 로드 시 startDate2의 기본 min 값을 내일로 설정
+	    document.addEventListener('DOMContentLoaded', function() { 
 	        setInitialMinValue();
-	
-	        // startDate2 값이 변경될 때마다 min 속성 업데이트
+	 
 	        document.getElementById('startDate2').addEventListener('change', function() {
 	            setMinValue();
-	        });
+	        }); 
 	          
 	    });
-	
+	     
 	    function setInitialMinValue() {
 	        const startDate2 = document.getElementById('startDate2');
 	        const endDate2 = document.getElementById('endDate2');
@@ -296,7 +377,7 @@
 	        };
 	        reader.readAsDataURL(file);
 	        
-	        validateForm(); // 이미지 파일을 변경한 후 폼을 유효성 검사 
+	        validateForm();  
 	    }
 	
 	    function deleteImage(section) {
@@ -317,51 +398,56 @@
 	    }
 	    
 	    function eventUpdateBtn1() {
-			let form = document.update_event_form;	
-			if(!form.eventTitle1.value){
-				alert("제목을 입력하세요.");
-				form.eventTitle1.focus();
-			} else if(!form.startDate1.value){
-				alert("모집 기간을 입력하세요.");
-				form.startDate1.focus();
-			} else if(!form.endDate1.value){
-				alert("모집 기간을 입력하세요.");
-				form.endDate1.focus();
-			} else if(!form.eventContent1.value){
-				alert("내용을 입력하세요.");
-				form.eventContent1.focus();
-			} else if (!form.eventimage1.value) {
-				alert('이미지 파일을 선택하세요.');
-				form.eventimage1.focus();	
-			}  
-		}
-	    
+	        let form = document.update_event_form;	
+	        if(!form.eventTitle1.value){
+	            alert("제목을 입력하세요.");
+	            form.eventTitle1.focus();
+	        } else if(!form.startDate1.value){
+	            alert("모집 기간을 입력하세요.");
+	            form.startDate1.focus();
+	        } else if(!form.endDate1.value){
+	            alert("모집 기간을 입력하세요.");
+	            form.endDate1.focus();
+	        } else if(!form.eventContent1.value){
+	            alert("내용을 입력하세요.");
+	            form.eventContent1.focus();
+	        } else if (!form.eventimage1.value && !document.getElementById('imagePreview1').src) {
+	            alert('이미지 파일을 선택하세요.');
+	            form.eventimage1.focus();	
+	        } else { 
+	            form.submit();
+	        }
+	    }
+
 	    function eventUpdateBtn2() {
-			let form = document.update_event_form;	
-			if(!form.eventTitle2.value){
-				alert("제목을 입력하세요.");
-				form.eventTitle2.focus();
-			} else if(!form.startDate2.value){
-				alert("모집 기간을 입력하세요.");
-				form.startDate2.focus();
-			} else if(!form.endDate2.value){
-				alert("모집 기간을 입력하세요.");
-				form.endDate2.focus();
-			} else if(!form.progressDate2.value){
-				alert("진행일을 입력하세요.");
-				form.progressDate2.focus();
-			} else if(!form.eventQuota2.value){
-				alert("모집 정원을 입력하세요.");
-				form.eventQuota2.focus();
-			} else if(!form.eventContent2.value){
-				alert("내용을 입력하세요.");
-				form.eventContent2.focus();
-			} else if (!form.eventimage2.value) {
-				alert('이미지 파일을 선택하세요.');
-				form.eventimage2.focus();	
-			}  
-		}
-	    
+	        let form = document.update_event_form;	
+	        if(!form.eventTitle2.value){
+	            alert("제목을 입력하세요.");
+	            form.eventTitle2.focus();
+	        } else if(!form.startDate2.value){
+	            alert("모집 기간을 입력하세요.");
+	            form.startDate2.focus();
+	        } else if(!form.endDate2.value){
+	            alert("모집 기간을 입력하세요.");
+	            form.endDate2.focus();
+	        } else if(!form.progressDate2.value){
+	            alert("진행일을 입력하세요.");
+	            form.progressDate2.focus();
+	        } else if(!form.eventQuota2.value){
+	            alert("모집 정원을 입력하세요.");
+	            form.eventQuota2.focus();
+	        } else if(!form.eventContent2.value){
+	            alert("내용을 입력하세요.");
+	            form.eventContent2.focus();
+	        } else if (!form.eventimage2.value && !document.getElementById('imagePreview2').src) {
+	            alert('이미지 파일을 선택하세요.');
+	            form.eventimage2.focus();	
+	        } else { 
+	            form.submit();
+	        }
+	    }
+	     
+	   
 </script>
 </body>
 </html>

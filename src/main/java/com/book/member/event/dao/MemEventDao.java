@@ -38,7 +38,8 @@ public class MemEventDao {
                 Event event = new Event(); 
                 event.setEvent_no(rs.getInt("event_no"));
                 event.setEv_title(rs.getString("event_title"));
-                event.setEv_start(rs.getString("event_title")); 
+                event.setEv_start(rs.getString("event_start")); 
+                event.setEv_end(rs.getString("event_end"));
                 events.add(event);
             }
         } catch (SQLException e) {

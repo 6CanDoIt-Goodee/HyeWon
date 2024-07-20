@@ -8,16 +8,18 @@
 <head>
     <meta charset="UTF-8">
     <title>이벤트 상세 정보</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'LINESeedKR-Bd';
             background-color: rgb(247, 247, 247);
+            margin : 0;
         }
 
         main {
-            max-width: 900px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 1rem 1rem;
             background-color: white;
@@ -28,78 +30,110 @@
         #event_Type {
             background-color: rgb(255, 232, 186);
             border-radius: 15px;
-            padding: 1% 1.2% 0.7% 1.2%;
+            padding: 1% 1.2% 0.7% 1.5%;
             margin-right: 2%;
-        }
-
-        #event_category {
-            background-color: rgba(0,0,0,0);
-        }
-
+        } 
+        
         .eventDeatil_main {
-            padding: 2% 4%;
-            background-color: rgba(0,0,0,0);
+            padding: 2% 4%; 
         }
 
         #event_title {
             text-align: center;
-            margin-bottom: 1rem;
-            background-color: rgba(0,0,0,0);
+            margin-bottom: 1rem; 
         }
 
         .event_header {
             text-align: center;
-            margin-bottom: 3%;
-            background-color: rgba(0,0,0,0);
+            margin-bottom: 3%; 
         }
 
         #event_regdate {
             text-align: right;
             margin-bottom: 3%;
-            font-size: 100%;
-            background-color: rgba(0,0,0,0);
-        }
+            font-size: 85%;
+            color : rgba(28, 28, 28, 1); 
+        } 
 
-        .event_details {
-            margin-bottom: 3%;
-            background-color: rgba(0,0,0,0);
-        }
-
-        .event_details .item {
-            margin-bottom: 10px;
-        }
-
+		.event_details .item {
+		    margin-bottom: 8px;  
+		}
+		
+        .event_details .item2 {
+		    margin-bottom: 10px; 
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between; 
+		}
+        
+        .details_content { 
+        	margin-left:10%;
+        } 
+        
+        .details_content2 { 
+        	margin-left:6%;
+        } 
+        
         .event_content {
-            margin-top: 3%;
-            background-color: rgba(0,0,0,0);
+            margin-top: 5%;   
+            text-align : center; 
         }
 
         .event-image {
+        	width: 30vw; 
+    		height:25vw;
             display: block;
-            margin: 5% auto 2% auto;
-            max-width: 100%;
+            margin: 5% auto 5% auto; 
             height: auto;
-        }
-
-        .btn-group {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .btn {
-            margin-right: 10px;
-        }
+        }  
         
-        #content_area {
-            font-size : 1vw;
-        }
-         
-        #event_btn {
+        #content_area {  
+        	font-size : 17px;  
+        	font-family: 'LINESeedKR-Bd';
+        } 
+        
+		/* paging */
+		@charset "UTF-8";
+		
+		.center {
+		    text-align: center; s
+		}
+		
+		.pagination {
+		    display: inline-block; 
+		}
+		
+		.pagination a {
+		    color: black;
+		    float: left;
+		    padding: 8px 15px 6px 15px;
+		    text-decoration: none;
+		    transition: background-color .3s;
+		    margin: 2px 4px 0px 4px; 
+		}
+		
+		.pagination a.active {
+		    background-color: #A5A5A5;
+		    color: white;
+		    border: 1px solid #A5A5A5;
+		}
+		
+		.pagination a:hover:not(.active) {
+		    background-color: #ddd;
+		}
+		
+		#list_empty {
+		    text-align: center;
+		    padding-top: 60px;
+		    background-color: white;
+		}
+		
+		#event_btn {
             width: 100%;
             display: block;
             margin: 0 auto;
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 17px;
             background-color: #007BFF;
             color: white;
             border: none;
@@ -112,6 +146,51 @@
         #event_btn:hover {
             background-color: #0056b3;
         }
+        
+        #notification_btn {
+		    background-color: transparent;
+		    border: none;
+		    font-size: 1.5rem;
+		    cursor: pointer;
+		    transition: color 0.3s;
+		    align-self: flex-end;
+		    margin-left: auto;
+		}
+
+		#notification_btn:hover {
+		    color: #ffd700;
+		}
+		
+		#notification_btn.active {
+		    color: #ffd700;
+		}
+		
+		/* 툴팁 스타일 */
+		#notification_btn {
+		    position: relative;
+		}
+		
+		#notification_btn::after {
+		    content: attr(title);
+		    position: absolute;
+		    bottom: 100%;
+		    left: 50%;
+		    transform: translateX(-50%);
+		    background-color: rgba(0, 0, 0, 0.8);
+		    color: white;
+		    padding: 5px 10px;
+		    border-radius: 4px;
+		    font-size: 12px;
+		    white-space: nowrap;
+		    opacity: 0;
+		    visibility: hidden;
+		    transition: opacity 0.3s, visibility 0.3s;
+		}
+		
+		#notification_btn:hover::after {
+		    opacity: 1;
+		    visibility: visible;
+		}
     </style>
 </head>
 <body>
@@ -138,24 +217,30 @@
 
                 <div class="event_header">
                     <h2 id="event_title"><%= event.getEv_title() %></h2>
-                    <p id="event_regdate">등록일 : <%= event.getEv_regdate().substring(0, 10) %></p>
+                    <p id="event_regdate">등록 &nbsp&nbsp <%= event.getEv_regdate().substring(0, 10) %></p>
                 </div>
                  
                 <% if (event.getEv_form() == 2) { %>
                     <div class="event_details">
-                        <div class="item">
-                            <strong>모집 인원:</strong> <%= event.getEvent_quota() %> 명
-                        </div>
-                        <div class="item">
-                            <strong>모집 기간:</strong> <%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %>
-                        </div>
-                        <div class="item">
-                            <strong>이벤트 진행일:</strong> <%= event.getEv_progress() %>
-                        </div>
-                    </div>
+					    <div class="item">
+					        모집 인원<span class="details_content"><%= event.getEvent_quota() %> 명</span>
+					    </div>
+					    <div class="item">
+					        모집 기간<span class="details_content"><%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %></span>
+					    </div>
+					    <div class="item2">
+					        이벤트 진행일<span class="details_content2"><%= event.getEv_progress() %></span>
+					        <!-- 알림 버튼 -->
+					        <% if (user_event != null && event.getEv_form() == 2) { %>
+					            <button id="notification_btn" type="button" onclick="toggleNotification(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>);" title="선착순 오픈 1시간 전 이메일 알림이 발송됩니다.">
+					                <i id="bell_icon" class="fa-regular fa-bell"></i>
+					            </button>
+					        <% } %>
+					    </div>
+					</div>
                 <% } else { %>
                 <div class="event_details">
-                    <div class="item"><strong>기간:</strong>
+                    <div class="event_start">진행 기간 &nbsp&nbsp&nbsp&nbsp
                         <% 
                             if (event.getEv_start().equals(event.getEv_end())) {
                                 out.print(event.getEv_start());
@@ -165,19 +250,12 @@
                         %> 
                     </div>
                 </div>
-                <% } %>
+                <% } %> 
                 <hr>
                 <div class="event_content"> 
                     <pre id="content_area"><%= event.getEv_content() %></pre>
                     <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
-                
-                    <!-- 알림 버튼 -->
-					<% if (user_event != null && event.getEv_form() == 2) { %>
-					    <button id="notification_btn" type="button" onclick="toggleNotification(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>);">
-					        알림 설정
-					    </button>
-					<% } %>
-                
+                 
                     <!-- 참여 버튼 --> 
                     <% if (user_event != null && event.getEv_form() == 2) { %>
                         <button id="event_btn" type="button"
@@ -207,10 +285,10 @@
     
  
     <%!
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm");
+        SimpleDateFormat inputFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat outputFormat1 = new SimpleDateFormat("yyyy-MM-dd a hh:mm");
 
-        String formatDateString(String input) {
+        String formatDateString1(String input) {
             try {
                 Date date = inputFormat.parse(input);
                 return outputFormat.format(date);
@@ -285,6 +363,7 @@
             }
             
             /* 알림 버튼 상태 확인 */
+            /* 알림 버튼 상태 확인 */
             if (<%= user_event != null %> && currentDate < oneHourBeforeStart) {
                 $.ajax({
                     type: "GET",
@@ -295,20 +374,22 @@
                     },
                     success: function(response) {
                         if (response === "true") {
-                            $("#notification_btn").text("알림 취소");
+                            $("#bell_icon").removeClass("fa-regular").addClass("fa-solid");
+                            $("#notification_btn").addClass("active");
                         } else {
-                            $("#notification_btn").text("알림 설정");
+                            $("#bell_icon").removeClass("fa-solid").addClass("fa-regular");
+                            $("#notification_btn").removeClass("active");
                         }
                     } 
                 });
             }
         });
-        
-        
+
         /* 알림 버튼 */
         function toggleNotification(eventNo, userNo) {
-            var button = $("#notification_btn");
-            var action = button.text().trim() === "알림 설정" ? "set" : "cancel";
+            var bellIcon = $("#bell_icon");
+            var notificationBtn = $("#notification_btn");
+            var action = bellIcon.hasClass("fa-regular") ? "set" : "cancel";
 
             $.ajax({
                 type: "POST",
@@ -320,16 +401,17 @@
                 },
                 success: function(response) {
                     if (action === "set") {
-                        button.text("알림 취소");
-                        alert("알림이 설정되었습니다.");
+                        bellIcon.removeClass("fa-regular").addClass("fa-solid");
+                        notificationBtn.addClass("active");
+                        alert("알림이 설정되었습니다. 모집 1시간 전 이메일로 알려드릴게요!");
                     } else {
-                        button.text("알림 설정");
+                        bellIcon.removeClass("fa-solid").addClass("fa-regular");
+                        notificationBtn.removeClass("active");
                         alert("알림이 취소되었습니다.");
                     }
                 } 
             });
         }
-    </script> 
-
+    </script>  
 </body>
 </html>

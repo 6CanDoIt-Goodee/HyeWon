@@ -30,28 +30,24 @@ public class EventUpdateEndServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // doGet에서는 일반적으로 처리할 내용이 없으므로, POST 메서드로만 처리합니다.
+            throws ServletException, IOException { 
         doPost(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
-        // URL에서 eventNo와 eventType을 가져옵니다.
+ 
         int eventNo = Integer.parseInt(request.getParameter("eventNo")); 
         String eventType = request.getParameter("eventType");
-
-        // 파일 업로드 관련 처리
+ 
         if (ServletFileUpload.isMultipartContent(request)) {
             String dir = request.getServletContext().getRealPath("/upload/event");
-            int maxSize = 1024 * 1024 * 10; // 10MB
+            int maxSize = 1024 * 1024 * 10; 
             String encoding = "UTF-8";
             DefaultFileRenamePolicy dfr = new DefaultFileRenamePolicy();
             MultipartRequest mr = new MultipartRequest(request, dir, maxSize, encoding, dfr);
-
-            // Event 객체 생성 및 데이터 설정
+ 
             Event event = new Event();
             event.setEvent_no(eventNo);
             event.setEv_form(Integer.parseInt(eventType));

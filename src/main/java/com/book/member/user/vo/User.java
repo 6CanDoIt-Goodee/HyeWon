@@ -1,8 +1,6 @@
 package com.book.member.user.vo;
 
-import com.book.common.Paging;
-
-public class User{
+public class User {
 	private int user_no;
 	private String user_name;
 	private String user_id;

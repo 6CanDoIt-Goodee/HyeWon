@@ -65,7 +65,7 @@ public class GetEventRegular implements Job {
 
         // 가져온 데이터가 현재 시간과 일치하는지 확인
         if (result.size() != 0) {
-        	System.out.println("알림 있어요");
+			/* System.out.println("알림 : " + result.size()); */
             for (int i = 0; i < result.size(); i++) {
                 String eventStartStr = (String) result.get(i).get("event_start");
                 LocalDateTime eventStart = LocalDateTime.parse(eventStartStr);
@@ -73,10 +73,7 @@ public class GetEventRegular implements Job {
                 // 모집 시작 시간 -1시간, 초단위 0
                 LocalDateTime target = eventStart.minusHours(1).withSecond(0).withNano(0);
                 // 현재 시간을 초를 0으로 설정
-                LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-                
-                System.out.println("target : " + target);
-                System.out.println("now : " + now);
+                LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0); 
                 
                 // target 시간과 now 시간 일치 확인
                 if (now.isEqual(target)) {

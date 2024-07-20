@@ -12,14 +12,14 @@
     <title>이벤트 상세 정보</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <style>
+    <style>   
         body {
             font-family: 'LINESeedKR-Bd';
             background-color: rgb(247, 247, 247);
         }
 
         main {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 1rem 1rem;
             background-color: white;
@@ -30,90 +30,91 @@
         #event_Type {
             background-color: rgb(255, 232, 186);
             border-radius: 15px;
-            padding: 1% 1.2% 0.7% 1.2%;
+            padding: 1% 1.2% 0.7% 1.5%;
             margin-right: 2%;
-        }
-
-        #event_category {
-            background-color: rgba(0,0,0,0);
-        }
-
+        } 
+        
         .eventDeatil_main {
-            padding: 2% 4%;
-            background-color: rgba(0,0,0,0);
+            padding: 2% 4%; 
         }
 
         #event_title {
             text-align: center;
-            margin-bottom: 1rem;
-            background-color: rgba(0,0,0,0);
+            margin-bottom: 1rem; 
         }
 
         .event_header {
             text-align: center;
-            margin-bottom: 3%;
-            background-color: rgba(0,0,0,0);
+            margin-bottom: 3%; 
         }
 
         #event_regdate {
             text-align: right;
             margin-bottom: 3%;
-            font-size: 100%;
-            background-color: rgba(0,0,0,0);
+            font-size: 85%;
+            color : rgba(28, 28, 28, 1); 
         }
 
-        .event_details {
-            margin-bottom: 3%;
-            background-color: rgba(0,0,0,0);
+        .event_details { 
+            margin-bottom: 3%; 
         }
 
         .event_details .item {
-            margin-bottom: 10px;
+            margin-bottom: 10px; 
         }
-
+        
+        .details_content { 
+        	margin-left:10%;
+        }
+        
+        .details_content3 { 
+        	margin-left:6%;
+        }
+        
         .event_content {
-            margin-top: 3%;
-            background-color: rgba(0,0,0,0);
+            margin-top: 5%;   
+            text-align : center; 
         }
 
         .event-image {
+        	width: 30vw; 
+    		height:25vw;
             display: block;
-            margin: 5% auto 2% auto;
-            max-width: 100%;
+            margin: 5% auto 5% auto; 
             height: auto;
-        }
-
-        .btn-group {
-            text-align: center;
-            margin-top: 20px;
-        }
+        } 
 
         .btn {
             margin-right: 10px;
         }
         
-        #content_area {
-        	font-size : 1vw;
+        #content_area {  
+        	font-size : 17px;  
+        	font-family: 'LINESeedKR-Bd';
         }
-
+         
+        .partic_list { 
+        	text-align : center; 
+        }
+        
 		/* paging */
 		@charset "UTF-8";
 		
 		.center {
-		    text-align: center;
+		    text-align: center; 
 		}
 		
 		.pagination {
-		    display: inline-block;
+		    display: inline-block; 
 		}
 		
 		.pagination a {
 		    color: black;
 		    float: left;
-		    padding: 8px 16px;
+		    padding: 8px 15px 6px 15px;
 		    text-decoration: none;
 		    transition: background-color .3s;
-		    margin: 0 4px;
+		    margin: 2px 4px 0px 4px; 
 		}
 		
 		.pagination a.active {
@@ -127,9 +128,10 @@
 		}
 		
 		#list_empty {
-			text-align: center;
-			padding : 10%;
-		} 
+		    text-align: center;
+		    padding-top: 60px;
+		    background-color: white;
+		}
     </style>
 </head>
 <body>
@@ -152,24 +154,24 @@
 
                 <div class="event_header">
                     <h2 id="event_title"><%= event.getEv_title() %></h2>
-                    <p id="event_regdate">등록일 : <%= event.getEv_regdate().substring(0, 10) %></p>
+                    <p id="event_regdate">등록 &nbsp&nbsp <%= event.getEv_regdate().substring(0, 10) %></p>
                 </div>
 
                 <% if (event.getEv_form() == 2) { %>
                 <div class="event_details">
                     <div class="item">
-                        <strong>모집 인원:</strong> <%= event.getEvent_quota() %> 명
+                        모집 인원<span class="details_content"><%= event.getEvent_quota() %> 명</span>
                     </div>
                     <div class="item">
-                        <strong>모집 기간:</strong> <%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %>
+                        모집 기간<span class="details_content"><%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %></span>
                     </div>
                     <div class="item">
-                        <strong>이벤트 진행일:</strong> <%= event.getEv_progress() %>
+                        이벤트 진행일<span class="details_content3"><%= event.getEv_progress() %></span>
                     </div>
                 </div>
                 <% } else { %>
                 <div class="event_details">
-                    <div class="item"><strong>기간:</strong>
+                    <div class="event_start">진행 기간 &nbsp&nbsp&nbsp&nbsp
                         <% 
                             if (event.getEv_start().equals(event.getEv_end())) {
                                 out.print(event.getEv_start());
@@ -182,15 +184,13 @@
                 <% } %>
                 <hr>
                 <div class="event_content"> 
-				<pre id="content_area"><%= event.getEv_content() %></pre>
+					<pre id="content_area"><%= event.getEv_content() %></pre>
                     <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
                 </div>
-
-                <!-- 수정, 삭제 버튼 -->
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="location.href='/event/update?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>'">수정</button>
-                    <button class="btn btn-danger" onclick="deleteEvent(<%= event.getEvent_no() %>)">삭제</button>
-                </div>
+ 
+                <!-- 수정, 삭제 버튼 --> 
+                   <button class="btn btn-outline-danger" onclick="deleteEvent(<%= event.getEvent_no() %>)">삭제</button> 
+                   <button class="btn btn-outline-primary" onclick="location.href='/event/update?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>'">수정</button>
             </div>
         </main>
     </section>
@@ -198,9 +198,9 @@
    	 	<main id="parUser_box"> 
 	        <div class="partic_list">
 	            <% 
-		        List<Map<String, String>> parUserList = (List<Map<String, String>>) request.getAttribute("parUserList");
-		        if (parUserList == null || parUserList.isEmpty()) { 
-		    %>
+			        List<Map<String, String>> parUserList = (List<Map<String, String>>) request.getAttribute("parUserList");
+			        if (parUserList == null || parUserList.isEmpty()) { 
+			    %>
 		        <p id="list_empty">참여자가 존재하지 않습니다.</p>
 	            <% } else { %>
 	                <table class="table table-striped table-bordered">
@@ -271,8 +271,6 @@
 	        </div> 
 		</main>
 	    <% } %>
-
-    
  
     <%!
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -289,10 +287,8 @@
         }
     %>
 
-    <script> 
-      
-        // 삭제 버튼 클릭 시 재확인 및 삭제 함수
-        function deleteEvent(eventNo) {
+    <script>  
+        function deleteEvent(eventNo) { 
             if (confirm('이벤트를 삭제하시겠습니까?')) {
                 location.href = '/event/delete?eventNo=' + eventNo;
             }

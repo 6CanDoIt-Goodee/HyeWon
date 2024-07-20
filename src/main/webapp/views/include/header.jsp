@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.List"%>
 <%@page import="com.book.member.event.dao.MemEventDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -6,6 +7,7 @@
 <%@ page import="com.book.member.event.dao.MemEventDao" %>
 <%@ page import="java.util.List"%>
 <%@ page import="com.book.admin.event.vo.Event"%> 
+<%@ page import="java.util.Date"%>
 <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
@@ -88,10 +90,13 @@
 	}
 
 			
-	* {
-	    background-color: rgb(247, 247, 247);
+	* { 
 	    box-sizing: border-box; 
 	    margin: 0;  
+	}
+	
+	body {
+		background-color: rgb(247, 247, 247);
 	}
 	
 	/* header */
@@ -138,8 +143,7 @@
 	    height: 90px;
 	    display: flex;
 	    justify-content: space-between;
-	    align-items: center; 
-	    margin-bottom: 10px;
+	    align-items: center;  
 	}
 	
 	.header_div > a {
@@ -192,7 +196,7 @@
 	    width: 100%;
 	    height: 100%;
 	    overflow: auto;
-	    background-color: rgba(0,0,0,0.4);
+	    background-color: rgba(0,0,0,0.6);
 	}
 	
 	.modal-content {
@@ -204,6 +208,33 @@
 	    max-width: 600px;
 	}
 	
+	.modal-content h2 {
+		text-align: center;
+		font-family: 'Freesentation-9Black';
+		font-size:30px;
+		margin-bottom: 30px;
+	}
+	
+	a {
+		text-decoration: none;
+		color : black;
+	}
+	
+	.notification-item {
+		background-color: rgba(250, 210, 125, 0.5);
+		padding : 10px 0px;
+		text-align: center;
+		font-size:18px;
+		font-weight:600;
+		border-radius: 15px;
+		margin-bottom: 15px;
+	}
+	
+	#noti_date {
+		margin-top:5px;
+		font-size:15px;
+		color: rgba(77, 77, 77);
+	}
 	.close {
 	    color: #aaa;
 	    float: right;
@@ -218,7 +249,15 @@
 	    text-decoration: none;
 	    cursor: pointer;
 	}
+	
+	#notification-icon {
+		font-size:20px;
+	    color: #ffd700;
+	}
 	 
+	#no_events {
+		text-align: center;
+	}
 </style>
 <section class="main_header">
      <header>
@@ -244,8 +283,8 @@
 	            <ul>
 	            	<li><a href="#" class="header_list">도서</a></li> 
 	                <li><a href="/event/list" class="header_list">이벤트</a></li> 
-	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
 	                <li><a href="#" class="header_list" id="header_adminPage">관리자 페이지</a></li>
+	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
 	            </ul>
 	        </div>
 	    <% 
@@ -258,8 +297,8 @@
 	                <li><a href="#" class="header_list">독후감</a></li>
 	                <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li> 
 	                <li><%= user.getUser_nickname() + "님 환영합니다." %></li>
+	                <li><a href="/user/mypage" class="header_list" id="header_join">마이페이지</a></li>
 	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
-	                <li><a href="/user/checkpw" class="header_list" id="header_join">계정수정</a></li>
 	                <li id="notification-icon" class="notification-icon"><i class="fas fa-bell"></i>
 	                </li>
 	
@@ -268,23 +307,38 @@
 	                    <div class="modal-content">
 	                        <span class="close">&times;</span>
 	                        <h2>알림 설정된 이벤트</h2>
-	                        <div id="notification-list">
+	                        <div id="notification-list"> 
+                        	    <%!
+							        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+							        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm");
+							
+							        String formatDateString(String input) {
+							            try {
+							                Date date = inputFormat.parse(input);
+							                return outputFormat.format(date);
+							            } catch (Exception e) {
+							                e.printStackTrace();
+							                return "";
+							            }
+							        }
+							    %>
 	                            <%
 	                                MemEventDao notificationDAO = new MemEventDao();
 	                                List<Event> notifiedEvents = notificationDAO.getNotifiedEventsForUser(user.getUser_no());
 	                                if (notifiedEvents != null && !notifiedEvents.isEmpty()) {
 	                                    for (Event event : notifiedEvents) {
 	                            %>
-	                                        <div class="notification-item">
-	                                            <a href="<%= request.getContextPath() %>/user/event/detail?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>">
-	                                                <div><%= event.getEv_title() %></div>
-	                                            </a>
-	                                        </div>
+                                        <div class="notification-item">
+                                            <a href="<%= request.getContextPath() %>/user/event/detail?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>">
+                                                <div id="noti_title"><%= event.getEv_title() %></div>
+                                                <div id="noti_date"><%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %></div>
+                                            </a>
+                                        </div>
 	                            <% 
 	                                    }
 	                                } else {
 	                            %>
-	                                    <p>알림 설정된 이벤트가 없습니다.</p>
+	                                    <p id="no_events">알림 설정된 이벤트가 없습니다.</p>
 	                            <% 
 	                                } 
 	                            %>

@@ -30,53 +30,177 @@
         box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
         border-radius: 20px;
     }
-	/* Heading styling */
+    
+	 
 	.event_list table tbody td a {
-	    text-decoration: none; /* 밑줄 제거 */
-	    color: black; /* 글자 색상 검은색으로 설정 */
-	    background-color:rgba(0, 0, 0, 0);
+	    text-decoration: none;  
+	    color: black;   
 	}
-	
-	#section_wrap {
-		background-color:rgba(0, 0, 0, 0);
-	}
-		
-	/* Heading styling */
-	.book_list table tbody td a {
-	    text-decoration: none; /* 밑줄 제거 */
-	    color: black; /* 글자 색상 검은색으로 설정 */
-	}
-	
-	/* Heading styling */
+	  
 	.word h3 {
-	    color: black;
-	    font-size: 24px;
-	    margin-bottom: 10px;
+         margin: 30px 0px;
+         text-align: center;
+         font-size: 30px;
 	}
 	
-	/* Table styling */
-	.event_list table {
-	    width: 100%;
-	    border-collapse: collapse;
-	    margin-top: 20px;
-	    background-color: white; /* 테이블 배경색을 흰색으로 설정 */
+	.event_list_table {
+	  margin-top :30px;
+	  width: 100%;
+	  border-collapse: collapse;
+	  border-top: 2px solid #000;
 	}
 	
-	.event_list table th, .book_list table td {
-	    padding: 10px;
-	    text-align: center;
-	    border: 1px solid #ddd;
+	.event_list_table th,
+	.event_list_table td {
+	  padding: 15px 0;
+	  text-align: center;
+	  font-size: 1rem;
+	  border-bottom: 1px solid #ddd;
 	}
 	
-	.event_list table th {
-	    background-color: #f2f2f2;
-	    font-weight: bold;
+	.event_list_table thead tr {
+	  border-bottom: 1px solid #999;
 	}
 	
-	.event_list table tr {
-	    color: black;
+	.event_list_table th {
+	  font-weight: 600; 
+	  background: rgba(250, 237, 177, 0.6);
 	}
 	
+	.event_list_table .num {
+	  width: 10%;
+	}
+	
+	.event_list_table .title {
+	  width: 60%;
+	  text-align: left;
+	}
+	.event_list_table .title a {
+	  color: #2c2c2c;
+	  text-decoration: none;
+	}
+	
+	.event_list_table thead .title {
+	  text-align: center;
+	}
+	
+	.event_list_table .date {
+	  width: 10%;
+	}
+	
+	.event_list_table .status {
+	  width: 10%;
+	}
+	 
+	 
+	
+	body { 
+        font-family: 'LINESeedKR-Bd';
+        background-color: rgb(247, 247, 247);  
+    }
+    
+    main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem 1rem; 
+        background-color: white; 
+        box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+    }
+	 
+	.event_list table tbody td a {
+	    text-decoration: none;  
+	    color: black;   
+	}
+	  
+	.word h3 {
+        margin: 30px 0px;
+        text-align: center;
+        font-size: 30px;
+	}
+	
+	.event_list_table {
+	  margin-top :30px;
+	  width: 100%;
+	  border-collapse: collapse;
+	  border-top: 2px solid #000;
+	}
+	
+	.event_list_table th,
+	.event_list_table td {
+	  padding: 15px 0;
+	  text-align: center;
+	  font-size: 1rem;
+	  border-bottom: 1px solid #ddd;
+	}
+	
+	.event_list_table thead tr {
+	  border-bottom: 1px solid #999;
+	}
+	
+	.event_list_table th {
+	  font-weight: 600; 
+	  background: rgba(250, 237, 177, 0.6);
+	}
+	
+	.event_list_table .num {
+	  width: 10%;
+	}
+	
+	.event_list_table .title {
+	  width: 60%;
+	  text-align: left;
+	}
+	.event_list_table .title a {
+	  color: #2c2c2c;
+	  text-decoration: none;
+	}
+	
+	.event_list_table thead .title {
+	  text-align: center;
+	}
+	
+	.event_list_table .date {
+	  width: 10%;
+	}
+	
+	.event_list_table .status {
+	  width: 10%;
+	}
+	  
+	select {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        margin-right: 10px;
+        margin-left : 5px;
+        background-color: #fff;
+        color: #333;
+        height: 40px;  
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #A5A5A5;
+        box-shadow: 0 0 5px rgba(165, 165, 165, 0.5);
+    }
+  
+    #evTitle {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        height: 40px;  
+        margin-right: 10px;
+    }
+
+    #evTitle:focus {
+        outline: none;
+        border-color: #A5A5A5;
+        box-shadow: 0 0 5px rgba(165, 165, 165, 0.5);
+    }
+    
 	/* paging */
 	@charset "UTF-8";
 	
@@ -123,8 +247,7 @@
 	                <h3>이벤트 목록</h3>
 	            </div>
 	            <br>
-	            <form action="/event/list" method="get">
-	                <label for="listCategory">카테고리:</label>
+	            <form action="/event/list" method="get"> 
 	                <select name="listCategory" id="listCategory">
 	                    <option value="">전체</option>
 	                    <option value="1" <%= (request.getParameter("listCategory") != null && request.getParameter("listCategory").equals("1")) ? "selected" : "" %>>기본</option>
@@ -135,7 +258,7 @@
 	                    <option value="6" <%= (request.getParameter("listCategory") != null && request.getParameter("listCategory").equals("6")) ? "selected" : "" %>>작가 초청</option>
 	                </select>  
 	                
-	                <label for="year">년도:</label>
+	                <label for="year">년도 </label>
 				    <select name="year" id="year">
 				    	<option value="">전체</option>
 				        <% 
@@ -145,7 +268,7 @@
 				            <option value="<%= year %>" <%= (request.getParameter("year") != null && request.getParameter("year").equals(String.valueOf(year))) ? "selected" : "" %>><%= year %></option>
 				        <% } %>
 				    </select>
-				    <label for="month">월:</label>
+				    <label for="month">월 </label>
 				    <select name="month" id="month">
 				        <option value="">전체</option>
 				        <% 
@@ -156,13 +279,13 @@
 				    </select>
     
 	                <input type="text" id="evTitle" name="evTitle">
-	                <button type="submit">검색</button>
+	                <button type="submit" class="btn btn-outline-warning">검색</button>
 	            </form>
 	            <div class="event_list">
 	                <% if (request.getAttribute("resultList") == null || ((List<Map<String, String>>) request.getAttribute("resultList")).isEmpty()) { %>
 	                    <p id="list_empty">존재하는 이벤트가 없습니다.</p>
 	                <% } else { %>
-	                    <table class="table table-striped table-bordered">
+	                    <table class="event_list_table">
 	                        <thead class="table-blight">
 	                            <tr>
 	                                <th scope="col">번호</th>

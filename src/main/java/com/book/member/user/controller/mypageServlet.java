@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.book.member.user.dao.Mypagedao;
 import com.book.member.user.vo.User;
@@ -21,18 +22,17 @@ public class mypageServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		User u = new User();
-//		int evCount = new Mypagedao().eventCount(u);
-//		int btCount = new Mypagedao().btCount(u);
-//		int sgCount = new Mypagedao().sgCount(u);
-//		
-//		request.setAttribute("evCount", evCount);
-//		request.setAttribute("btCount", btCount);
-//		request.setAttribute("sgCount", sgCount);
+		HttpSession session = request.getSession();
+		User thisUser = (User)session.getAttribute("user");
+
+		int evCount = new Mypagedao().eventCount(thisUser);
+		int btCount = new Mypagedao().btCount(thisUser);
+		int sgCount = new Mypagedao().sgCount(thisUser);
 		
-		request.setAttribute("evCount", "33");
-		request.setAttribute("btCount", "44");
-		request.setAttribute("sgCount", "55");
+		request.setAttribute("evCount", evCount);
+		request.setAttribute("btCount", btCount);
+		request.setAttribute("sgCount", sgCount);
+
 		
 		RequestDispatcher view = request.getRequestDispatcher("/views/member/user/mypage.jsp");
 		view.forward(request, response);

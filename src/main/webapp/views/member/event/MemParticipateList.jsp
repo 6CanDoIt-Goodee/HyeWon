@@ -4,7 +4,8 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map"%>
 <%@ page import="java.text.SimpleDateFormat"%>
-<%@ page import="java.util.Date"%>
+<%@ page import="java.util.Date"%> 
+<%@ page import="com.book.member.user.vo.User"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +19,75 @@
     crossorigin="anonymous">
     
 <style>
+	body {
+        font-family: 'LINESeedKR-Bd';
+        background-color: rgb(247, 247, 247);
+    }
+
+    main {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem 1rem;
+        background-color: white;
+        box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+    }
+    
+    	.word h3 {
+         margin: 30px 0px;
+         text-align: center;
+         font-size: 30px;
+	}
+	
+	.event_list_table {
+	  margin-top :30px;
+	  width: 100%;
+	  border-collapse: collapse;
+	  border-top: 2px solid #000;
+	}
+	
+	.event_list_table th,
+	.event_list_table td {
+	  padding: 15px 0;
+	  text-align: center;
+	  font-size: 1rem;
+	  border-bottom: 1px solid #ddd;
+	}
+	
+	.event_list_table thead tr {
+	  border-bottom: 1px solid #999;
+	}
+	
+	.event_list_table th {
+	  font-weight: 600; 
+	  background: rgba(250, 237, 177, 0.6);
+	}
+	
+	.event_list_table .num {
+	  width: 10%;
+	}
+	
+	.event_list_table .title {
+	  width: 60%;
+	  text-align: left;
+	}
+	.event_list_table .title a {
+	  color: #2c2c2c;
+	  text-decoration: none;
+	}
+	
+	.event_list_table thead .title {
+	  text-align: center;
+	}
+	
+	.event_list_table .date {
+	  width: 10%;
+	}
+	
+	.event_list_table .status {
+	  width: 10%;
+	}
+	
 	/* paging */
 	@charset "UTF-8";
 	
@@ -54,20 +124,22 @@
 	}
 </style>
 <body>
-<%@ include file="../../include/header.jsp" %>
-    <li><a href="/event/list" class="header_list">목록</a></li> 
-    <li><a href="/event/create" class="header_list">등록</a></li>  
-      
+<%@ include file="../../include/header.jsp" %>  
     <section>
     	<main>
 	        <div id="section_wrap" class="container">
-	            <div class="word">
-	                <h3>사용자 이벤트 참여 내역</h3>
-	            </div>
-	            <br>
+	            <%
+				    User user_nick = (User) session.getAttribute("user");
+				%>
+				<div class="word">
+				    <h3><%= (user != null) ? user_nick.getUser_nickname() : "" %>님의 이벤트 참여 내역</h3>
+				</div>
+	            <br> 
+
+				 
 	            <form action="/user/event/parList" method="get">
 	                <div class="input-group mb-3">
-	                    <input type="text" class="form-control" name="searchKeyword" placeholder="이벤트 제목 검색">
+	                    <input type="text" class="form-control mr-sm-2" name="searchKeyword" placeholder="이벤트 제목 검색">
 	                    <button class="btn btn-outline-secondary" type="submit">검색</button>
 	                </div>
 	            </form>
@@ -78,7 +150,7 @@
 	                <% if (request.getAttribute("userEvents") == null || ((List<Map<String, String>>) request.getAttribute("userEvents")).isEmpty()) { %>
 	                    <p id="list_empty">참여한 이벤트가 없습니다.</p>
 	                <% } else { %>
-	                    <table class="table table-striped table-bordered">
+	                    <table class="event_list_table">
 	                        <thead class="table-light">
 	                            <tr>
 	                                <th scope="col">번호</th>
@@ -94,7 +166,7 @@
 	                            	Event paging = (Event) request.getAttribute("paging");
                                     User user_par = (User) session.getAttribute("user");
                                     int userNo = user_par.getUser_no();
-                                    int startRow = (paging.getNowPage() - 1) * paging.getNumPerPage(); // 시작 로우 계산
+                                    int startRow = (paging.getNowPage() - 1) * paging.getNumPerPage();  
                                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                                     Date currentDate = new Date();
                                     for (int i = 0; i < list.size(); i++) {

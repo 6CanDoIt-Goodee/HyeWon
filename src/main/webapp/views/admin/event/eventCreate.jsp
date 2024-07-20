@@ -7,6 +7,39 @@
 <title>이벤트 추가</title>
 <!-- <link href="../resources/css/event/eventCreate.css" rel="stylesheet" type="text/css"> -->
 <style>  
+
+ 	body {
+        font-family: 'LINESeedKR-Bd';
+        background-color: rgb(247, 247, 247);
+    }
+
+    main {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem 1rem;
+        background-color: white;
+        box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+    }
+    
+  	select, input {
+        padding: 5px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 13px;
+        margin-right: 10px; 
+        background-color: #fff;
+        color: #333;
+        height: 30px;  
+        width : 140px; 
+    }
+
+    select:focus {
+        outline: none;
+        border-color: #A5A5A5;
+        box-shadow: 0 0 5px rgba(165, 165, 165, 0.5);
+    }
+    
    .form-section {
        display: none;
    }
@@ -28,18 +61,28 @@
        margin-right: 3%; 
    }
    
-   #eventTitle1, #eventTitle2 {
-       width: 35%; 
+   #eventTitle1, #eventTitle2 {  
+        width : 60%;
    }
    
-   #startDate1, #endDate1, #startDate2, #endDate2 {
-       width: 200px; 
+   #startDate1, #endDate1 {
+        margin-bottom: 5px; 
    }
    
+   #startDate2, #endDate2 {
+        margin-bottom: 5px; 
+        width : 25%;
+   }
+    
    #eventContent1, #eventContent2 {  
-       width: 35%;
+       width : 60%;
        height: 15em; 
        resize: none; 
+       border: 1px solid #ccc;
+	   border-radius: 4px;
+	   font-size: 13px;
+	   margin-right: 10px; 
+	   background-color: #fff;
    }
    
    .image-box {
@@ -82,105 +125,149 @@
        font-size: 12px;
        font-weight: 600;
    }
+   
+   button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+ 
+    #eventInsertBtn,
+    #eventInsertBtn2 {
+        background-color: #4CAF50;  
+        color: white;
+    }
+
+    #eventInsertBtn:disabled,
+    #eventInsertBtn2:disabled {
+        background-color: #BDBDBD; 
+        color: #9E9E9E; 
+        cursor: not-allowed;
+    }
+
+    #eventInsertBtn:hover,
+    #eventInsertBtn2:hover {
+        background-color: #45a049; 
+    }
+ 
+    #eventCancelBtn {
+        background-color: #f44336; 
+        color: white;
+        margin-left: 10px;
+    }
+
+    #eventCancelBtn:hover {
+        background-color: #e53935;  
+    }
+    
 </style>
 </head>
 <body>
    <%@ include file="../../include/header.jsp" %>
-    
-   <form name="create_event_form" action="/event/createEnd" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="eventType">이벤트 유형</label>
-            <select id="eventType" name="eventType" onchange="showFormSection()"> 
-                <option value="1" selected>기본 이벤트</option>
-                <option value="2">선착순 이벤트</option> 
-            </select>
-        </div>
-
-        <div id="form-section1" class="form-section">
-           <div class="form-group">
-              <label for="eventCategory1">카테고리</label>
-              <select id="eventCategory1" name="eventCategory1"> 
-                  <option value="1" selected>신간 도서</option>
-                  <option value="2">독서 마라톤</option>
-                  <option value="3">챌린지</option>
-                  <option value="4">작가 초청</option> 
-              </select>
-             </div>
-            <div class="form-group">
-                <label for="eventTitle1">제목</label>
-                <input type="text" id="eventTitle1" name="eventTitle1">
-            </div>
-            <div class="form-group">
-                <label for="startDate1">기간</label>
-                <div>
-                    <input type="date" id="startDate1" name="startDate1" onchange="toggleEndDate(1)"><br>
-                    <input type="date" id="endDate1" name="endDate1" disabled>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="eventContent1">내용</label>
-                <textarea id="eventContent1" name="eventContent1" wrap="hard"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="eventimage1">이미지</label>
-                <div>
-                    <div class="image-box default" id="imageBox1" onclick="document.getElementById('eventimage1').click()">
-                        <img id="imagePreview1" alt="Image Preview">
-                    </div>
-                    <div class="delete-button" id="deleteButton1" onclick="deleteImage(1)">이미지 삭제</div>
-                    <input type="file" id="eventimage1" name="eventimage1"  accept=".png,.jpg,.jpeg" onchange="previewImage(event, 1)">
-                </div>
-            </div>  
-            <button id="eventCancelBtn" onclick="eventCancelBtn();">취소</button>
-            <button id="eventInsertBtn"  onclick="eventInsertBtn(); disabled">등록</button>
-        </div>
-
-        <div id="form-section2" class="form-section">
-            <div class="form-group">
-                <label for="eventCategory2">카테고리</label>
-                <select id="eventCategory2" name="eventCategory2"> 
-                    <option value="1" selected>신간 도서</option>
-                    <option value="2">독서 마라톤</option>
-                    <option value="3">챌린지</option>
-                    <option value="4">작가 초청</option> 
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="eventTitle2">제목</label>
-                <input type="text" id="eventTitle2" name="eventTitle2"><br>
-            </div>
-            <div class="form-group">
-                <label for="startDate2">모집 기간</label>
-                <input type="datetime-local" id="startDate2" name="startDate2" onchange="setMinValue()">
-                <input type="datetime-local" id="endDate2" name="endDate2" disabled onchange="setMinValue()">
-            </div>
-            <div class="form-group">
-                <label for="progressDate2">이벤트 진행일</label>
-                <input type="date" id="progressDate2" name="progressDate2" disabled><br>
-            </div>
-            <div class="form-group">
-                <label for="eventQuota2">정원</label>
-                <input type="number" id="eventQuota2" name="eventQuota2" min="1"><br>
-            </div> 
-            <div class="form-group">
-                <label for="eventContent2">내용</label>
-                <textarea id="eventContent2" name="eventContent2" wrap="hard"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="eventimage2">이미지</label>
-                <div>
-                    <div class="image-box default" id="imageBox2" onclick="document.getElementById('eventimage2').click()">
-                        <img id="imagePreview2" alt="Image Preview">
-                    </div>
-                    <div class="delete-button" id="deleteButton2" onclick="deleteImage(2)">이미지 삭제</div>
-                    <input type="file" id="eventimage2" name="eventimage2"  accept=".png,.jpg,.jpeg" onchange="previewImage(event, 2)">
-                </div>
-            </div>
-            <button id="eventCancelBtn" onclick="eventCancelBtn();">취소</button>
-            <button id="eventInsertBtn2"  onclick="eventInsertBtn(); disabled">등록</button>
-        </div> 
-    </form>
-
+    <section>
+    	<main>    
+	   <form name="create_event_form" action="/event/createEnd" method="post" enctype="multipart/form-data">
+	        <div class="form-group">
+	            <label for="eventType">이벤트 유형</label>
+	            <select id="eventType" name="eventType" onchange="showFormSection()"> 
+	                <option value="1" selected>기본 이벤트</option>
+	                <option value="2">선착순 이벤트</option> 
+	            </select>
+	        </div>
+	
+	        <div id="form-section1" class="form-section">
+	           <div class="form-group">
+	              <label for="eventCategory1">카테고리</label>
+	              <select id="eventCategory1" name="eventCategory1"> 
+	                  <option value="1" selected>신간 도서</option>
+	                  <option value="2">독서 마라톤</option>
+	                  <option value="3">챌린지</option>
+	                  <option value="4">작가 초청</option> 
+	              </select>
+	             </div>
+	             
+				<div class="form-group">
+				    <label for="eventTitle1">제목</label>
+				    <input type="text" id="eventTitle1" name="eventTitle1" maxlength="40" onkeyup="updateCounter(1)">
+				    <span style="color:#aaa;" id="counter1">(0 / 40)</span>
+				</div>
+	            <div class="form-group">
+	                <label for="startDate1">기간</label>
+	                <div>
+	                    <input type="date" id="startDate1" name="startDate1" onchange="toggleEndDate(1)"><br>
+	                    <input type="date" id="endDate1" name="endDate1" disabled>
+	                </div>
+	            </div>
+	            <div class="form-group">
+	                <label for="eventContent1">내용</label>
+	                <textarea id="eventContent1" name="eventContent1" wrap="hard"></textarea>
+	            </div>
+	            <div class="form-group">
+	                <label for="eventimage1">이미지</label>
+	                <div>
+	                    <div class="image-box default" id="imageBox1" onclick="document.getElementById('eventimage1').click()">
+	                        <img id="imagePreview1" alt="Image Preview">
+	                    </div>
+	                    <div class="delete-button" id="deleteButton1" onclick="deleteImage(1)">이미지 삭제</div>
+	                    <input type="file" id="eventimage1" name="eventimage1"  accept=".png,.jpg,.jpeg" onchange="previewImage(event, 1)">
+	                </div>
+	            </div>  
+	            <button id="eventCancelBtn" onclick="eventCancelBtn();">취소</button>
+	            <button id="eventInsertBtn"  onclick="eventInsertBtn(); disabled">등록</button>
+	        </div>
+	
+	        <div id="form-section2" class="form-section">
+	            <div class="form-group">
+	                <label for="eventCategory2">카테고리</label>
+	                <select id="eventCategory2" name="eventCategory2"> 
+	                    <option value="1" selected>신간 도서</option>
+	                    <option value="2">독서 마라톤</option>
+	                    <option value="3">챌린지</option>
+	                    <option value="4">작가 초청</option> 
+	                </select>
+	            </div>
+				<div class="form-group">
+				    <label for="eventTitle2">제목</label>
+				    <input type="text" id="eventTitle2" name="eventTitle2" maxlength="40" onkeyup="updateCounter(2)">
+				    <span style="color:#aaa;" id="counter2">(0 / 40)</span>
+				</div>
+	            <div class="form-group">
+	                <label for="startDate2">모집 기간</label>
+	                <input type="datetime-local" id="startDate2" name="startDate2" onchange="setMinValue()">
+	                <input type="datetime-local" id="endDate2" name="endDate2" disabled onchange="setMinValue()">
+	            </div>
+	            <div class="form-group">
+	                <label for="progressDate2">이벤트 진행일</label>
+	                <input type="date" id="progressDate2" name="progressDate2" disabled><br>
+	            </div>
+	            <div class="form-group">
+	                <label for="eventQuota2">정원</label>
+	                <input type="number" id="eventQuota2" name="eventQuota2" min="1"><br>
+	            </div> 
+	            <div class="form-group">
+	                <label for="eventContent2">내용</label>
+	                <textarea id="eventContent2" name="eventContent2" wrap="hard"></textarea>
+	            </div>
+	            <div class="form-group">
+	                <label for="eventimage2">이미지</label>
+	                <div>
+	                    <div class="image-box default" id="imageBox2" onclick="document.getElementById('eventimage2').click()">
+	                        <img id="imagePreview2" alt="Image Preview">
+	                    </div>
+	                    <div class="delete-button" id="deleteButton2" onclick="deleteImage(2)">이미지 삭제</div>
+	                    <input type="file" id="eventimage2" name="eventimage2"  accept=".png,.jpg,.jpeg" onchange="previewImage(event, 2)">
+	                </div>
+	            </div>
+	            <button id="eventCancelBtn" onclick="eventCancelBtn();">취소</button>
+	            <button id="eventInsertBtn2" onclick="eventInsertBtn(); disabled">등록</button>
+	        </div> 
+	    </form>
+	</main>
+	</section>
     <script src="../../../resources/js/eventCreate.js"></script> 
     <script>
 	    document.addEventListener('DOMContentLoaded', function() {
@@ -221,11 +308,10 @@
 	            endDate2.disabled = false;
 	            const startDate = new Date(startDate2.value);
 	            startDate.setDate(startDate.getDate() + 1); // 다음 날로 설정
-	            const minEndDate = startDate.toISOString().slice(0, 16); // datetime-local 형식으로 변환
+	            const minEndDate = startDate.toISOString().slice(0, 16);  
 	
 	            endDate2.min = minEndDate;
-	            
-	            // endDate2의 값이 변경될 때 progressDate2의 min 속성 업데이트
+	             
 	            endDate2.addEventListener('change', function() {
 	                if (endDate2.value) {
 	                    const endDate = new Date(endDate2.value);
@@ -245,7 +331,7 @@
 	            progressDate2.value = '';
 	        }
 	
-	        validateForm(); // 변경된 값으로 폼 유효성 검사 수행
+	        validateForm();  
 	    }
 	
 	    function validateForm() {
@@ -305,8 +391,34 @@
 	        form.submit();
 	    }
 	    
+	    $(document).ready(function() {
+            $('#eventTitle1').on('keyup', function() {
+                var content = $(this).val();
+                var maxLength = $(this).attr('maxlength');
+                
+                if (content.length > maxLength) {
+                    alert("최대 40자까지 입력 가능합니다.");
+                    $(this).val(content.substring(0, maxLength));
+                }
+
+                $('#counter1').text("(" + $(this).val().length + " / " + maxLength + ")");
+            });
+        });
 	    
-	     
+	    $(document).ready(function() {
+            $('#eventTitle2').on('keyup', function() {
+                var content = $(this).val();
+                var maxLength = $(this).attr('maxlength');
+                
+                if (content.length > maxLength) {
+                    alert("최대 40자까지 입력 가능합니다.");
+                    $(this).val(content.substring(0, maxLength));
+                }
+
+                $('#counter2').text("(" + $(this).val().length + " / " + maxLength + ")");
+            });
+        });
+ 
 </script>
 
 </body>
