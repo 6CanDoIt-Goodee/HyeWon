@@ -1,7 +1,17 @@
+<%@page import="java.util.List"%>
+<%@page import="com.book.member.event.dao.MemEventDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import = "com.book.member.user.vo.User" %>
+<%@ page import="com.book.member.event.dao.MemEventDao" %>
+<%@ page import="java.util.List"%>
+<%@ page import="com.book.admin.event.vo.Event"%>
 <link href='../../resources/css/include/font.css' rel="stylesheet" type="text/css"> 
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+  />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
 	@charset "UTF-8";  
 
@@ -156,6 +166,59 @@
 	    padding: 5px 15px;
 	    background-color: rgb(255, 255, 255);
 	}
+	
+	/* 알림 */
+	.notification-icon {
+	    position: relative;
+	    cursor: pointer;
+	}
+	
+	.notification-count {
+	    position: absolute;
+	    top: -5px;
+	    right: -5px;
+	    background-color: red;
+	    color: white;
+	    border-radius: 50%;
+	    padding: 2px 5px;
+	    font-size: 12px;
+	}
+	
+	.modal {
+	    display: none;
+	    position: fixed;
+	    z-index: 1;
+	    left: 0;
+	    top: 0;
+	    width: 100%;
+	    height: 100%;
+	    overflow: auto;
+	    background-color: rgba(0,0,0,0.4);
+	}
+	
+	.modal-content {
+	    background-color: #fefefe;
+	    margin: 15% auto;
+	    padding: 20px;
+	    border: 1px solid #888;
+	    width: 80%;
+	    max-width: 600px;
+	}
+	
+	.close {
+	    color: #aaa;
+	    float: right;
+	    font-size: 28px;
+	    font-weight: bold;
+	    cursor: pointer;
+	}
+	
+	.close:hover,
+	.close:focus {
+	    color: black;
+	    text-decoration: none;
+	    cursor: pointer;
+	}
 	 
 </style>
 <section class="main_header">
@@ -193,8 +256,60 @@
 				<li>
 				 	<a href="/user/checkpw"class="header_list" id="header_join">계정수정</a>
 				</li>
+				<li id="notification-icon" class="notification-icon">
+				    <i class="fas fa-bell"></i> 
+				</li>
+				
+				<!-- 알림 모달 -->
+				<div id="notification-modal" class="modal">
+				    <div class="modal-content">
+				        <span class="close">&times;</span>
+				        <h2>알림 설정된 이벤트</h2>
+				        <div id="notification-list">
+		                <%
+		                	MemEventDao notificationDAO = new MemEventDao();
+		                    List<Event> notifiedEvents = notificationDAO.getNotifiedEventsForUser(user.getUser_no());
+		                    if(notifiedEvents != null && !notifiedEvents.isEmpty()) {
+		                        for(Event event : notifiedEvents) {
+		               		 %>
+		                            <div class="notification-item">
+		                            	<a href="<%= request.getContextPath() %>/user/event/detail?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form()%>">
+		                                	<div><%= event.getEv_title() %></<div></a>
+		                            </div>
+		                	<% 
+		                        }
+		                    } else {
+		                	%>
+		                        <p>알림 설정된 이벤트가 없습니다.</p>
+		                	<%
+		                    } 
+			                %>
+			            </div>
+				    </div>
+				</div>
 			</ul>
 		</div>
 		<%} %>	
      </header>
 </section>  
+<script>
+	$(document).ready(function() {
+	    var modal = $("#notification-modal");
+	    var icon = $("#notification-icon");
+	    var closeBtn = $(".close");
+	 
+	    icon.click(function() { 
+	        modal.css("display", "block");
+	    });
+	 
+	    closeBtn.click(function() {
+	        modal.css("display", "none");
+	    });
+	 
+	    $(window).click(function(event) {
+	        if (event.target == modal[0]) {
+	            modal.css("display", "none");
+	        }
+	    }); 
+	});
+</script>

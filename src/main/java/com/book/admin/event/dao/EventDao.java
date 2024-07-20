@@ -20,22 +20,23 @@ import com.book.common.Paging;
 public class EventDao {
 	
 	// 메인페이지 이벤트
-	public static List<Event> getAllEvents(Connection conn) {
-	    List<Event> events = new ArrayList<>();
+	public static List<Map<String, String>> getAllEvents() {
+		List<Map<String, String>> events = new ArrayList<>();
+	    Connection conn = getConnection();
 	    String sql = "SELECT * FROM events WHERE event_end >= CURRENT_DATE";
-
+	    
 	    try (PreparedStatement stmt = conn.prepareStatement(sql);
 	         ResultSet rs = stmt.executeQuery()) {
 
 	        while (rs.next()) {
-	            Event event = new Event();
-	            event.setEvent_no(rs.getInt("event_no"));
-	            event.setEv_title(rs.getString("ev_title"));
-	            event.setEv_start(rs.getString("ev_start").toString());  
-	            event.setEv_end(rs.getString("ev_end").toString());   
-	            event.setEv_category_name(rs.getString("event_form"));
-	            event.setNew_image(rs.getString("new_image")); 
-	            events.add(event);
+	        	Map<String, String> mainPagEv = new HashMap<>();
+	        	mainPagEv.put("event_no", rs.getString("event_no"));
+	        	mainPagEv.put("event_title", rs.getString("event_title"));
+	        	mainPagEv.put("event_start", rs.getString("event_start").toString());
+	        	mainPagEv.put("event_end", rs.getString("event_end").toString()); 
+	        	mainPagEv.put("event_form", rs.getString("event_form"));
+	        	mainPagEv.put("event_new_image", rs.getString("event_new_image"));  
+	            events.add(mainPagEv);
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();  

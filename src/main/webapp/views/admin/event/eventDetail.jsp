@@ -169,9 +169,14 @@
                 </div>
                 <% } else { %>
                 <div class="event_details">
-                    <%-- 기본 이벤트일 경우 등록일만 출력 --%>
-                    <div class="item">
-                        <%= event.getEv_start() %>  ~ <%= event.getEv_end() %>
+                    <div class="item"><strong>기간:</strong>
+                        <% 
+                            if (event.getEv_start().equals(event.getEv_end())) {
+                                out.print(event.getEv_start());
+                            } else {
+                                out.print(event.getEv_start() + " ~ " + event.getEv_end());
+                            }
+                        %> 
                     </div>
                 </div>
                 <% } %>

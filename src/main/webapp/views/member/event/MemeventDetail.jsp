@@ -122,12 +122,12 @@
             <div class="eventDeatil_main">
                 <span id="event_Type">
                     <% 
-					    Event event = (Event) request.getAttribute("event");  
-					    User user_event = (User) session.getAttribute("user");
-					    boolean isRegistered = (boolean) request.getAttribute("isRegistered");
-					    int registeredCount = event.getEvent_registered();
-					    int participateState = (int) request.getAttribute("participateState");  
-					%>
+                        Event event = (Event) request.getAttribute("event");  
+                        User user_event = (User) session.getAttribute("user");
+                        boolean isRegistered = (boolean) request.getAttribute("isRegistered");
+                        int registeredCount = event.getEvent_registered();
+                        int participateState = (int) request.getAttribute("participateState");  
+                    %>
                     <% if (event.getEv_form() == 1) { %>
                          기본
                      <% } else if (event.getEv_form() == 2) { %>
@@ -140,68 +140,67 @@
                     <h2 id="event_title"><%= event.getEv_title() %></h2>
                     <p id="event_regdate">등록일 : <%= event.getEv_regdate().substring(0, 10) %></p>
                 </div>
-				 
+                 
                 <% if (event.getEv_form() == 2) { %>
-	                <div class="event_details">
-	                    <div class="item">
-	                        <strong>모집 인원:</strong> <%= event.getEvent_quota() %> 명
-	                    </div>
-	                    <div class="item">
-	                        <strong>모집 기간:</strong> <%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %>
-	                    </div>
-	                    <div class="item">
-	                        <strong>이벤트 진행일:</strong> <%= event.getEv_progress() %>
-	                    </div>
-	                </div>
+                    <div class="event_details">
+                        <div class="item">
+                            <strong>모집 인원:</strong> <%= event.getEvent_quota() %> 명
+                        </div>
+                        <div class="item">
+                            <strong>모집 기간:</strong> <%= formatDateString(event.getEv_start()) %> ~ <%= formatDateString(event.getEv_end()) %>
+                        </div>
+                        <div class="item">
+                            <strong>이벤트 진행일:</strong> <%= event.getEv_progress() %>
+                        </div>
+                    </div>
                 <% } else { %>
                 <div class="event_details">
-                    <%-- 기본 이벤트일 경우 등록일만 출력 --%>
                     <div class="item"><strong>기간:</strong>
-                    	<% 
-					        if (event.getEv_start().equals(event.getEv_end())) {
-					            out.print(event.getEv_start());
-					        } else {
-					            out.print(event.getEv_start() + " ~ " + event.getEv_end());
-					        }
-					    %> 
+                        <% 
+                            if (event.getEv_start().equals(event.getEv_end())) {
+                                out.print(event.getEv_start());
+                            } else {
+                                out.print(event.getEv_start() + " ~ " + event.getEv_end());
+                            }
+                        %> 
                     </div>
                 </div>
                 <% } %>
                 <hr>
                 <div class="event_content"> 
-				    <pre id="content_area"><%= event.getEv_content() %></pre>
-				    <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
-				
-					<!-- 알림 버튼 -->
-					<% if (user_event != null) { %>
+                    <pre id="content_area"><%= event.getEv_content() %></pre>
+                    <img src="<%= request.getContextPath() %>/upload/event/<%= event.getNew_image() %>" alt="새 이미지" class="event-image">
+                
+                    <!-- 알림 버튼 -->
+					<% if (user_event != null && event.getEv_form() == 2) { %>
 					    <button id="notification_btn" type="button" onclick="toggleNotification(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>);">
 					        알림 설정
 					    </button>
 					<% } %>
-				
-					<!-- 참여 버튼 --> 
-					<% if (user_event != null && event.getEv_form() == 2) { %>
-					    <button id="event_btn" type="button"
-					        <% if (isRegistered) { %>
-					            style="display:block;"
-					        <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
-					            style="display:block;"
-					        <% } else { %>
-					            style="display:block;"
-					        <% } %>
-					        	onclick="toggleRegistration(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>, <%= participateState %>);">
-					        <% if (participateState == 0) { %>
-					            참여 취소
-					        <% } else if (participateState == 1) { %>
-					            대기 취소
-					        <% } else if (registeredCount >= event.getEvent_quota()) { %>
-					            대기
-					        <% } else { %>
-					            등록
-					        <% } %>
-					    </button>
-					<% } %> 
-				</div>
+                
+                    <!-- 참여 버튼 --> 
+                    <% if (user_event != null && event.getEv_form() == 2) { %>
+                        <button id="event_btn" type="button"
+                            <% if (isRegistered) { %>
+                                style="display:block;"
+                            <% } else if (registeredCount >= event.getEvent_quota() && participateState == 1) { %>
+                                style="display:block;"
+                            <% } else { %>
+                                style="display:block;"
+                            <% } %>
+                                onclick="toggleRegistration(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>, <%= participateState %>);">
+                            <% if (participateState == 0) { %>
+                                참여 취소
+                            <% } else if (participateState == 1) { %>
+                                대기 취소
+                            <% } else if (registeredCount >= event.getEvent_quota()) { %>
+                                대기
+                            <% } else { %>
+                                등록
+                            <% } %>
+                        </button>
+                    <% } %> 
+                </div>
             </div> 
         </main>
     </section>
@@ -222,104 +221,115 @@
         }
     %>
 
-	<script>
-	    // 참여 등록 및 취소 
-	    function toggleRegistration(eventNo, userNo, participateState) {
-	        var button = $("#event_btn");
-	        var action = button.text().trim();
+    <script>
+        // 참여 등록 및 취소 
+        function toggleRegistration(eventNo, userNo, participateState) {
+            var button = $("#event_btn");
+            var action = button.text().trim();
 
-	        $.ajax({
-	            type: "POST",
-	            url: "<%=request.getContextPath()%>/user/event/par",
-	            data: { 
-	                "event_no": eventNo, 
-	                "user_no": userNo, 
-	                "action": action,
-	                "participate_state": participateState 
-	            },
-	            success: function(response) {
-	                // 버튼 상태 업데이트
-	                if (action === "등록") {
-	                    button.text("참여 취소");
-	                } else if (action === "참여 취소") {
-	                    button.text("등록");
-	                } else if (action === "대기") {
-	                    button.text("대기 취소");
-	                } else if (action === "대기 취소") {
-	                    button.text("대기");
-	                }
-	                alert(action + " 성공");
-	                location.reload(); // 페이지 새로고침
-	            }
-	        });
-	    }
+            $.ajax({
+                type: "POST",
+                url: "<%=request.getContextPath()%>/user/event/par",
+                data: { 
+                    "event_no": eventNo, 
+                    "user_no": userNo, 
+                    "action": action,
+                    "participate_state": participateState 
+                },
+                success: function(response) {
+                    // 버튼 상태 업데이트
+                    if (action === "등록") {
+                        button.text("참여 취소");
+                    } else if (action === "참여 취소") {
+                        button.text("등록");
+                    } else if (action === "대기") {
+                        button.text("대기 취소");
+                    } else if (action === "대기 취소") {
+                        button.text("대기");
+                    }
+                    alert(action + " 성공");
+                    location.reload(); // 페이지 새로고침
+                }
+            });
+        }
 
-	    $(document).ready(function() { 
- 			// 모집 기간 확인
-	        var eventStart = new Date("<%= event.getEv_start() %>");
-	        var eventEnd = new Date("<%= event.getEv_end() %>");
-	        var currentDate = new Date();
+        $(document).ready(function() {  
+            var eventStart = new Date("<%= event.getEv_start() %>");
+            var eventEnd = new Date("<%= event.getEv_end() %>");
+            var currentDate = new Date();
+ 
+            var eventButton = $("#event_btn");
+            var notificationButton = $("#notification_btn");
+            
+            // 이벤트 시작 1시간 전 시간 계산
+            var oneHourBeforeStart = new Date(eventStart.getTime() - (60 * 60 * 1000));
 
-	        // 버튼 상태 확인
-	        var eventButton = $("#event_btn");
-	        if (currentDate < eventStart) {
-	            eventButton.text("모집 예정");
-	            eventButton.prop("disabled", true);
-	        } else if (currentDate > eventEnd) {
-	            eventButton.text("모집 종료");
-	            eventButton.prop("disabled", true);
-	        } else if (currentDate >= eventStart && currentDate <= eventEnd) {
-	            if (<%= event.getEv_form() %> === 2) {
-	                eventButton.show();
-	            }
-	        }
-	        
-	        /* 알림 버튼 */
-	        if (<%= user_event != null %>) {
-	            $.ajax({
-	                type: "GET",
-	                url: "<%=request.getContextPath()%>/user/event/checkNotification",
-	                data: { 
-	                    "event_no": <%= event.getEvent_no() %>, 
-	                    "user_no": <%= user_event.getUser_no() %>
-	                },
-	                success: function(response) {
-	                    if (response === "true") {
-	                        $("#notification_btn").text("알림 취소");
-	                    } else {
-	                        $("#notification_btn").text("알림 설정");
-	                    }
-	                } 
-	            });
-	        }
-	    });
-	    
-	    
-	    /* 알림 버튼 */
-	    function toggleNotification(eventNo, userNo) {
-	        var button = $("#notification_btn");
-	        var action = button.text().trim() === "알림 설정" ? "set" : "cancel";
+            if (currentDate < eventStart) {
+                eventButton.text("모집 예정");
+                eventButton.prop("disabled", true);
+                
+                if (currentDate < oneHourBeforeStart) {
+                    notificationButton.show();
+                } else {
+                    notificationButton.hide();
+                }
+            } else if (currentDate > eventEnd) {
+                eventButton.text("모집 종료");
+                eventButton.prop("disabled", true);
+                notificationButton.hide();
+            } else if (currentDate >= eventStart && currentDate <= eventEnd) {
+                if (<%= event.getEv_form() %> === 2) {
+                    eventButton.show();
+                }
+                notificationButton.hide();
+            }
+            
+            /* 알림 버튼 상태 확인 */
+            if (<%= user_event != null %> && currentDate < oneHourBeforeStart) {
+                $.ajax({
+                    type: "GET",
+                    url: "<%=request.getContextPath()%>/user/event/checkNotification",
+                    data: { 
+                        "event_no": <%= event.getEvent_no() %>, 
+                        "user_no": <%= user_event != null ? user_event.getUser_no() : 0 %>
+                    },
+                    success: function(response) {
+                        if (response === "true") {
+                            $("#notification_btn").text("알림 취소");
+                        } else {
+                            $("#notification_btn").text("알림 설정");
+                        }
+                    } 
+                });
+            }
+        });
+        
+        
+        /* 알림 버튼 */
+        function toggleNotification(eventNo, userNo) {
+            var button = $("#notification_btn");
+            var action = button.text().trim() === "알림 설정" ? "set" : "cancel";
 
-	        $.ajax({
-	            type: "POST",
-	            url: "<%=request.getContextPath()%>/user/event/notification",
-	            data: { 
-	                "event_no": eventNo, 
-	                "user_no": userNo, 
-	                "action": action
-	            },
-	            success: function(response) {
-	                if (action === "set") {
-	                    button.text("알림 취소");
-	                    alert("알림이 설정되었습니다.");
-	                } else {
-	                    button.text("알림 설정");
-	                    alert("알림이 취소되었습니다.");
-	                }
-	            } 
-	        });
-	    }
-	</script> 
+            $.ajax({
+                type: "POST",
+                url: "<%=request.getContextPath()%>/user/event/notification",
+                data: { 
+                    "event_no": eventNo, 
+                    "user_no": userNo, 
+                    "action": action
+                },
+                success: function(response) {
+                    if (action === "set") {
+                        button.text("알림 취소");
+                        alert("알림이 설정되었습니다.");
+                    } else {
+                        button.text("알림 설정");
+                        alert("알림이 취소되었습니다.");
+                    }
+                } 
+            });
+        }
+    </script> 
 
 </body>
 </html>

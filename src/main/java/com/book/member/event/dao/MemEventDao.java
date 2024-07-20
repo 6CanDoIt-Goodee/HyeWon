@@ -6,6 +6,7 @@ import static com.book.common.sql.JDBCTemplate.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,42 @@ import com.book.member.event.vo.MemEvent;
 
 public class MemEventDao {
  
-	// 진행 중인 이벤트 목록 조회 메서드
+	// 알림 받기 설정한 이벤트 목록 
+    public List<Event> getNotifiedEventsForUser(int userNo) {
+        List<Event> events = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT e.* FROM events e " +
+                         "JOIN event_notifications n ON e.event_no = n.event_no " +
+                         "WHERE n.user_no = ? AND e.event_start > NOW() " +
+                         "ORDER BY e.event_start ASC";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userNo);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Event event = new Event(); 
+                event.setEvent_no(rs.getInt("event_no"));
+                event.setEv_title(rs.getString("event_title"));
+                event.setEv_start(rs.getString("event_title")); 
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+            close(conn);
+        }
+
+        return events;
+    } 
+    
+	// 진행 중인 이벤트 목록 조회  
     public List<Map<String, String>> selectOngoingEvents(Event option, Connection conn) {
         List<Map<String, String>> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -58,7 +94,7 @@ public class MemEventDao {
         return list;
     }
 
-    // 종료된 이벤트 목록 조회 메서드
+    // 종료된 이벤트 목록 조회  
     public List<Map<String, String>> selectEndedEvents(Event option, Connection conn) {
         List<Map<String, String>> list = new ArrayList<>();
         PreparedStatement pstmt = null;
@@ -99,7 +135,7 @@ public class MemEventDao {
         return list;
     }
 
-    // 기존 이벤트 목록 조회 메서드
+    // 기존 이벤트 목록 조회  
     public List<Map<String, String>> selectEventList(Event option, Connection conn) {
         List<Map<String, String>> list = new ArrayList<>();
         PreparedStatement pstmt = null;

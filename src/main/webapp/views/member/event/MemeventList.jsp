@@ -115,21 +115,21 @@ body {
 
 	<div class="event-grid">
 		<%
-    List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("resultList");
-    if (list != null) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date now = new Date();  
-
-        for (Map<String, String> row : list) {
-            Date eventStart = format.parse(row.get("event_start"));
-            Date eventEnd = format.parse(row.get("event_end"));
-            boolean isOngoing = !now.before(eventStart) && !now.after(eventEnd);
-            String eventForm = row.get("event_form");
-            long daysRemaining = (eventEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-            String dday = (daysRemaining >= 0) ? "D-" + daysRemaining : "모집 기간 종료";
-            String eventNo = row.get("event_no");
-            String eventEndDateStr = format.format(eventEnd); 
-    %>
+		    List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("resultList");
+		    if (list != null) {
+		        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		        Date now = new Date();  
+		
+		        for (Map<String, String> row : list) {
+		            Date eventStart = format.parse(row.get("event_start"));
+		            Date eventEnd = format.parse(row.get("event_end"));
+		            boolean isOngoing = !now.before(eventStart) && !now.after(eventEnd);
+		            String eventForm = row.get("event_form");
+		            long daysRemaining = (eventEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+		            String dday = (daysRemaining >= 0) ? "D-" + daysRemaining : "모집 기간 종료";
+		            String eventNo = row.get("event_no");
+		            String eventEndDateStr = format.format(eventEnd); 
+		   %>
 		<div class="event-item">
 			<a href="javascript:void(0);"
 				onclick="return handleEventClick('<%= eventNo %>', '<%= eventEndDateStr %>');"
