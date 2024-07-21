@@ -23,7 +23,7 @@
     }
     
     main {
-        max-width: 1200px;
+        max-width: 900px;
         margin: 2rem auto;
         padding: 1rem 1rem; 
         background-color: white; 
@@ -41,82 +41,6 @@
          margin: 30px 0px;
          text-align: center;
          font-size: 30px;
-	}
-	
-	.event_list_table {
-	  margin-top :30px;
-	  width: 100%;
-	  border-collapse: collapse;
-	  border-top: 2px solid #000;
-	}
-	
-	.event_list_table th,
-	.event_list_table td {
-	  padding: 15px 0;
-	  text-align: center;
-	  font-size: 1rem;
-	  border-bottom: 1px solid #ddd;
-	}
-	
-	.event_list_table thead tr {
-	  border-bottom: 1px solid #999;
-	}
-	
-	.event_list_table th {
-	  font-weight: 600; 
-	  background: rgba(250, 237, 177, 0.6);
-	}
-	
-	.event_list_table .num {
-	  width: 10%;
-	}
-	
-	.event_list_table .title {
-	  width: 60%;
-	  text-align: left;
-	}
-	.event_list_table .title a {
-	  color: #2c2c2c;
-	  text-decoration: none;
-	}
-	
-	.event_list_table thead .title {
-	  text-align: center;
-	}
-	
-	.event_list_table .date {
-	  width: 10%;
-	}
-	
-	.event_list_table .status {
-	  width: 10%;
-	}
-	 
-	 
-	
-	body { 
-        font-family: 'LINESeedKR-Bd';
-        background-color: rgb(247, 247, 247);  
-    }
-    
-    main {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 1rem 1rem; 
-        background-color: white; 
-        box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
-        border-radius: 20px;
-    }
-	 
-	.event_list table tbody td a {
-	    text-decoration: none;  
-	    color: black;   
-	}
-	  
-	.word h3 {
-        margin: 30px 0px;
-        text-align: center;
-        font-size: 30px;
 	}
 	
 	.event_list_table {
@@ -237,9 +161,7 @@
 	}
 </style>
 <body>
-    <%@ include file="../../include/header.jsp" %>
-    <li><a href="/event/list" class="header_list">목록</a></li>
-    <li><a href="/event/create" class="header_list">등록</a></li> 
+    <%@ include file="../../include/header.jsp" %> 
     <section>
     	<main>
 	        <div id="section_wrap" class="container">

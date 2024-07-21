@@ -297,7 +297,7 @@
 	                <li><a href="#" class="header_list">독후감</a></li>
 	                <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li> 
 	                <li><%= user.getUser_nickname() + "님 환영합니다." %></li>
-	                <li><a href="/user/mypage" class="header_list" id="header_join">마이페이지</a></li>
+	                <li><a href="/user/mypage" class="header_list" >마이페이지</a></li>
 	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
 	                <li id="notification-icon" class="notification-icon"><i class="fas fa-bell"></i>
 	                </li>

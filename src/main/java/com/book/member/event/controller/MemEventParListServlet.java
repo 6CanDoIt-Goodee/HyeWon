@@ -53,11 +53,11 @@ public class MemEventParListServlet extends HttpServlet {
          Connection conn = getConnection();
          MemEventDao memEventDao = new MemEventDao();
 
-         int totalData = memEventDao.selectParEventCount(userNo, searchKeyword, conn);
+         int totalData = memEventDao.selectParEventCount(userNo, searchKeyword);
 
          int startRow = (nowPage - 1) * numPerPage;
          int endRow = startRow + numPerPage - 1;
-         List<Map<String, String>> userEvents = memEventDao.getUserEventParticipations(userNo, startRow, numPerPage, searchKeyword, conn);
+         List<Map<String, String>> userEvents = memEventDao.getUserEventParticipations(userNo, startRow, numPerPage, searchKeyword);
 
          close(conn);
 

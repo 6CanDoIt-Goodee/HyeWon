@@ -132,6 +132,97 @@
 		    padding-top: 60px;
 		    background-color: white;
 		}
+		
+		/* 댓글 */
+		
+		.container {
+		   width: 900px;
+		   margin: auto;
+		   overflow: hidden;
+		   padding: 20px;
+		   position: relative; 
+		}
+		
+		.replyDiv {
+		   width: 900px;
+		   height: 200px;
+		}
+		
+		.nickname{
+		margin-top:15px
+		}
+		
+		.parentReply{
+		border-top:1px solid #ddd;
+		}
+		
+		.childReply{
+		margin-left: 50px;
+		border-top:1px solid #ddd;
+		}
+		
+		.replyCount{ 
+		margin-bottom: 20px;
+		}
+		
+		.write {
+		   width: 95%;
+		   padding: 20px;
+		   border-radius: 5px;
+		   border: 1px solid #ccc;
+		   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		   resize: none;
+		   margin-top: 20px
+		}
+		
+		.write:focus {
+		   outline: none;
+		   border: none;
+		}
+		
+		.replyContent {
+		   width: 95%;
+		   height: 100px;
+		   padding: 10px;
+		   resize: none;
+		   margin-top: 10px;
+		}
+		
+		#reBtn{
+		border:none;
+		margin-bottom: 10px;
+		display:flex;
+		justify-content:right;
+		}
+		
+		.replyBtns {
+		   margin-left: 10px;
+		   width: 50px;
+		   height: 30px;
+		   border-radius: 15%;
+		   text-align: center;
+		   background: #575756;
+		   color: #fffbfb;
+		   font-size: 14px;
+		   justify-content: center;
+		   align-items: center;
+		   cursor: pointer;
+		   text-decoration: none;
+		   border: none;
+		}
+		
+		.btn_gr {
+		   margin-top: 10px;
+		   display: flex;
+		   justify-content: flex-end;
+		   margin-bottom: 10px;
+		}
+		
+		
+		.replyBtns:hover {
+		   background-color: #e0e0e0;
+		}
+		
     </style>
 </head>
 <body>
@@ -168,6 +259,8 @@
                     <div class="item">
                         이벤트 진행일<span class="details_content3"><%= event.getEv_progress() %></span>
                     </div>
+                    <div class="item">참여 현황<span class="details_content"><%= event.getEvent_registered() %> / <%= event.getEvent_quota() %></span></div>
+                    <div class="item">대기 인원<span class="details_content"><%= event.getEvent_waiting() %></span></div>
                 </div>
                 <% } else { %>
                 <div class="event_details">
@@ -191,6 +284,7 @@
                 <!-- 수정, 삭제 버튼 --> 
                    <button class="btn btn-outline-danger" onclick="deleteEvent(<%= event.getEvent_no() %>)">삭제</button> 
                    <button class="btn btn-outline-primary" onclick="location.href='/event/update?eventNo=<%= event.getEvent_no() %>&eventType=<%= event.getEv_form() %>'">수정</button>
+		           <a href="/event/list" class="btn btn-outline-primary" id="eventListPageBtn">목록</a>
             </div>
         </main>
     </section>
@@ -270,13 +364,132 @@
 	            </div> 
 	        </div> 
 		</main>
+	    <% } %> 
+<!-- 댓글 컨테이너 -->
+	<section class="container">
+	    <% Integer replyCnt = (Integer) request.getAttribute("erReplyCnt"); %>
+	    <div id="replyCount">댓글 수 : <%= (replyCnt != null ? replyCnt : 0) %></div><br>
+	    
+	    <% 
+	    // 댓글 리스트 가져오기
+	    List<Map<String, String>> erReplyList = (List<Map<String, String>>) request.getAttribute("erReplyList");
+	    // 세션에서 사용자 정보 가져오기
+	    User evReuserNo = (User) session.getAttribute("user");
+	    int userNo = (evReuserNo != null) ? evReuserNo.getUser_no() : -1;  // 사용자 번호를 가져오되, 세션이 없으면 -1로 설정
+	    
+	    boolean isLoggedIn = evReuserNo != null;
+	    boolean isNotUserOne = userNo != 1;
+	    
+	    if (erReplyList != null && !erReplyList.isEmpty()) {
+	        for (int i = 0; i < erReplyList.size(); i++) {
+	            Map<String, String> ver = erReplyList.get(i);
+	            String erReply = (ver.get("er_delete").equals("1")) ? "삭제된 댓글입니다." : ver.get("er_content");
+	            int erParentNo = Integer.parseInt(ver.get("er_parent"));
+	            String erReplyNo = ver.get("er_no");
+	            String nickname = ver.get("er_userNickName");
+	            String erRegDate = ver.get("er_regDate");
+	            String erModDate = ver.get("er_modDate");
+	            int replyUserNo = Integer.parseInt(ver.get("er_user_no"));
+	            String parentClass = erParentNo == 0 ? "parentReply" : "childReply";
+	    %>  
+	    <!-- 하나의 댓글 시작 -->  
+	    <div id="allreply" class="<%= parentClass %>">
+	        <div id="reply_<%= erReplyNo %>">
+	            <div class="nickname" style="display: flex; justify-content: space-between;">
+	                <span><%= nickname %></span>
+	                <div style="text-align: right;">
+	                    <span style="font-size:15px"><%= erRegDate %></span>
+	                    <% if (!erModDate.equals(erRegDate)) { %>
+	                        <span style="font-size:15px">수정됨(<%= erModDate %>)</span>
+	                    <% } %>
+	                </div>
+	            </div>
+	        </div>
+	        <!-- 댓글 내용 -->
+	        <div id="replyContent_<%= erReplyNo %>" class="replyContent"><%= erReply %></div>
+	        <!-- 수정버튼 눌렀을 때 ( 등록폼 display none ) -->
+	        <form id="updateForm_<%= erReplyNo %>" class="updateForm" action="/member/event/updateReply" method="post" style="display:none;">
+	            <input type="hidden" name="event_no" value="<%= event.getEvent_no() %>">
+	            <input type="hidden" name="eventType" value="<%= event.getEv_form() %>">
+	            <input type="hidden" name="er_reply_no" value="<%= erReplyNo %>">
+	            <input type="hidden" name="er_user_no" value="<%= userNo %>">
+	            <input class="replyContent" id="replyUpdate_<%= erReplyNo %>" name="updateContent" type="text" value="<%= erReply %>">
+	            <!-- 로그인한 유저와 댓글을 등록한 유저의 번호가 같거나 // 댓글이 삭제가 안되었을 경우 
+	                 버튼이 보이도록 -->
+	            <% if (userNo == replyUserNo && !ver.get("er_delete").equals("1")) { %>
+	                <div class="btn_gr">
+	                    <input type="submit" id="update_<%= erReplyNo %>" class="replyBtns" value="등록">
+	                    <input type="button" id="cancel_<%= erReplyNo %>" class="replyBtns" value="취소" onclick="cancelReplyForm('<%= erReplyNo %>')">
+	                </div>
+	            <% } %>
+	        </form>
+	        <!-- 삭제 폼 -->
+	        <form action="/member/event/deleteReply" method="post" style="display: inline;">
+	            <input type="hidden" name="event_no" value="<%= event.getEvent_no() %>">
+	            <input type="hidden" name="eventType" value="<%= event.getEv_form() %>">
+	            <input type="hidden" name="er_reply_no" value="<%= erReplyNo %>">
+	            <input type="hidden" name="er_user_no" value="<%= userNo %>">
+	            <!-- 로그인한 유저와 댓글을 등록한 유저의 번호가 같거나 // 댓글이 삭제가 안되었을 경우 
+	                 버튼이 보이도록 -->
+	            <% if (userNo == replyUserNo && !ver.get("er_delete").equals("1")) { %>
+	                <div class="btn_gr">
+	                    <input type="button" id="change_<%= erReplyNo %>" class="replyBtns" value="수정" onclick="changeReplyForm('<%= erReplyNo %>')">
+	                    <input class="replyBtns" type="submit" id="delete_<%= erReplyNo %>" value="삭제">
+	                </div>
+	            </form>
+	            <% } %>
+	            <!-- 부모의 번호가 0번이거나 // 삭제가 안되었을 경우
+	                답글하기가 보이도록 -->
+	            <% if (erParentNo == 0 && !ver.get("er_delete").equals("1")) { %>
+	                <% if (isLoggedIn && isNotUserOne) { %> <!-- 로그인 상태이고 사용자 번호가 1이 아닌 경우만 보이도록 수정 -->
+	                    <div class="btn_gr">
+	                        <button type="button" id="reBtn" onclick="showReplyForm('<%= erReplyNo %>')">답글하기</button>
+	                    </div>
+	                <% } %>
+	            <% } %>
+	            <!-- 답글하기를 눌렀을 때 나오는 답글 폼 -->
+	            <div id="replyForm_<%= erReplyNo %>" class="reply-form" style="display:none;">
+	                <form action="/member/event/childReply" method="post">
+	                    <input type="hidden" name="event_no" value="<%= event.getEvent_no() %>">
+	                    <input type="hidden" name="eventType" value="<%= event.getEv_form() %>">
+	                    <input type="hidden" name="er_parent" value="<%= erReplyNo %>">
+	                    <input type="hidden" name="er_user_no" value="<%= userNo %>">
+	                    <textarea class="write" name="er_content" placeholder="답글을 입력해주세요."></textarea>
+	                    <div class="btn_gr">
+	                        <input class="replyBtns" type="submit" value="등록">
+	                        <input class="replyBtns" type="button" value="취소" onclick="hideReplyForm('<%= erReplyNo %>')">
+	                    </div>
+	                </form>
+	            </div>
+	        </div>
+	        <% } %>
+	    <% } else { %> 
+	        <!-- 등록된 댓글이 없다면 -->
+	        <div class="replyContent">등록된 댓글이 없습니다.</div>
 	    <% } %>
+	    
+	    <!-- 새 댓글 작성 폼 (부모 댓글) -->
+	    <% if (isLoggedIn && isNotUserOne) { %> <!-- 로그인 상태이고 사용자 번호가 1이 아닌 경우만 보이도록 수정 -->
+	        <form action="/member/event/addReply" method="post">
+	            <div id="replyDiv">
+	                <input type="hidden" name="event_no" value="<%= event.getEvent_no() %>">
+	                <input type="hidden" name="eventType" value="<%= event.getEv_form() %>">
+	                <input type="hidden" name="er_user_no" value="<%= userNo %>">
+	                <textarea class="write" name="er_content" placeholder="댓글을 입력해주세요."></textarea>
+	                <div class="btn_gr">
+	                    <input class="replyBtns" type="submit" value="등록">
+	                    <input class="replyBtns" type="button" value="취소" onclick="clearReplyForm()">
+	                </div>
+	            </div>
+	        </form>
+	    <% } %>
+	</section>
  
     <%!
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm");
+        SimpleDateFormat inputFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat outputFormat1 = new SimpleDateFormat("yyyy-MM-dd a hh:mm");
 
-        String formatDateString(String input) {
+        String formatDateString1(String input) {
             try {
                 Date date = inputFormat.parse(input);
                 return outputFormat.format(date);
@@ -286,7 +499,7 @@
             }
         }
     %>
-
+    
     <script>  
         function deleteEvent(eventNo) { 
             if (confirm('이벤트를 삭제하시겠습니까?')) {

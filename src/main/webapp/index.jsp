@@ -5,6 +5,7 @@
 <%@ page import="com.book.admin.event.vo.Event"%>
 <%@ page import="com.book.admin.event.dao.EventDao" %>
 <%@ page import="java.util.Map" %> 
+<%@ page import="java.util.Date"%>
 
 <!DOCTYPE html>
 <html>
@@ -111,15 +112,14 @@
 	    width: 30px;
 	    height: 30px;
 	    margin-top: -15px;  
-	    color: rgb(56, 56, 56);
+	    color: rgb(56, 56, 56,0.3);
 	    font-weight: lighter;
 	    font-size: 18px;
-	    border-radius: 50%;
-	    background-color: #cacaca84;
+	    border-radius: 50%; 
 	    text-align: center;
 	    line-height: 30px;
 	    user-select: none;
-	    border: 1px solid rgb(56, 56, 56);
+	    border: 1px solid rgb(56, 56, 56,0.3);
 	    text-decoration: none;
 	    z-index: 10; 
 	}
@@ -195,11 +195,24 @@
 	}
 	
 	.event_form {
-		background-color: rgba(248, 224, 119, 0.65);
-		font-family: 'LeferiPoint-BlackA';
-		font-size: 1.3vw;
-		padding : 7px 7px 0px 7px; 
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
 	}
+	
+	.event_form_text {
+	    background-color: rgba(248, 224, 119, 0.65);
+	    font-family: 'LeferiPoint-BlackA';
+	    font-size: 1.3vw;
+	    padding: 7px 7px 0px 7px;
+	}
+	
+	.event-dday {
+	    font-weight: bold;
+	    font-size: 1.7vw;
+	    color: #edbb45;
+	    margin-left: 15px;  
+	} 
 	
 	.event_date {
 	    margin-top: 5%;
@@ -260,34 +273,42 @@
 		            <% 
 		                boolean isAdmin = user != null && user.getUser_no() == 1;
 		                List<Map<String, String>> events = EventDao.getAllEvents();
+		                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				        Date now = new Date(); 
 		                if (events != null && !events.isEmpty()) {
 		                    for (int i = 0; i < events.size(); i++) {
-		                        Map<String, String> event = events.get(i);
+		                    	Map<String, String> event = events.get(i);
 		                        String eventNo = event.get("event_no");
 		                        String imageUrl = request.getContextPath() + "/upload/event/" + event.get("event_new_image");
 		                        String eventTitle = event.get("event_title");
 		                        String eventStart = event.get("event_start").substring(0, 10);
 		                        String eventEnd = event.get("event_end").substring(0, 10);
-		                        String eventForm = event.get("event_form"); 
+		                        String eventForm = event.get("event_form");
 		                        String detailUrl = isAdmin ? request.getContextPath() + "/event/detail?eventNo=" + eventNo + "&eventType=" + eventForm
-			                            : request.getContextPath() + "/user/event/detail?eventNo=" + eventNo + "&eventType=" + eventForm;
+		                                                   : request.getContextPath() + "/user/event/detail?eventNo=" + eventNo + "&eventType=" + eventForm;
+		                        Date eventEndDate = format.parse(eventEnd);
+		                        long daysRemaining = (eventEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+		                        String dday = (daysRemaining > 0) ? "D-" + daysRemaining : (daysRemaining == 0) ? "모집중" : "모집 기간 종료";
 		            %>  
-	                    <div class="slide fade">
-	                        <a href="<%= detailUrl %>">
-	                            <div class="slide-image-container"> 
-	                                <img src="<%= imageUrl %>" alt="Image <%= i + 1 %>" class="slide-image">
-	                            </div>
-	                            <div class="event_content">
-	                                <div class="event_title"><%= eventTitle %></div>
-	                                <% if ("2".equals(eventForm)) { %>
-	                                    <div class="event_form">선착순 모집</div>
-	                                <% } %>
-	                                <div class="event_date">
-	                                    <%= eventStart.equals(eventEnd) ? eventStart : eventStart + " ~ " + eventEnd %>
-	                                </div>
-	                            </div>
-	                        </a>
-	                    </div>
+					        <div class="slide fade">
+					            <a href="<%= detailUrl %>">
+					                <div class="slide-image-container"> 
+					                    <img src="<%= imageUrl %>" alt="Image <%= i + 1 %>" class="slide-image">
+					                </div>
+					                <div class="event_content">
+					                    <div class="event_title"><%= eventTitle %></div>
+					                    <% if ("2".equals(eventForm)) { %>
+					                        <div class="event_form">
+					                            <span class="event_form_text">선착순 모집</span>
+					                            <span class="event-dday"><%= dday %></span>
+					                        </div>
+					                    <% } %>
+					                    <div class="event_date">
+					                        <%= eventStart.equals(eventEnd) ? eventStart : eventStart + " ~ " + eventEnd %>
+					                    </div> 
+					                </div>
+					            </a>
+					        </div>
 		            <%
 		                    }  
 		                } else {

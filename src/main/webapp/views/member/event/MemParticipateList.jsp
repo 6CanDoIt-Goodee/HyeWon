@@ -124,7 +124,7 @@
 	}
 </style>
 <body>
-<%@ include file="../../include/header.jsp" %>  
+ 	 <%@ include file="../../include/header.jsp" %>
     <section>
     	<main>
 	        <div id="section_wrap" class="container">
@@ -132,7 +132,7 @@
 				    User user_nick = (User) session.getAttribute("user");
 				%>
 				<div class="word">
-				    <h3><%= (user != null) ? user_nick.getUser_nickname() : "" %>님의 이벤트 참여 내역</h3>
+				    <h3><%= (user_nick != null) ? user_nick.getUser_nickname() : "" %>님의 이벤트 참여 내역</h3>
 				</div>
 	            <br> 
 

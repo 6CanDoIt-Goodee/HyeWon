@@ -186,7 +186,7 @@
 			            boolean isOngoing = !now.before(eventStart) && !now.after(eventEnd);
 			            String eventForm = row.get("event_form");
 			            long daysRemaining = (eventEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-			            String dday = (daysRemaining >= 0) ? "D-" + daysRemaining : "모집 기간 종료";
+			            String dday = (daysRemaining > 0) ? "D-" + daysRemaining : (daysRemaining == 0) ? "모집중" : "모집 기간 종료";
 			            String eventNo = row.get("event_no");
 			            String eventEndDateStr = format.format(eventEnd); 
 			   %>

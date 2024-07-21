@@ -20,7 +20,7 @@ public class MemEventDao {
 	// 알림 받기 설정한 이벤트 목록 
     public List<Event> getNotifiedEventsForUser(int userNo) {
         List<Event> events = new ArrayList<>();
-        Connection conn = null;
+        Connection conn = getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -42,29 +42,30 @@ public class MemEventDao {
                 event.setEv_end(rs.getString("event_end"));
                 events.add(event);
             }
+            close(conn);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(rs);
-            close(pstmt);
-            close(conn);
+            close(pstmt); 
         }
 
         return events;
     } 
     
 	// 진행 중인 이벤트 목록 조회  
-    public List<Map<String, String>> selectOngoingEvents(Event option, Connection conn) {
+    public List<Map<String, String>> selectOngoingEvents(Event option) {
         List<Map<String, String>> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
+        Connection conn = getConnection();
+        
         try {
             String sql = "SELECT e.event_no, e.event_title, e.event_regdate, e.event_start, e.event_end, e.event_form, c.event_category_name, e.event_new_image " +
                          "FROM events e " +
                          "JOIN event_category c ON e.event_category_no = c.event_category_no " +
                          "WHERE e.event_end >= CURRENT_DATE " +
-                         "ORDER BY e.event_regdate DESC " +
+                         "ORDER BY e.event_start " +
                          "LIMIT ? OFFSET ?";
 
             pstmt = conn.prepareStatement(sql);
@@ -84,23 +85,25 @@ public class MemEventDao {
                 row.put("event_category_name", rs.getString("event_category_name"));
                 row.put("event_new_image", rs.getString("event_new_image"));
                 list.add(row);
-            }
+            } 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        } finally { 
             close(rs);
             close(pstmt);
+            close(conn);
         }
 
         return list;
     }
 
     // 종료된 이벤트 목록 조회  
-    public List<Map<String, String>> selectEndedEvents(Event option, Connection conn) {
+    public List<Map<String, String>> selectEndedEvents(Event option) {
         List<Map<String, String>> list = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
+        Connection conn = getConnection();
+        
         try {
             String sql = "SELECT e.event_no, e.event_title, e.event_regdate, e.event_start, e.event_end, e.event_form, c.event_category_name, e.event_new_image " +
                          "FROM events e " +
@@ -128,89 +131,18 @@ public class MemEventDao {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        } finally { 
             close(rs);
             close(pstmt);
+            close(conn);
         }
 
         return list;
-    }
-
-    // 기존 이벤트 목록 조회  
-    public List<Map<String, String>> selectEventList(Event option, Connection conn) {
-        List<Map<String, String>> list = new ArrayList<>();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = "SELECT e.event_no, e.event_title, e.event_regdate, e.event_form, c.event_category_name, e.event_start, e.event_end, e.event_new_image " +
-                         "FROM events e " +
-                         "JOIN event_category c ON e.event_category_no = c.event_category_no " +
-                         "WHERE 1=1"; // 시작 조건
-
-            // 카테고리 번호에 따라 필터링 조건 추가
-            if (option.getEvent_category() != 0) {
-                if (option.getEvent_category() == 1 || option.getEvent_category() == 2) {
-                    sql += " AND e.event_form = ?";
-                } else {
-                    sql += " AND c.event_category_no = ?";
-                }
-            }
-
-            // 이벤트 제목 필터링 조건 추가
-            if (option.getEv_title() != null && !option.getEv_title().isEmpty()) {
-                sql += " AND e.event_title LIKE CONCAT('%', ?, '%')";
-            }
-
-            sql += " ORDER BY e.event_regdate ASC LIMIT ? OFFSET ?";
-
-            pstmt = conn.prepareStatement(sql);
-            int paramIndex = 1;
-
-            // 카테고리 번호 설정
-            if (option.getEvent_category() != 0) {
-                if (option.getEvent_category() == 1 || option.getEvent_category() == 2) {
-                    pstmt.setInt(paramIndex++, option.getEvent_category()); // event_form 값 설정
-                } else {
-                    pstmt.setInt(paramIndex++, option.getEvent_category()); // event_category_no 값 설정
-                }
-            }
-
-            // 이벤트 제목 설정
-            if (option.getEv_title() != null && !option.getEv_title().isEmpty()) {
-                pstmt.setString(paramIndex++, option.getEv_title());
-            }
-
-            // LIMIT OFFSET 설정 (페이징 처리)
-            pstmt.setInt(paramIndex++, option.getNumPerPage());
-            pstmt.setInt(paramIndex, option.getLimitPageNo());
-
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Map<String, String> row = new HashMap<>();
-                row.put("event_no", rs.getString("event_no"));
-                row.put("event_title", rs.getString("event_title"));
-                row.put("event_regdate", rs.getString("event_regdate"));
-                row.put("event_form", rs.getString("event_form"));
-                row.put("event_category_name", rs.getString("event_category_name"));
-                row.put("event_start", rs.getString("event_start"));
-                row.put("event_end", rs.getString("event_end"));
-                row.put("event_new_image", rs.getString("event_new_image"));
-                list.add(row);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(rs);
-            close(pstmt);
-        }
-        return list;
-    }
+    } 
     
     // 진행 중 이벤트 개수 조회 
-    public int selectOngoingCount(Event option, Connection conn) {
+    public int selectOngoingCount(Event option) {
+    	Connection conn = getConnection();
         int totalCount = 0;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -232,13 +164,15 @@ public class MemEventDao {
         } finally {
             close(rs);
             close(pstmt);
+            close(conn);
         }
 
         return totalCount;
     } 
     
     // 진행 종료 이벤트 개수 조회 
-    public int selectEndedCount(Event option, Connection conn) {
+    public int selectEndedCount(Event option) {
+    	Connection conn = getConnection();
         int totalCount = 0;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -260,13 +194,15 @@ public class MemEventDao {
         } finally {
             close(rs);
             close(pstmt);
+            close(conn);
         }
 
         return totalCount;
     }
      
     // 이벤트 총 개수 조회 메서드
-    public int selectEventCount(Event option, Connection conn) {
+    public int selectEventCount(Event option) {
+    	Connection conn = getConnection();
         int totalCount = 0;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -311,13 +247,15 @@ public class MemEventDao {
         } finally {
             close(rs);
             close(pstmt);
+            close(conn);
         }
 
         return totalCount;
     } 
     
     // 이벤트 번호로 조회 메서드
-    public Event selectEventByNo(int eventNo, Connection conn) {
+    public Event selectEventByNo(int eventNo) {
+    	Connection conn = getConnection();
         Event event = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -354,14 +292,15 @@ public class MemEventDao {
             e.printStackTrace();
         } finally {
             close(rs);
-            close(pstmt);
+            close(pstmt); 
         }
 
         return event;
     }
     
     // 이벤트 참여 여부 확인
-    public boolean checkRegistration(int eventNo, int userNo, Connection conn) {
+    public boolean checkRegistration(int eventNo, int userNo) {
+    	Connection conn = getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         boolean isRegistered = false;
@@ -379,18 +318,20 @@ public class MemEventDao {
                     isRegistered = true;
                 }
             }
+            close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             close(rs);
             close(pstmt);
-        }
- 
+            close(conn);
+        } 
         return isRegistered;
     }
     
     // 이벤트 등록, 대기 상태 조회
-    public int getParticipateState(int userNo, int eventNo, Connection conn) {
+    public int getParticipateState(int userNo, int eventNo) {
+    	Connection conn = getConnection();
     	int state = -1;
     	String query = "SELECT participate_state FROM participates WHERE user_no = ? AND event_no = ?";
     	try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -401,6 +342,7 @@ public class MemEventDao {
     			if (rs.next()) {
     				state = rs.getInt("participate_state");
     			}
+    			close(conn);
     		}
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -416,11 +358,11 @@ public class MemEventDao {
             pstmt.setInt(1, userNo);
             pstmt.setInt(2, eventNo);
             pstmt.executeUpdate();
+            close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    } 
-	
+    }  
 	
 	// 이벤트 참여자 삭제
     public void cancelRegistration(int eventNo, int userNo) {
@@ -433,6 +375,7 @@ public class MemEventDao {
             
 	        // 취소 후 대기자 자동 등록 처리
 	        autoPromoteWaitingParticipant(eventNo);
+	        close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -454,15 +397,17 @@ public class MemEventDao {
 
             if (rowsUpdated > 0) {
                 // 대기자 자동 등록이 발생했을 때 이벤트 테이블 업데이트
-                updateEventCounts(eventNo, conn);
+                updateEventCounts(eventNo);
             }
+            close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     // 이벤트 테이블의 event_registered 및 event_waiting 업데이트 
-    private void updateEventCounts(int eventNo, Connection conn) {
+    private void updateEventCounts(int eventNo) {
+    	Connection conn = getConnection();
         String updateEventSql = "UPDATE events " +
                                 "SET event_registered = event_registered + 1, " +
                                 "event_waiting = event_waiting - 1 " +
@@ -471,6 +416,7 @@ public class MemEventDao {
         try (PreparedStatement pstmt = conn.prepareStatement(updateEventSql)) {
             pstmt.setInt(1, eventNo);
             pstmt.executeUpdate();
+            close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -486,6 +432,7 @@ public class MemEventDao {
             pstmt.setInt(2, eventNo);
             pstmt.setInt(3, 1);
             pstmt.executeUpdate();
+            close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -500,13 +447,15 @@ public class MemEventDao {
             pstmt.setInt(1, eventNo);
             pstmt.setInt(2, userNo);
             pstmt.executeUpdate();
+            close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
     // 참여 이벤트 수 
-    public int selectParEventCount(int userNo, String searchKeyword, Connection conn) {
+    public int selectParEventCount(int userNo, String searchKeyword) {
+    	Connection conn = getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         int result = 0;
@@ -536,13 +485,15 @@ public class MemEventDao {
         } finally {
             close(rs);
             close(pstmt);
+            close(conn);
         }
         return result;
     }
 
 
     // 참여 이벤트 조회 
-    public List<Map<String, String>> getUserEventParticipations(int userNo, int startRow, int numPerPage, String searchKeyword, Connection conn) {
+    public List<Map<String, String>> getUserEventParticipations(int userNo, int startRow, int numPerPage, String searchKeyword) {
+    	Connection conn = getConnection();
         List<Map<String, String>> events = new ArrayList<>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -591,6 +542,7 @@ public class MemEventDao {
         } finally {
             close(rs);
             close(pstmt);
+            close(conn);
         }
         return events;
     }

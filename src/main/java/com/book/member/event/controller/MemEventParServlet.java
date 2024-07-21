@@ -43,7 +43,7 @@ public class MemEventParServlet extends HttpServlet {
 		boolean result = false;
 
 		MemEventDao memEventDao = new MemEventDao();
-		if ("등록".equals(action)) {
+		if ("참여".equals(action)) {
 			memEventDao.registerForEvent(eventNo, userNo);
 		} else if ("참여 취소".equals(action)) {
 			memEventDao.cancelRegistration(eventNo, userNo);

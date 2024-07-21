@@ -36,9 +36,7 @@ public class MemEventListServlet extends HttpServlet {
          }
   
          Event option = new Event();
-         option.setEv_title(evTitle); 
-
-         Connection conn = getConnection();
+         option.setEv_title(evTitle);  
 
          String nowPage = request.getParameter("nowPage");
          if (nowPage != null) {
@@ -49,16 +47,12 @@ public class MemEventListServlet extends HttpServlet {
          List<Map<String, String>> list = null;
 
          if ("ongoing".equals(status)) {
-        	 option.setTotalData(new MemEventDao().selectOngoingCount(option, conn));
-             list = dao.selectOngoingEvents(option, conn);
+        	 option.setTotalData(new MemEventDao().selectOngoingCount(option));
+             list = dao.selectOngoingEvents(option); 
          } else if ("ended".equals(status)) {
-        	 option.setTotalData(new MemEventDao().selectEndedCount(option, conn));
-             list = dao.selectEndedEvents(option, conn);
-         } else {
-             list = dao.selectEventList(option, conn);
-         }
-
-         close(conn);
+        	 option.setTotalData(new MemEventDao().selectEndedCount(option));
+             list = dao.selectEndedEvents(option); 
+         }   
 
          request.setAttribute("paging", option);
          request.setAttribute("resultList", list);

@@ -36,7 +36,7 @@ public class EventDetailServlet extends HttpServlet {
 		Connection conn = getConnection();
 		
         paging.setNowPage(nowPage);
-        paging.setNumPerPage(3); // 페이징당 목록 수 
+        paging.setNumPerPage(10); // 페이징당 목록 수 
         
         EventDao eventDao = new EventDao();
         Event event = eventDao.selectEventByNo(eventNo, conn);  
