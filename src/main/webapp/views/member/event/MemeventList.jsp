@@ -12,11 +12,15 @@
 <title>이벤트 목록</title>
 <style>
  	body {
-        font-family: 'LINESeedKR-Bd';
         background-color: rgb(247, 247, 247);
+        -ms-overflow-style: none;
     }
+    ::-webkit-scrollbar {
+	  display: none;
+	} 
 
     main {
+        font-family: 'LINESeedKR-Bd'; 
         max-width: 1000px;
         margin: 2rem auto;
         padding: 1rem 1rem;
@@ -155,6 +159,8 @@
         text-align: center;
         padding: 10%;
     }
+     
+    
 </style>
 </head>
 <body>

@@ -3,163 +3,103 @@
     <title>마이페이지 사이드바</title> 
 	<script src="../../../resources/javascript/mypageSidebar.js"></script>  
 	<style>
-	@font-face {
-	    font-family: 'GangwonEduPowerExtraBoldA';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
+
+	.main_content {
+	    max-width: 1300px; 
+	    height: 750px;
+	    margin: 5rem auto;
+	    background-color: rgb(247, 247, 247);
+	    display: flex;
+	    flex-direction: row;
 	}
-	/* 프리젠테이션 */
-	@font-face {
-	    font-family: 'Freesentation-9Black';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
-	    font-weight: 700;
-	    font-style: normal;
-	}
-	
-	/* LINE Seed */
-	@font-face {
-	    font-family: 'LINESeedKR-Bd';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
-	    font-weight: 700;
-	    font-style: normal;
-	}
-	
-	/* 한나체Pro */
-	@font-face {
+	/* 사이드바 */
+	.section1{
+	    width: 20%;
+	    margin-right: 2rem;
+	    height: 100%;
+	    background-color: white;
 	    font-family: 'BMHANNAPro';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
-	} 
-	
-	/* 여기어때 잘난체 고딕 */
-	@font-face {
-	    font-family: 'JalnanGothic';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
+	}
+	.menu {
+	    list-style-type: none;
+	    padding: 0;
+	    height: 600px;
+	    background-color: white;
 	}
 	
-	/* 세방고딕 */
-	@font-face {
-	    font-family: 'SEBANG_Gothic_Bold';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/SEBANG_Gothic_Bold.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
+	.menu-item {
+	    width: 100%;
+	    background-color: white;
+	    font-family: 'BMHANNAPro';
+	    font-size: 22px;
 	}
 	
-	/* 오아고딕 */
-	@font-face {
-	    font-family: 'OAGothic-ExtraBold';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
-	    font-weight: 800;
-	    font-style: normal;
+	.menu-item a {
+	    color: black;
+	    text-decoration: none;
+	    display: block;
+	    padding: 20px;
+	    padding-left: 30px;
+	    background-color: white;
+	    transition: background-color 0.3s ease;
+	    font-family: 'BMHANNAPro';
 	}
 	
-	/* 레페리포인트 */
-	@font-face {
-	    font-family: 'LeferiPoint-BlackA';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-BlackA.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
+	
+	.menu-item a:hover {
+	    background-color: rgb(247, 247, 247);
 	}
-.main_content {
-    max-width: 1300px; 
-    height: 750px;
-    margin: 5rem auto;
-    background-color: rgb(247, 247, 247);
-    display: flex;
-    flex-direction: row;
-}
-/* 사이드바 */
-.section1{
-    width: 20%;
-    margin-right: 2rem;
-    height: 100%;
-    background-color: white;
-    font-family: 'BMHANNAPro';
-}
-.menu {
-    list-style-type: none;
-    padding: 0;
-    height: 600px;
-    background-color: white;
-}
-
-.menu-item {
-    width: 100%;
-    background-color: white;
-    font-family: 'BMHANNAPro';
-    font-size: 22px;
-}
-
-.menu-item a {
-    color: black;
-    text-decoration: none;
-    display: block;
-    padding: 20px;
-    padding-left: 30px;
-    background-color: white;
-    transition: background-color 0.3s ease;
-    font-family: 'BMHANNAPro';
-}
-
-
-.menu-item a:hover {
-    background-color: rgb(247, 247, 247);
-}
-@keyframes slide-down {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slide-up {
-    0% {
-        opacity: 1;
-        height: auto;
-    }
-    100% {
-        opacity: 0;
-        height: 0;
-        padding: 0;
-        margin: 0;
-        border: 0;
-    }
-}
-.submenu {
-    display: none;
-    list-style-type: none;
-    padding: 0;
-    margin-top: 5px;
-    overflow: hidden;
-}
-
-.submenu li a {
-    color: black;
-    text-decoration: none;
-    padding: 20px;
-    display: block;
-    transition: background-color 0.3s ease;
-}
-.submenu li a:hover {
-    background-color: white;
-}
-/* 나의 정보 form */
-.section2{
-    width: 100%;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-}
+	@keyframes slide-down {
+	    0% {
+	        opacity: 0;
+	        transform: translateY(-10px);
+	    }
+	    100% {
+	        opacity: 1;
+	        transform: translateY(0);
+	    }
+	}
+	
+	@keyframes slide-up {
+	    0% {
+	        opacity: 1;
+	        height: auto;
+	    }
+	    100% {
+	        opacity: 0;
+	        height: 0;
+	        padding: 0;
+	        margin: 0;
+	        border: 0;
+	    }
+	}
+	.submenu {
+	    display: none;
+	    list-style-type: none;
+	    padding: 0;
+	    margin-top: 5px;
+	    overflow: hidden;
+	}
+	
+	.submenu li a {
+	    color: black;
+	    text-decoration: none;
+	    padding: 20px;
+	    display: block;
+	    transition: background-color 0.3s ease;
+	}
+	.submenu li a:hover {
+	    background-color: white;
+	}
+	/* 나의 정보 form */
+	.section2{
+	    width: 100%;
+	    background-color: white;
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: flex-start;
+	    align-items: center;
+	}
 	</style>
 <body>
     <%@ include file="../../include/header.jsp" %>
@@ -190,4 +130,45 @@
         </div> 
     </div>
 </body> 
+    <!-- 마이페이지 드롭다운 -->
+    <script>
+	  document.addEventListener("DOMContentLoaded", function() {
+	      const menuItems = document.querySelectorAll(".menu-item > a");
+	
+	      menuItems.forEach(function(item) {
+	          const submenu = item.nextElementSibling;
+	          let isOpen = false;
+	
+	          item.addEventListener("click", function(event) {
+	              if (submenu) {
+	
+	                  if (isOpen) {
+	                      submenu.style.animation = "slide-up 0.3s ease";
+	                      
+	                      setTimeout(function(){
+	                          submenu.style.display = "none";
+	                          submenu.style.animation = "";
+	                      }, 300);
+	
+	                      isOpen = false;
+	                  } else {
+	                      submenu.style.display = "block";
+	                      submenu.style.height = "auto";
+	                      void submenu.offsetWidth;
+	                      submenu.style.animation = "slide-down 0.3s ease";
+	                      submenu.style.height = submenu.scrollHeight + "px";
+	
+	                      isOpen = true;
+	                  }
+	              }
+	          });
+	      });
+	
+	      const submenuLinks = document.querySelectorAll(".submenu li a");
+	      submenuLinks.forEach(function(link) {
+	          link.addEventListener("click", function(event) {
+	          });
+	      });
+	  });
+	  </script>
 </html>

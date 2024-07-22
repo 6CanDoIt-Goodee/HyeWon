@@ -7,28 +7,6 @@
     <title>마이페이지</title>
 	<script src="../../../resources/javascript/mypageSidebar.js"></script>   
 <style>
-	@font-face {
-	    font-family: 'GangwonEduPowerExtraBoldA';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	/* 프리젠테이션 */
-	@font-face {
-	    font-family: 'Freesentation-9Black';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
-	    font-weight: 700;
-	    font-style: normal;
-	}
-	
-	/* LINE Seed */
-	@font-face {
-	    font-family: 'LINESeedKR-Bd';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
-	    font-weight: 700;
-	    font-style: normal;
-	}
-	
 	/* 한나체Pro */
 	@font-face {
 	    font-family: 'BMHANNAPro';
@@ -44,33 +22,9 @@
 	    font-weight: normal;
 	    font-style: normal;
 	}
-	
-	/* 세방고딕 */
-	@font-face {
-	    font-family: 'SEBANG_Gothic_Bold';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/SEBANG_Gothic_Bold.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	
-	/* 오아고딕 */
-	@font-face {
-	    font-family: 'OAGothic-ExtraBold';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
-	    font-weight: 800;
-	    font-style: normal;
-	}
-	
-	/* 레페리포인트 */
-	@font-face {
-	    font-family: 'LeferiPoint-BlackA';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-BlackA.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
-	}
 .main_content {
     max-width: 1300px; 
-    height: 740px;
+    height: 680px;
     margin: 5rem auto;
     background-color: rgb(247, 247, 247);
     display: flex;
@@ -163,6 +117,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+}
 /* 나의 프로필 */
 .profileForm{
     background-color: white;
@@ -208,7 +163,7 @@
     width: 30%;
     text-align: center;
     font-size: 22px;
-    margin-top: 10px;
+    margin-top: 8px;
     font-family: 'BMHANNAPro';
 }
 .firstGroup > div > input{
@@ -232,7 +187,7 @@
     width: 30%;
     text-align: center;
     font-size: 22px;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 .secondGroup > div > input{
 	font-family: 'BMHANNAPro';
@@ -270,11 +225,11 @@
     display: flex;
     background-color: white;
 }
-/* 출석 (달력)*/
+/* 출석 */
 .attendForm{
     background-color: white;
     margin: 15px;
-    height: 420px;
+    height: 360px;
     width: 500px;
     border: 1px solid #858585;
     border-radius: 10px;
@@ -287,7 +242,6 @@
     font-weight: 500;
     font-family: 'BMHANNAPro';
     margin-top: 32px;
-    /* background-color: white; */
     display: flex;
     justify-content: center;
 }
@@ -305,11 +259,25 @@
     justify-content: space-between;
     width: 330px;
 }
+#attendInfo > div > p{
+	background-color : white;
+	margin-top : 8px;
+}
+.atClass{
+	background-color : white;
+	text-align : center;
+	width : 100%;
+}
+#lastAt{
+	margin-top : 20px;
+	font-size: 30px;
+	background-color : white;
+}
 /* 나의 활동 */
 .sec3{
     background-color: white;
     margin: 15px;
-    height: 420px;
+    height: 360px;
     width: 500px;
     border: 1px solid #858585;
     border-radius: 10px;
@@ -337,7 +305,11 @@
     justify-content: space-between;
     width: 330px;
 }
-.myRecForm > div > input{
+.myRecForm > div > p{
+	background-color: white;
+	margin-top : 8px;
+}
+.myCount{
     background-color: rgb(247, 247, 247);
     height: 35px;
     width: 170px;
@@ -348,7 +320,6 @@
     margin-left: 10px;
     text-align: center;
 }
-
 </style>
 </head>
 <body>
@@ -356,7 +327,7 @@
     <div class="main_content">
         <div class="section1">
             <ul class="menu">
-                <li class="menu-item"><a href="#">나의 정보</a></li>
+                <li class="menu-item"><a href="/user/mypage">나의 정보</a></li>
                 <li class="menu-item">
                     <a href="#">독후감 목록</a>
                     <ul class="submenu">
@@ -364,7 +335,7 @@
                         <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
                     </ul>
                 </li>
-                <li class="menu-item"><a href="#">이벤트 참여 내역</a></li>
+                <li class="menu-item"><a href="/user/event/parList">이벤트 참여 내역</a></li>
                 <li class="menu-item"><a href="#">도서 신청</a></li>
                 <li class="menu-item">
                     <a href="#">문의 사항</a>
@@ -415,20 +386,34 @@
 			    <div class="attendForm">
 			        <div id="attend">출석</div>
 			        <div id="attendInfo">
-			        	<div>총 출석일</div>
+			        	<div>
+			        		<p>총 출석일</p>
+			        		<input type="text" class="myCount" id="atCount" value="<%=request.getAttribute("atCount")%>" readonly disabled>
+			        	</div>
+			        	<div>
+			        		<div class="atClass">
+				        		<p id="lastAt">마지막 출석날짜는 </p>
+				        		<p id="lastAt">
+				        			<%=request.getAttribute("year")%>년 <%=request.getAttribute("month")%>월 <%=request.getAttribute("date")%>일입니다.
+				        		</p>
+			        		</div>
+			        	</div>
 			        </div>
 			    </div>
 			    <div class="sec3">
 			        <div class="myRec">나의 활동</div>
 			        <div class="myRecForm">
-			            <div>이벤트 참여 수
-			                <input type="text" id="eventCount" value="${evCount}" readonly disabled>
+			            <div>
+			            	<p>이벤트 참여 수</p>
+			                <input type="text" class="myCount" id="eventCount" value="<%=request.getAttribute("evCount")%>" readonly disabled>
 			            </div>
-			            <div>독후감 수
-			                <input type="text" id="btCount" value="${btCount}" readonly disabled>
+			            <div>
+			            	<p>독후감 수</p>
+			                <input type="text" class="myCount" id="btCount" value="<%=request.getAttribute("btCount")%>" readonly disabled>
 			            </div>
-			            <div>문의사항 수
-			                <input type="text" id="askCount" value="${sgCount}" readonly disabled>
+			            <div>
+			            	<p>문의사항 수</p>
+			                <input type="text" class="myCount" id="askCount" value="<%=request.getAttribute("sgCount")%>" readonly disabled>
 			            </div>
 			        </div>
 			    </div>
@@ -436,4 +421,45 @@
         </div> 
     </div>
 </body> 
+    <!-- 마이페이지 드롭다운 -->
+    <script>
+	  document.addEventListener("DOMContentLoaded", function() {
+	      const menuItems = document.querySelectorAll(".menu-item > a");
+	
+	      menuItems.forEach(function(item) {
+	          const submenu = item.nextElementSibling;
+	          let isOpen = false;
+	
+	          item.addEventListener("click", function(event) {
+	              if (submenu) {
+	
+	                  if (isOpen) {
+	                      submenu.style.animation = "slide-up 0.3s ease";
+	                      
+	                      setTimeout(function(){
+	                          submenu.style.display = "none";
+	                          submenu.style.animation = "";
+	                      }, 300);
+	
+	                      isOpen = false;
+	                  } else {
+	                      submenu.style.display = "block";
+	                      submenu.style.height = "auto";
+	                      void submenu.offsetWidth;
+	                      submenu.style.animation = "slide-down 0.3s ease";
+	                      submenu.style.height = submenu.scrollHeight + "px";
+	
+	                      isOpen = true;
+	                  }
+	              }
+	          });
+	      });
+	
+	      const submenuLinks = document.querySelectorAll(".submenu li a");
+	      submenuLinks.forEach(function(link) {
+	          link.addEventListener("click", function(event) {
+	          });
+	      });
+	  });
+	  </script>
 </html>

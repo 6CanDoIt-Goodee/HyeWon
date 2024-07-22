@@ -2,7 +2,6 @@ package com.book.member.user.controller;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,19 +29,19 @@ public class UserCheckpwEndServlet extends HttpServlet {
 		String pw = request.getParameter("pw");
 		
 		User u = new UserDao().checkpw(pw);
+		HttpSession session = request.getSession(false);
+		User sessionUser = (User) session.getAttribute("user");
 		
 		
-		if(u != null) {
-			HttpSession session = request.getSession(true);
+		if(u != null && sessionUser.getUser_pw().equals(pw)) {
 			if(session.isNew() || session.getAttribute("user")==null) {
 				session.setAttribute("user", u);
 				session.setMaxInactiveInterval(60*30);
 			}
 			System.out.println("성공");
-			response.sendRedirect("/views/user/edit.jsp");
+			response.sendRedirect("/views/member/user/edit.jsp");
 		}else {
-			RequestDispatcher view = request.getRequestDispatcher("/views/member/user/checkpw_fail.jsp");
-			view.forward(request, response);
+			response.sendRedirect("/views/member/user/checkpw_fail.jsp");
 			System.out.println("실패");
 		}
 	}

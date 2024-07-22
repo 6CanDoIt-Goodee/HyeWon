@@ -1,5 +1,7 @@
 package com.book.member.user.vo;
 
+import java.time.LocalDateTime;
+
 public class User {
 	private int user_no;
 	private String user_name;
@@ -8,15 +10,17 @@ public class User {
 	private String user_email;
 	private String user_nickname;
 	private int user_active;
-	private Boolean is_verified;
+	private LocalDateTime user_create;
 	
 	public User() {
 		super();
 		
 	}
+	
+	
 
 	public User(int user_no, String user_name, String user_id, String user_pw, String user_email, String user_nickname,
-			int user_active, Boolean is_verified) {
+			int user_active, LocalDateTime user_create) {
 		super();
 		this.user_no = user_no;
 		this.user_name = user_name;
@@ -25,8 +29,10 @@ public class User {
 		this.user_email = user_email;
 		this.user_nickname = user_nickname;
 		this.user_active = user_active;
-		this.is_verified = is_verified;
+		this.user_create = user_create;
 	}
+
+
 
 	public int getUser_no() {
 		return user_no;
@@ -84,20 +90,23 @@ public class User {
 		this.user_active = user_active;
 	}
 
-	public boolean isIs_verified() {
-		return is_verified;
+	public LocalDateTime getUser_create() {
+		return user_create;
 	}
 
-	public void setIs_verified(boolean is_verified) {
-		this.is_verified = is_verified;
+	public void setUser_create(LocalDateTime user_create) {
+		this.user_create = user_create;
 	}
+
+
 
 	@Override
 	public String toString() {
 		return "User [user_no=" + user_no + ", user_name=" + user_name + ", user_id=" + user_id + ", user_pw=" + user_pw
 				+ ", user_email=" + user_email + ", user_nickname=" + user_nickname + ", user_active=" + user_active
-				+ ", is_verified=" + is_verified + "]";
+				+ ", user_create=" + user_create + "]";
 	}
 
 	
-}
+	
+}	

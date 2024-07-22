@@ -388,6 +388,7 @@
 	    }
 	
 	    startSlideShow();
+	     
     </script>
 </body>
 </html>

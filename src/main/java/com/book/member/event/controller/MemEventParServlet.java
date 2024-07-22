@@ -29,13 +29,11 @@ public class MemEventParServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// 사용자가 전송한 데이터 가져오기
+			throws ServletException, IOException { 
 		int eventNo = Integer.parseInt(request.getParameter("event_no"));
 		int userNo = Integer.parseInt(request.getParameter("user_no"));
 		String action = request.getParameter("action");
-
-		// 참여 이벤트 객체 생성
+ 
 		MemEvent memevent = new MemEvent();
 		memevent.setEventNo(eventNo);
 		memevent.setUserNo(userNo);

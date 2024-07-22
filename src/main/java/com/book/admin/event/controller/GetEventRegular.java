@@ -51,7 +51,7 @@ public class GetEventRegular implements Job {
                 map.put("event_quota", rs.getInt("event_quota"));
                 map.put("user_email", rs.getString("user_email"));
 
-                String content = String.format("안녕하세요, 1시간 후 %s 이벤트의 선착순 등록이 시작됩니다.", rs.getString("event_title"));
+                String content = String.format("%s 이벤트의 선착순 등록이 1시간 후 시작됩니다!", rs.getString("event_title"));
                 map.put("content", content);
                 result.add(map);
             }

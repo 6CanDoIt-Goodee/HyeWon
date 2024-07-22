@@ -12,7 +12,7 @@ import com.book.member.user.vo.User;
 
 public class Mypagedao {
 	
-	public int eventCount(User u) {
+	public int eventCount(int userNo) {
 		Connection conn = getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -22,7 +22,7 @@ public class Mypagedao {
 			String sql = "SELECT COUNT(event_no) AS 'evCount' FROM participates "
 					+ "WHERE user_no = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, u.getUser_no());
+			pstmt.setInt(1, userNo);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				result = rs.getInt("evCount");
@@ -37,7 +37,7 @@ public class Mypagedao {
 		return result;
 	}
 	
-	public int btCount(User u) {
+	public int btCount(int userNo) {
 		Connection conn = getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -47,7 +47,7 @@ public class Mypagedao {
 			String sql = "SELECT COUNT(booktext_no) AS 'btCount' FROM booktext "
 					+ "WHERE user_no = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, u.getUser_no());
+			pstmt.setInt(1, userNo);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				result = rs.getInt("btCount");
@@ -61,7 +61,7 @@ public class Mypagedao {
 		}
 		return result;
 	}
-	public int sgCount(User u) {
+	public int sgCount(int userNo) {
 		Connection conn = getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -71,7 +71,7 @@ public class Mypagedao {
 			String sql = "SELECT COUNT(sg_no) AS 'sgCount' FROM suggestion "
 					+ "WHERE user_no = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, u.getUser_no());
+			pstmt.setInt(1, userNo);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				result = rs.getInt("sgCount");

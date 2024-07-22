@@ -1,11 +1,7 @@
 package com.book.member.user.controller;
 
-import static com.book.common.sql.JDBCTemplate.close;
-import static com.book.common.sql.JDBCTemplate.getConnection;
-
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,27 +27,21 @@ public class UserFindIdEndServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
-        String inputCode = request.getParameter("email_number");
-
+        System.out.println(name);
+        System.out.println(email);
         // 세션에서 인증 코드 가져오기
         HttpSession session = request.getSession();
         String sessionCode = (String) session.getAttribute("verificationCode");
+        String inputCode = request.getParameter("email_number");
 
         if (sessionCode != null && sessionCode.equals(inputCode)) {
-            Connection conn = getConnection();
-            UserDao userDao = new UserDao();
-            User user = null;
-            try {
-                user = userDao.getUserByNameAndEmail(name, email);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            close(conn);
-
-            if (user != null) {
-                response.getWriter().write("아이디: " + user.getUser_id());
+            List<User> user = new UserDao().findid(name,email);
+            
+            if (user != null && !user.isEmpty()) {
+            	session.setAttribute("user", user);
+            	response.sendRedirect("/views/member/user/findid_success.jsp");
             } else {
-                response.getWriter().write("일치하는 사용자가 없습니다.");
+            	response.sendRedirect("/views/member/user/findid_fail.jsp");
             }
         } else {
             response.getWriter().write("인증 실패");

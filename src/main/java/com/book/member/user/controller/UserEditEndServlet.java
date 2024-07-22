@@ -36,9 +36,9 @@ public class UserEditEndServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		int result = new UserDao().editUser(no,pw,name,nickname,email);
 		if(result > 0) {
-			System.out.println("회원 정보 수정 성공!");
+			response.sendRedirect("/");
 		}else {
-			System.out.println("후..");
+			System.out.println("실패");
 		}
 	}
 		

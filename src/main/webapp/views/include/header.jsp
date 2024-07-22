@@ -268,8 +268,8 @@
 	        <div class="header_div">
 	            <a href="/" class="main_logo">Knock Book</a>
 	            <ul> 
-	                <li><a href="#" class="header_list">도서</a></li>
-	                <li><a href="#" class="header_list">독후감</a></li>
+	                <li><a href="/user/bookList" class="header_list">도서</a></li>
+	                <li><a href="/book/textList" class="header_list">독후감</a></li>
 	                <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li>
 	                <li><a href="/user/login" class="header_list" id="header_login">로그인</a></li>
 	                <li><a href="/user/create" class="header_list" id="header_join">회원가입</a></li>
@@ -281,7 +281,7 @@
 	        <div class="header_div">
 	            <a href="/" class="main_logo">Knock Book</a>
 	            <ul>
-	            	<li><a href="#" class="header_list">도서</a></li> 
+	            	<li><a href="/book/list" class="header_list">도서</a></li> 
 	                <li><a href="/event/list" class="header_list">이벤트</a></li> 
 	                <li><a href="#" class="header_list" id="header_adminPage">관리자 페이지</a></li>
 	                <li><a href="/user/logout" class="header_list" id="header_logout">로그아웃</a></li>
@@ -293,8 +293,8 @@
 	        <div class="header_div">
 	            <a href="/" class="main_logo">Knock Book</a>
 	            <ul>
-	                <li><a href="#" class="header_list">도서</a></li>
-	                <li><a href="#" class="header_list">독후감</a></li>
+	                <li><a href="/user/bookList" class="header_list">도서</a></li>
+	                <li><a href="/book/textList" class="header_list">독후감</a></li>
 	                <li><a href="/user/event/list?status=ongoing" class="header_list">이벤트</a></li> 
 	                <li><%= user.getUser_nickname() + "님 환영합니다." %></li>
 	                <li><a href="/user/mypage" class="header_list" >마이페이지</a></li>
