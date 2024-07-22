@@ -7,101 +7,102 @@
 <title>비밀번호 찾기</title> 
 <style>
 	@charset "UTF-8";
-	 body {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    background-color: #fff;
-	    height: 100vh;
-	    padding: 0;
-	    margin: 0;
-	    font-family: Arial, sans-serif;
-	}
-	
-	.container {
-	    width: 100%;
-	    max-width: 600px;
-	    margin-top: -50px; /* Slightly move up */
-	}
-	
-	@font-face {
+ 	@font-face {
 	    font-family: 'JalnanGothic';
 	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
 	    font-weight: normal;
 	    font-style: normal;
 	}
 	
-	#main_logo {
-        font-size: 33px;
-        color: rgb(224, 195, 163);
-        text-decoration: none;
-        font-family: 'JalnanGothic';
-    } 
-	
-	.navbar {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: 100px;
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin-top: -50px; 
+    }
+
+    #main_logo {
+	    font-size: 33px;
+	    color: rgb(224, 195, 163);
+	    text-decoration: none;
+	    font-family: 'JalnanGothic';
 	}
+
 	
-	.text-center {
-	    margin-bottom: 50px;
-	}
+	    .navbar {
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	        height: 100px;
+	    }
 	
-	.form-group {
-	    margin-bottom: 15px;
-	    display: flex;
-	    align-items: center;
-	    justify-content: flex-start;
-	}
+	    .text-center {
+	        margin-bottom: 50px;
+	    }
 	
-	label {
-	    margin-right: 15px;
-	    font-weight: bold;
-	    min-width: 80px; 
-	}
+	    .form-group {
+	        margin-bottom: 15px;
+	        display: flex;
+	        align-items: center;
+	        justify-content: flex-start;
+	    }
 	
-	input[type="text"], input[type="email"], input[type="button"] {
-	    padding: 10px;
-	    border: 1px solid #ccc;
-	    border-radius: 5px;
-	    font-size: 16px;
-	}
+	    label {
+	        margin-right: 15px;
+	        font-weight: bold;
+	        min-width: 80px; 
+	    }
 	
-	input[type="text"], input[type="email"] {
-	    width: calc(100% - 95px); 
-	    max-width: 400px;
-	    margin-right: 10px;
-	}
+	    input[type="text"], input[type="email"], input[type="button"] {
+	        padding: 10px;
+	        border: 1px solid #ccc;
+	        border-radius: 5px;
+	        font-size: 16px;
+	    }
 	
-	input[type="button"] {
-	    background-color: #007BFF;
-	    color: white;
-	    cursor: pointer;
-	    width: auto;
-	}
+	    input[type="text"], input[type="email"] {
+	        width: calc(100% - 95px); 
+	        max-width: 400px;
+	        margin-right: 10px;
+	    }
 	
-	.button-group {
-	    display: flex;
-	    justify-content: center;
-	    gap: 20px;
-	    margin-top: 40px;
-	}
+	    input[type="button"] {
+	        background-color: #007BFF;
+	        color: white;
+	        cursor: pointer;
+	        width: auto;
+	    }
 	
-	.btn {
-	    padding: 10px 20px;
-	    background-color: #007BFF;
-	    color: white;
-	    border: none;
-	    border-radius: 5px;
-	    cursor: pointer;
-	    width: 100px;
-	}
+	    .button-group {
+	        display: flex;
+	        justify-content: center;
+	        gap: 20px;
+	        margin-top: 40px;
+	    }
 	
-	.btn-secondary {
-	    background-color: #6c757d;
-	}
+	    .btn {
+	        padding: 10px 20px;
+	        background-color: #007BFF;
+	        color: white;
+	        border: none;
+	        border-radius: 5px;
+	        cursor: pointer;
+	        width: 100px;
+	    }
+	
+	    .btn-secondary {
+	        background-color: #6c757d;
+	    }
 </style>
 </head>
 <body>
@@ -120,7 +121,7 @@
         <form name="findpw_form" action="/user/findpwend" method="post">
             <div class="form-group">
                 <label for="name">아이디 :</label>
-                <input type="text" id="id" name="id" placeholder="이름을 입력하세요" style="width: 352px;">
+                <input type="text" id="id" name="id" placeholder="아이디를 입력하세요" style="width: 352px;">
             </div>
             <div class="form-group">
                 <label for="email">이메일:</label>

@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>회원탈퇴 성공</title>
-<link href='../../resources/css/member/user/delete_success.css'
+<link href='../../resources/css/user/delete_success.css'
 	rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -20,7 +20,7 @@
 		</main>
 		<footer>
 			<a href="/views/user/login.jsp"> 
-			<input class="btn" type="button" value="홈으로" style="margin-right: 20px;"onclick="location.href='/user/login'">
+			<input class="btn" type="button" value="홈으로" style="margin-right: 20px;"onclick="location.href='/'">
 			</a> 
 		</footer>
 	</section>

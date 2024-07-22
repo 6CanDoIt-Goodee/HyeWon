@@ -5,91 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>비밀번호 재설정</title>
-<style>
-  @charset "UTF-8";
-  
-  	@font-face {
-	    font-family: 'JalnanGothic';
-	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
-	    font-weight: normal;
-	    font-style: normal;
-  	}
-	
-  	body {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    background-color: #fff;
-	    height: 100vh;
-	    padding: 0;
-	    margin: 0;
-	    font-family: Arial, sans-serif;
-	}
-	
-	.container {
-	    width: 100%;
-	    max-width: 600px;
-	    margin-top: -50px; /* Slightly move up */
-	}
-	
-    #main_logo {
-        font-size: 33px;
-        color: rgb(224, 195, 163);
-        text-decoration: none;
-        font-family: 'JalnanGothic';
-    }
-	
-	.navbar {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: 100px;
-	}
-	
-	.text-center {
-	    margin-bottom: 50px;
-	}
-	
-	.form-group {
-	    margin-bottom: 15px;
-	    position: relative;
-	}
-	
-	label {
-	    display: block;
-	    margin-bottom: 5px;
-	    font-weight: bold;
-	}
-	
-	input[type="password"], input[type="text"], select {
-	    width: 90%;
-	    padding: 10px;
-	    border: 1px solid #ccc;
-	    border-radius: 5px;
-	    font-size: 16px;
-	}
-	
-	.button-group {
-	    display: flex;
-	    justify-content: center;
-	    gap: 20px;
-	    margin-top: -100px; 
-	}
-	
-	.btn {
-	    padding: 10px 20px;
-	    background-color: #007BFF;
-	    color: white;
-	    border: none;
-	    border-radius: 5px;
-	    cursor: pointer;
-	    width: 100px;
-	}
-	
-	.btn-secondary {
-	    background-color: #6c757d;
-	}
-</style>
+<link href="../../resources/css/user/changepw.css" rel="stylesheet">
 </head>
 <body>
 	 <div class="container">
@@ -102,14 +18,14 @@
             <p>비밀번호를 재설정 해주세요.</p>
         </div>
         <div>
-            <form name="changepw_form" action="/user/changePw" method="post">
+            <form name="changepw_form" action="/user/changepw" method="post">
             <div class="form-group">
                 <label for="pw">새 비밀번호</label>
                 <div style="display: flex; align-items: center;">
                     <input type="password" id="pw" name="pw" placeholder="새 비밀번호" oninput="validatePassword()">
                 </div>
                 <div class="tooltip">
-                    <span id="tooltip-text"  style="font-size: 10px;color: red;">길이가 8~16자리 이하의 영문 대/소문자, 숫자, 특수문자 사용 가능합니다.</span>
+                    <span id="tooltip-text"  style="font-size: 10px;color: red;">길이가8~16자리 이하의 영문 대/소문자, 숫자, 특수문자 사용 가능합니다.</span>
                 </div>
             </div>
             <div class="form-group">

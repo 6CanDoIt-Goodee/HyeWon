@@ -1,5 +1,6 @@
 package com.book.member.book.controller;
 
+import com.book.member.book.dao.BookReplyDao;
 import com.book.member.book.dao.BookTextDao;
 import com.book.member.book.dao.LikeDao;
 import com.book.member.user.vo.User;
@@ -30,30 +31,46 @@ public class BookTextDetailServlet extends HttpServlet {
         int bt_no = Integer.parseInt(request.getParameter("bt_no"));
         List<Map<String, String>> list = new BookTextDao().detailBookText(bt_no);
 
-        HttpSession session = request.getSession(false);
-        int lkCn = 0;
-        int likeChecked = 0;
-        String color = "gray";
+        List<Map<String, String>> bkReplyList = new BookReplyDao().bkReplySelectList(bt_no);
+        int btReplyCnt = new BookReplyDao().btCount(bt_no);
 
+        // 좋아요 수
+        int lkCnt = 0;
+        // 해당 유저가 좋아요를 눌렀는지
+        int likeChecked = 0;
+        // 하트 색
+        String color = null;
+        HttpSession session = request.getSession(false);
+        // 사용자가 로그인을 했다면
         if (session != null && session.getAttribute("user") != null) {
             User user_like = (User) session.getAttribute("user");
-            System.out.println("dd"+user_like.getUser_no());
-            // 해당 독후감의 좋아요 수
-            lkCn = new LikeDao().countLike(bt_no);
-            // 사용자의 해당 독후감 좋아요 여부
+            // 좋아요를 눌렀는지 확인하는 메소드
             likeChecked = new LikeDao().likeChecked(user_like.getUser_no(), bt_no);
 
             // 좋아요를 눌렀다면
-            if (likeChecked == 1) {
+            if(likeChecked == 1) {
                 color = "red";
+                // 안 눌렀다면
+            } else {
+                color = "gray";
             }
+            // 사용자가 로그인을 안 했다면 하트를 누를 수 없으므로
+        } else {
+            color = "gray";
+            likeChecked = 0;
         }
-
+        // 좋아요 수 메소드
+        lkCnt = new LikeDao().countLike(bt_no);
         // 가져온 값 보내기
-        request.setAttribute("lkCn", lkCn);
+        request.setAttribute("lkCnt", lkCnt);
         request.setAttribute("likeChecked", likeChecked);
         request.setAttribute("color", color);
+        request.setAttribute("btReplyCnt", btReplyCnt);
+        request.setAttribute("bkReplyList", bkReplyList);
         request.setAttribute("resultList", list);
+
+        System.out.println("컬러는 " + color);
+        System.out.println("likCnt는 " + lkCnt);
 
         RequestDispatcher rd = request.getRequestDispatcher("/views/member/book/booktextDetail.jsp");
         rd.forward(request, response);

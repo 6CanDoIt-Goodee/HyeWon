@@ -10,79 +10,79 @@ import java.sql.ResultSet;
 
 import com.book.member.user.vo.User;
 
-public class Mypagedao {
-	
-	public int eventCount(int userNo) {
-		Connection conn = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		int result = 0;
-		
-		try {
-			String sql = "SELECT COUNT(event_no) AS 'evCount' FROM participates "
-					+ "WHERE user_no = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userNo);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				result = rs.getInt("evCount");
-			} 
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			close(rs);
-			close(pstmt);
-			close(conn);
-		}
-		return result;
-	}
-	
-	public int btCount(int userNo) {
-		Connection conn = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		int result = 0;
-		
-		try {
-			String sql = "SELECT COUNT(booktext_no) AS 'btCount' FROM booktext "
-					+ "WHERE user_no = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userNo);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				result = rs.getInt("btCount");
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			close(rs);
-			close(pstmt);
-			close(conn);
-		}
-		return result;
-	}
-	public int sgCount(int userNo) {
-		Connection conn = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		int result = 0;
-		
-		try {
-			String sql = "SELECT COUNT(sg_no) AS 'sgCount' FROM suggestion "
-					+ "WHERE user_no = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userNo);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				result = rs.getInt("sgCount");
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-			close(rs);
-			close(pstmt);
-			close(conn);
-		}
-		return result;
-	}
+public class MypageDao {
+
+    public int eventCount(int userNo) {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int result = 0;
+
+        try {
+            String sql = "SELECT COUNT(event_no) AS 'evCount' FROM participates "
+                    + "WHERE user_no = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userNo);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                result = rs.getInt("evCount");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+            close(conn);
+        }
+        return result;
+    }
+
+    public int btCount(int userNo) {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int result = 0;
+
+        try {
+            String sql = "SELECT COUNT(booktext_no) AS 'btCount' FROM booktext "
+                    + "WHERE user_no = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userNo);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                result = rs.getInt("btCount");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+            close(conn);
+        }
+        return result;
+    }
+    public int sgCount(int userNo) {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int result = 0;
+
+        try {
+            String sql = "SELECT COUNT(sg_no) AS 'sgCount' FROM suggestion "
+                    + "WHERE user_no = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userNo);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                result = rs.getInt("sgCount");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(pstmt);
+            close(conn);
+        }
+        return result;
+    }
 }

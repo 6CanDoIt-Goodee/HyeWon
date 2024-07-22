@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마이페이지</title>
-	<script src="../../../resources/javascript/mypageSidebar.js"></script>   
+	<script src="../../../resources/javascript/mypageSidebar.js"></script>
 <style>
 	/* 한나체Pro */
 	@font-face {
@@ -13,8 +13,8 @@
 	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
 	    font-weight: normal;
 	    font-style: normal;
-	} 
-	
+	}
+
 	/* 여기어때 잘난체 고딕 */
 	@font-face {
 	    font-family: 'JalnanGothic';
@@ -23,7 +23,7 @@
 	    font-style: normal;
 	}
 .main_content {
-    max-width: 1300px; 
+    max-width: 1300px;
     height: 680px;
     margin: 5rem auto;
     background-color: rgb(247, 247, 247);
@@ -168,7 +168,7 @@
 }
 .firstGroup > div > input{
 	font-family: 'BMHANNAPro';
-	font-size : 20px;	
+	font-size : 20px;
 }
 .secondGroup{
     background-color: white;
@@ -181,7 +181,7 @@
     width: 500px;
     display: flex;
     justify-content: space-around;
-    
+
 }.secondGroup > div > p{
     background-color: white;
     width: 30%;
@@ -331,17 +331,17 @@
                 <li class="menu-item">
                     <a href="#">독후감 목록</a>
                     <ul class="submenu">
-                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 작성된 독후감</a></li>
-                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
+                        <li><a href="/user/bookList">&nbsp;&nbsp;&nbsp;&nbsp; 작성된 독후감</a></li>
+                        <li><a href="/user/saveTextList">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
                     </ul>
                 </li>
                 <li class="menu-item"><a href="/user/event/parList">이벤트 참여 내역</a></li>
-                <li class="menu-item"><a href="#">도서 신청</a></li>
+                <li class="menu-item"><a href="/book/apply">도서 신청</a></li>
                 <li class="menu-item">
                     <a href="#">문의 사항</a>
                     <ul class="submenu">
-                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 작성</a></li>
-                        <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 목록</a></li>
+                        <li><a href="/member/sg/create">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 작성</a></li>
+                        <li><a href="/member/sg/list">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 목록</a></li>
                     </ul>
                 </li>
             </ul>
@@ -349,31 +349,31 @@
         <div class="section2">
 			<div class="profileForm">
 			    <div id="myProfile">나의 프로필</div>
-			    <% 
+			    <%
 			    	User us = (User)session.getAttribute("user");
 			    %>
 			        <div class="profileInfo">
 			            <div class="firstGroup">
 			                <div>
 			                    <p>아이디</p>
-			                    <input type="text" class="profile" id="id" 
+			                    <input type="text" class="profile" id="id"
 			                    value="<%=us.getUser_id()%>" readonly disabled>
 			                </div>
 			                <div>
 			                    <p>이름</p>
-			                    <input type="text" class="profile" id="name" 
+			                    <input type="text" class="profile" id="name"
 			                    value="<%=us.getUser_name()%>" readonly disabled>
-			                </div>                    
+			                </div>
 			            </div>
 			            <div class="secondGroup">
 			                <div>
-			                    <p>이메일</p> 
-			                    <input type="text" class="profile" id="email" 
+			                    <p>이메일</p>
+			                    <input type="text" class="profile" id="email"
 			                    value="<%=us.getUser_email()%>" readonly disabled>
 			                </div>
 			                <div>
 			                    <p>닉네임</p>
-			                    <input type="text" class="profile" id="nickname" 
+			                    <input type="text" class="profile" id="nickname"
 			                    value="<%=us.getUser_nickname()%>" readonly disabled">
 			                </div>
 			            </div>
@@ -392,10 +392,34 @@
 			        	</div>
 			        	<div>
 			        		<div class="atClass">
-				        		<p id="lastAt">마지막 출석날짜는 </p>
-				        		<p id="lastAt">
-				        			<%=request.getAttribute("year")%>년 <%=request.getAttribute("month")%>월 <%=request.getAttribute("date")%>일입니다.
-				        		</p>
+				        		 <p id="lastAt"></p>
+                                        <p id="lastAt">
+                                            <%
+                                                String yearStr = (String) request.getAttribute("year");
+                                                String monthStr = (String) request.getAttribute("month");
+                                                String dateStr = (String) request.getAttribute("date");
+
+                                                int year = 0;
+                                                int month = 0;
+                                                int date = 0;
+
+                                                if (yearStr != null && !yearStr.isEmpty()) {
+                                                    year = Integer.parseInt(yearStr);
+                                                }
+                                                if (monthStr != null && !monthStr.isEmpty()) {
+                                                    month = Integer.parseInt(monthStr);
+                                                }
+                                                if (dateStr != null && !dateStr.isEmpty()) {
+                                                    date = Integer.parseInt(dateStr);
+                                                }
+
+                                                if (year == 0 || month == 0 || date == 0) {
+                                                    out.print("오늘 첫 방문입니다.");
+                                                } else {
+                                                    out.print("마지막 출석날짜는"+"\n"+year + "년 " + month + "월 " + date + "일입니다.");
+                                                }
+                                                       %>
+                                        </p>
 			        		</div>
 			        	</div>
 			        </div>
@@ -418,29 +442,29 @@
 			        </div>
 			    </div>
 			</div>
-        </div> 
+        </div>
     </div>
-</body> 
+</body>
     <!-- 마이페이지 드롭다운 -->
     <script>
 	  document.addEventListener("DOMContentLoaded", function() {
 	      const menuItems = document.querySelectorAll(".menu-item > a");
-	
+
 	      menuItems.forEach(function(item) {
 	          const submenu = item.nextElementSibling;
 	          let isOpen = false;
-	
+
 	          item.addEventListener("click", function(event) {
 	              if (submenu) {
-	
+
 	                  if (isOpen) {
 	                      submenu.style.animation = "slide-up 0.3s ease";
-	                      
+
 	                      setTimeout(function(){
 	                          submenu.style.display = "none";
 	                          submenu.style.animation = "";
 	                      }, 300);
-	
+
 	                      isOpen = false;
 	                  } else {
 	                      submenu.style.display = "block";
@@ -448,13 +472,13 @@
 	                      void submenu.offsetWidth;
 	                      submenu.style.animation = "slide-down 0.3s ease";
 	                      submenu.style.height = submenu.scrollHeight + "px";
-	
+
 	                      isOpen = true;
 	                  }
 	              }
 	          });
 	      });
-	
+
 	      const submenuLinks = document.querySelectorAll(".submenu li a");
 	      submenuLinks.forEach(function(link) {
 	          link.addEventListener("click", function(event) {

@@ -43,11 +43,11 @@
             height: auto;
             border-radius: 5px;
         }
-        
+
        .replyCount{
 margin-bottom: 20px;
-} 
-       
+}
+
         .bkReplyContainer {
    width: 900px;
    margin: auto;
@@ -136,128 +136,146 @@ justify-content:right;
 <body>
  <%@ include file="../../../views/include/header.jsp" %>
 
-    <div id="detail_container" class="container">
-        <% List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("resultList");
-           for (Map<String, String> detail : list) { %>
-            <div class="detail_section">
-                <h4>책 이름</h4>
-                <p><%= detail.get("bk_title") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>카테고리</h4>
-                <p><%= detail.get("bk_cate") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>작성자</h4>
-                <p><%= detail.get("bt_writer") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>출판사</h4>
-                <p><%= detail.get("bk_publisher") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>추천도</h4>
-                <p><%= detail.get("recommendation") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>읽기 시작한 날짜</h4>
-                <p><%= detail.get("bt_start") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>읽기 종료한 날짜</h4>
-                <p><%= detail.get("bt_end") %></p>
-            </div>
-            <div class="detail_section">
-                <h4>독후감</h4>
-                <p><%= detail.get("bt_content") %></p>
-            </div>
-            <div class="detail_section detail_image">
-                <h4>책 이미지</h4>
-                <img src="<%= detail.get("bk_img") %>" alt="책 이미지" width="300px">
-            </div>
+    	<%-- 컨테이너 div --%>
+        <div id="detail_container" class="container">
+            <%@ page import="com.book.member.book.vo.BookText, java.util.*" %>
+            <% List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("resultList");
+            // for each문 시작
+               for (Map<String, String> detail : list) { %>
+                <div class="detail_section">
+                    <h4>책 이름</h4>
+                    <p><%= detail.get("bk_title") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>카테고리</h4>
+                    <p><%= detail.get("bk_cate") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>작성자</h4>
+                    <p><%= detail.get("bt_writer") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>출판사</h4>
+                    <p><%= detail.get("bk_publisher") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>추천도</h4>
+                    <p><%= detail.get("recommendation") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>읽기 시작한 날짜</h4>
+                    <p><%= detail.get("bt_start") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>읽기 종료한 날짜</h4>
+                    <p><%= detail.get("bt_end") %></p>
+                </div>
+                <div class="detail_section">
+                    <h4>독후감</h4>
+                    <p><%= detail.get("bt_content") %></p>
+                </div>
+                <div class="detail_section detail_image">
+                    <h4>책 이미지</h4>
+                    <img src="<%= detail.get("bk_img") %>" alt="책 이미지" width="300px">
+                </div>
+                <% User user_bt = (User) session.getAttribute("user");
+                   if (user_bt != null) {
+                   int userNumber = user_bt.getUser_no();
+                   String a = detail.get("user_no");
+                   String str = Integer.toString(user_bt.getUser_no());
+                   if (a.equals(str)) { %>
+                    <div>
+                        <input type="submit" class="update_bt" value="수정">
+                    </div>
+                    <div>
+                        <input type="submit" class="delete_bt" value="삭제">
+                    </div>
+                <% } %>
+    		<% } %>
+             	<style>
+    		        #heart{
+    		            width: 20px;
+    					background-color: white;
+    					margin-bottom: 8px;
+    		        }
+    		        .red{fill: red;}
+    		        .gray{fill: gray;}
+    		        #like_count{
+    		        	font-size: 20px;
+    		        	width: 25px;
+    		        	background-color: white;
+    		        	margin-left: 5px;
+    		        }
+    		    </style>
+    		    <div style="background-color: white">
+    		    <%-- 하트의 class명에 받아온 color값을 넣어서 class가 gray냐 red냐에 따라 css로 하트 색 바꿈 --%>
+    		    	<svg id="heart" class="<%= request.getAttribute("color") %>"
+    		    		xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    		        <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7
+    			        10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68
+    			        47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6
+    			        51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5
+    			        55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+    			    </svg>
+    			    <%-- 하트 수 --%>
+    			     <span id="like_count"><%=request.getAttribute("lkCnt")%></span>
+    		   	</div>
+    		       <%
+    		       User like_bt = (User) session.getAttribute("user");
+    		       // 로그인 정보가 있고 관리자가 아닐 경우
+                   if (like_bt != null && like_bt.getUser_no() != 1) {
+                   int likeNumber = like_bt.getUser_no();
+                   %>
+    		    <script type="text/javascript">
+    				const heartBtn = document.getElementById('heart');
+    		    	heartBtn.addEventListener('click',function(event){
+    		            var color = "<%= request.getAttribute("color")%>";
+    		            var userNo = "<%= likeNumber %>";
+    		            var categoryNo = "<%= detail.get("bk_cate_no")%>";
+    		            var booktextNo = "<%= detail.get("bt_no") %>";
+    					$.ajax({
+    						type : "POST",
+    						url : "<%=request.getContextPath()%>/like/insert",
+    						data : {
+    							"color" : color,
+    							"userNo" : userNo,
+    							"categoryNo" : categoryNo,
+    							"booktextNo" : booktextNo
+    						},
+    						success: function(response){
+    							if(color === "gray"){
+    							    heartBtn.classList.remove('gray');
+    							    heartBtn.classList.add('red');
+    							} else{
+    							    heartBtn.classList.remove('red');
+    							    heartBtn.classList.add('gray');
+    							}
+    							$('#like_count').text(response.lkCnt);
+    							location.reload();
+    						},
+    		    		});
+    		    	});
+    	   		</script>
+    	   		<%-- 비회원인 경우 --%>
+                 <%} else { %>
+                <script type="text/javascript">
+    				const heartBtn = document.getElementById('heart');
+    	    		heartBtn.addEventListener('click',function(event){
+    					alert("로그인한 사용자만 누를 수 있습니다.");
+    				});
+    	    	</script>
+                <% } %>
 
-            <% User user_bt = (User) session.getAttribute("user");
-               if (user_bt != null) {
-                   int userNumber = user_bt.getUser_no(); %>
+        	<% } %>
 
-                   <form action="/like/insert" name="insert_like" method="post">
-                       <input type="hidden" name="like_bool" id="like_bool" value="${likeChecked}">
-                       <input type="hidden" name="user_no" id="user_no" value="<%= userNumber %>">
-                       <input type="hidden" name="category_no" id="category_no" value="<%= detail.get("bk_cate_no") %>">
-                       <input type="hidden" name="booktext_no" id="booktext_no" value="<%= detail.get("bt_no") %>">
+        </div>
 
-                       <!-- 하트 버튼 -->
-                       <span class="heart" href="#" id="insertLike">
-                           <!-- 하트 이미지 경로 -->
-                           <svg xmlns="http://www.w3.org/2000/svg" id="likeBtn" viewBox="0 0 512 512" style="width: 20px; fill: ${color};">
-                               <path class="heartBtn" d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
-                           </svg>
-                       </span>
 
-                       <span id="like_count" style="font-size: 20px; width: 25px;">${lkCn}</span>
-                   </form>
-                   <script type="text/javascript">
-                       $(document).ready(function(){
-                           $('#insertLike').click(function(event){
-                               event.preventDefault();
-                               const userNo = $('#user_no').val();
-                               const categoryNo = $('#category_no').val();
-                               const booktextNo = $('#booktext_no').val();
-                               // 위에서 받아온 value 값
-                               let likeVal = parseInt($('#like_bool').val());
-                               // 하트버튼
-                               const likeBtn = $('#likeBtn');
-                               $.ajax({
-                                   type: 'post',
-                                   url: '/like/insert',
-                                   dataType: 'json',
-                                   data: {
-                                       "userNo": userNo,
-                                       "categoryNo": categoryNo,
-                                       "booktextNo": booktextNo,
-                                       "likeVal": likeVal
-                                   },
-                                   success: function(data){
-                                       if (likeVal === 0) {
-                                           $('#likeBtn').find('.heartBtn').css('fill', 'red');
-                                           $('#like_bool').val(1);
-                                       } else {
-                                           $('#likeBtn').find('.heartBtn').css('fill', 'gray');
-                                           $('#like_bool').val(0);
-                                       }
-                                       $('#like_count').text(data.likeCount);
-                                   }
-                               });
-                           });
-                       });
-                   </script>
-
-                   <% String a = detail.get("user_no");
-                      String str = Integer.toString(user_bt.getUser_no());
-                      if (a.equals(str)) { %>
-                       <form action="/user/editCheck" method="post">
-						    <input type="hidden" name="bt_no" value="<%= detail.get("bt_no") %>">
-						    <button type="submit" class="btn btn-primary">수정</button>
-						</form>
-						<form action="/user/textDelete" method="post">
-						    <input type="hidden" name="bt_no" value="<%= detail.get("bt_no") %>">
-						    <button type="submit" class="btn btn-danger">삭제</button>
-						</form>
-                   <% } %>
-
-               <% } %>
-           <% } %>
-    </div>
-    
-    
-    
-    
-    
     <section class="bkReplyContainer">
     <% Integer replyCnt = (Integer) request.getAttribute("btReplyCnt"); %>
 	<div id="replyCount">댓글 수 : <%= (replyCnt != null ? replyCnt : 0) %></div><br>
-    
-    <% 
+
+    <%
     // 독후감 댓글 가져오기
     List<Map<String, String>> bkReplyList = (List<Map<String, String>>) request.getAttribute("bkReplyList");
     // 세션에서 가져온 유저 번호
@@ -266,7 +284,7 @@ justify-content:right;
 
     boolean isLoggedIn = bt_userNo != null;
     boolean isNotUserOne = userNo != 1;
-    
+
     if (bkReplyList != null && !bkReplyList.isEmpty()) {
         for (Map<String, String> bre : bkReplyList) {
         	for (Map<String, String> detail : list) {
@@ -317,7 +335,7 @@ justify-content:right;
            </form>
        <% } %>
        <% if (btParentNo == 0 && !bre.get("br_delete").equals("1")) { %>
-       	<% if (isLoggedIn && isNotUserOne) { %> 
+       	<% if (isLoggedIn && isNotUserOne) { %>
            <span class="btn_gr">
                <button type="button" id="reBtn" onclick="btShowReplyForm('<%= btReplyNo %>')">답글하기</button>
            </span>
@@ -336,15 +354,15 @@ justify-content:right;
                </span>
            </form>
        </div>
-   
+
     </div>
     <% 	}
       }
-    } else { 
-    %> 
+    } else {
+    %>
         <div class="replyContent">등록된 댓글이 없습니다.</div>
     <% } %>
-    
+
 	<%
 	if(isLoggedIn && isNotUserOne) {
 		for (Map<String, String> detail : list) { %>
@@ -360,7 +378,7 @@ justify-content:right;
             </div>
         </div>
     </form>
-    <%} 
+    <%}
 	}%>
 </section>
 

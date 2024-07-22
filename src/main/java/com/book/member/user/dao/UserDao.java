@@ -3,14 +3,13 @@ package com.book.member.user.dao;
 import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
 
-import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import org.apache.jasper.tagplugins.jstl.core.Catch;
+import java.util.Map;
 
 import com.book.member.user.vo.User;
 
@@ -51,14 +50,13 @@ public class UserDao {
             if (emailCount >= 3) {
                 return -1; 
             }
-            String sql = "INSERT INTO `users`(user_name, user_id, user_pw, user_email, user_nickname, user_active) VALUES(?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO `users`(user_name, user_id, user_pw, user_email, user_nickname) VALUES(?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, u.getUser_name());
             pstmt.setString(2, u.getUser_id());
             pstmt.setString(3, u.getUser_pw());
             pstmt.setString(4, u.getUser_email());
             pstmt.setString(5, u.getUser_nickname());
-            pstmt.setBoolean(6, true);
             result = pstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +97,37 @@ public class UserDao {
 		}
 		return u;
 	}
-
+	
+	public User checknickname(String nickname) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Connection conn = getConnection();
+		User u= null;
+		try {
+			String sql = "SELECT * FROM `users` WHERE user_nickname=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, nickname);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				u = new User(
+						rs.getInt("user_no"),
+						rs.getString("user_name"),
+						rs.getString("user_id"),
+						rs.getString("user_pw"),
+						rs.getString("user_email"),
+						rs.getString("user_nickname"),
+						rs.getInt("user_active"),
+						rs.getTimestamp("user_create").toLocalDateTime());
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn);
+			close(rs);
+			close(pstmt);
+		}
+		return u;
+	}
 	
 	public User loginUser(String id, String pw) {
 		PreparedStatement pstmt = null;
@@ -218,6 +246,24 @@ public class UserDao {
 		}
 		return result;
 	}
+	public int changepw(String id,String pw) {
+		PreparedStatement pstmt = null;
+		Connection conn =getConnection();
+		int result = 0;
+		try {
+			String sql = "UPDATE `users` SET user_pw=? WHERE user_id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,pw);
+			pstmt.setString(2,id);
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn);
+			close(pstmt);
+		}
+		return result;
+	}
 	
 
 	public List<User> findid(String name, String email) {
@@ -314,35 +360,34 @@ public class UserDao {
 		}
 		return result;
 	}
-	public List<User> getAllUsers() {
-		Connection conn = getConnection();
+	public List<Map<String, Object>> getAllUsers() {
+        Connection conn = getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        List<User> users  = new ArrayList<>();
+        List<Map<String, Object>> users = new ArrayList<>();
         try {
         	String sql = "SELECT * FROM `users`";
-        	pstmt = conn.prepareStatement(sql);
-        	rs = pstmt.executeQuery();
-        	while (rs.next()) {
-        		User u = new User (
-    					rs.getInt("user_no"),
-    					rs.getString("user_name"),
-    					rs.getString("user_id"),
-    					rs.getString("user_pw"),
-    					rs.getString("user_email"),
-    					rs.getString("user_nickname"),
-    					rs.getInt("user_active"),
-    					rs.getTimestamp("user_create").toLocalDateTime());
-    			users.add(u);
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("user_no", rs.getInt("user_no"));
+                userMap.put("user_name", rs.getString("user_name"));
+                userMap.put("user_id", rs.getString("user_id"));
+                userMap.put("user_pw", rs.getString("user_pw"));
+                userMap.put("user_email", rs.getString("user_email"));
+                userMap.put("user_nickname", rs.getString("user_nickname"));
+                userMap.put("user_active", rs.getInt("user_active"));
+                userMap.put("user_create", rs.getTimestamp("user_create").toLocalDateTime());
+                users.add(userMap);
             }
-        }catch(Exception e) {
-        	e.printStackTrace();
-        }finally {
-        	close(conn);
-	        close(rs);
-	        close(pstmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(conn);
+            close(rs);
+            close(pstmt);
         }
         return users;
-	}
-	
+    }
 }

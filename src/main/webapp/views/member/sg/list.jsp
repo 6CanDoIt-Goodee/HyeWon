@@ -279,31 +279,27 @@ html {
     </script>
 <% } %>
    <%@ include file="../../include/header.jsp" %>
-            <div class="main_content">
-            <!-- 이 선 위는 변경 X -->
-            <!-- 아래에 추가 -->
+            <div class="main_content"> 
             <div class="section1">
                 <ul class="menu">
-                    <li class="menu-item"><a href="#">나의 정보</a></li>
-                    <li class="menu-item">
-                        <a href="#">독후감 목록</a>
-                        <ul class="submenu">
-                            <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 작성된 독후감</a></li>
-                            <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
-                        </ul>
-                    </li>
-                    <li class="menu-item"><a href="#">이벤트 참여 내역</a></li>
-                    <li class="menu-item"><a href="/book/apply">도서 신청</a></li>
-                 <li class="menu-item">
-                        <a href="#">문의 사항</a>
-                        <ul class="submenu">
-                            <li><a href="/member/sg/create">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 작성</a></li>
-                            <li><a href="/member/sg/list">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 목록</a></li>
-                            <li><a href="/admin/sg/list">&nbsp;&nbsp;&nbsp;&nbsp; 관리자 문의사항 조회</a></li>
-							<li><a href="/admin/sg/basic">&nbsp;&nbsp;&nbsp;&nbsp; 관리자 기본답변 추가</a></li>
-                        </ul>
-                    </li>
-                </ul>
+	                <li class="menu-item"><a href="/user/mypage">나의 정보</a></li>
+	                <li class="menu-item">
+	                    <a href="#">독후감 목록</a>
+	                    <ul class="submenu">
+	                        <li><a href="/user/bookList">&nbsp;&nbsp;&nbsp;&nbsp; 작성된 독후감</a></li>
+	                        <li><a href="/user/saveTextList">&nbsp;&nbsp;&nbsp;&nbsp; 나만보기</a></li>
+	                    </ul>
+	                </li>
+	                <li class="menu-item"><a href="/user/event/parList">이벤트 참여 내역</a></li>
+	                <li class="menu-item"><a href="/book/apply">도서 신청</a></li>
+	                <li class="menu-item">
+	                    <a href="#">문의 사항</a>
+	                    <ul class="submenu">
+	                        <li><a href="/member/sg/create">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 작성</a></li>
+	                        <li><a href="/member/sg/list">&nbsp;&nbsp;&nbsp;&nbsp; 문의 사항 목록</a></li>
+	                    </ul>
+	                </li>
+	            </ul>
             </div>
 <!-- 여기 밑에 넣을 내용 추가 하면 되는데
 위에 css 지울부분도 있고 그래서 일단 수정해야햄... 알아서 수정하시길.... ( 자기가 원하는대로 하면 될듯) -->

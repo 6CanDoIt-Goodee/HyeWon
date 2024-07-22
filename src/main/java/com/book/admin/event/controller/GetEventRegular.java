@@ -84,10 +84,8 @@ public class GetEventRegular implements Job {
 
                     try {
                         sendEmail(userEmail, "이벤트 알림", content);
-                        updateNotificationStatus(notificationNo);
-                        System.out.println("이메일 전송 완료 및 상태 업데이트: Event No: " + eventNo);
-                    } catch (Exception e) {
-                        System.err.println("이메일 전송 실패: Event No: " + eventNo);
+                        updateNotificationStatus(notificationNo); 
+                    } catch (Exception e) { 
                         e.printStackTrace();
                     }
                 }

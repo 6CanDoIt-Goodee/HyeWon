@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@page import="com.book.member.user.vo.User" %> <!-- 임포트 해서 유저 아이디 네임 값 가져오기 위해  -->
+<%@page import="com.book.member.user.vo.User" %>  
 <!DOCTYPE html>
 <html>
 <head>

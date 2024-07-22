@@ -80,6 +80,9 @@
             text-align : center; 
         }
 
+	    #noti_btn {
+	    	text-align: right; 
+	    }
         .event-image {
         	width: 30vw; 
     		height:25vw;
@@ -326,15 +329,17 @@
 					    </div>
 					    <div class="item2">
 					        이벤트 진행일<span class="details_content2"><%= event.getEv_progress() %></span>
+					    </div>
+                        <div class="item">참여 현황<span class="details_content"><%= event.getEvent_registered() %> / <%= event.getEvent_quota() %></span></div>
+                        <div class="item">대기 인원<span class="details_content"><%= event.getEvent_waiting() %></span></div>
+				        <div id="noti_btn">
 					        <!-- 알림 버튼 -->
 					        <% if (user_event != null && event.getEv_form() == 2) { %>
 					            <button id="notification_btn" type="button" onclick="toggleNotification(<%= event.getEvent_no() %>, <%= user_event.getUser_no() %>);" title="선착순 오픈 1시간 전 이메일 알림이 발송됩니다.">
 					                <i id="bell_icon" class="fa-regular fa-bell"></i>
 					            </button>
 					        <% } %>
-					    </div>
-                        <div class="item">참여 현황<span class="details_content"><%= event.getEvent_registered() %> / <%= event.getEvent_quota() %></span></div>
-                        <div class="item">대기 인원<span class="details_content"><%= event.getEvent_waiting() %></span></div>
+				        </div>
 					</div>
                 <% } else { %>
                 <div class="event_details">

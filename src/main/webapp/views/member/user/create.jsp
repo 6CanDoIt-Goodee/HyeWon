@@ -148,16 +148,17 @@
                         <option value="gmail.com">구글</option>
                         <option value="daum.net">다음</option>
                     </select>
-                    <input type="button" value="인증번호 받기" onclick="sendVerificationCode()" style="margin-left: 10px;">
+                    <input type="button" value="인증번호 받기" onclick="sendVerificationCode();" style="margin-left: 10px;">
                 </div>
                 <div class="form-group">
                     <input type="text" name="email_number" maxlength="6" placeholder="인증 코드 6자리를 입력해주세요." style="width: 500px; margin-left: 135px;">
-                    <input type="button" value="인증번호 확인" onclick="verifyCode()">
+                    <input type="button" value="인증번호 확인" onclick="verifyCode();">
                 </div>
                 <div class="form-group">
                     <label for="nickname">닉네임</label>
                     <input type="text" placeholder="닉네임을 입력해주세요." id="nickname" name="nickname" style="width: 500px;">
-                    <input type="button" onclick="generateNickname()" value="닉네임 랜덤 생성">
+                    <input type="button" onclick="checkNickname();" value="닉네임 중복확인">
+                    <input type="button" onclick="generateNickname();" value="닉네임 랜덤 생성">
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn" onclick="submit_button();">확인</button>
@@ -213,8 +214,6 @@
         const lengthPattern = /^[a-zA-Z\d]{8,16}$/;
         const startsWithLetterPattern = /^[a-zA-Z]/;
         
-        console.log(id);
-        
         if (!id) {
             alert("아이디를 입력하세요.");
             form.id.focus();
@@ -242,6 +241,36 @@
                 }
             };
             xhr.send("id=" + encodeURIComponent(id));
+        }
+    }
+    // 닉네임 중복 확인 함수 정의
+    function checkNickname() {
+        const form = document.create_account_form;
+        const nickname = form.nickname.value;
+        
+        const letterNumberHangulPattern = /^[a-zA-Z0-9가-힣\s]{2,16}$/;
+        
+        if (!nickname) {
+            alert("닉네임을 입력하세요.");
+            form.nickname.focus();
+        }else if (!letterNumberHangulPattern.test(nickname)) {
+            alert('닉네임은 길이 2~16자의 영문자 또는 한글만 포함할 수 있습니다.');
+            form.nickname.focus();
+        } else {
+            // AJAX 요청을 사용하여 아이디 중복 확인
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/user/checkNickname", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (xhr.responseText === "duplicate") {
+                        alert("중복된 닉네임입니다.");
+                    } else if (xhr.responseText === "available") {
+                        alert("사용 가능한 닉네임입니다.");
+                    }
+                }
+            };
+            xhr.send("nickname=" + encodeURIComponent(nickname));
         }
     }
 

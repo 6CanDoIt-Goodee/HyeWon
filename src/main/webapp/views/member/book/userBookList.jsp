@@ -166,12 +166,18 @@
         }
 
         .ele_bw {
-            width: calc(25% - 20px);
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: white;
-        }
+		    width: calc(25% - 20px);
+		    padding: 10px;
+		    border: 1px solid #ddd;
+		    border-radius: 5px;
+		    background-color: white;
+		    cursor: pointer; 
+		    transition: box-shadow 0.3s ease;  
+		}
+		
+		.ele_bw:hover {
+		    box-shadow: 0 0 10px rgba(0,0,0,0.1);  
+		}
 
         .ele_bw > div > img {
             width: 10vw;
@@ -393,17 +399,17 @@
                 <% List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("resultList");
                    if (list != null && !list.isEmpty()) {
                    for (Map<String, String> row : list) { %>
-                    <div class="ele_bw">
-                        <div><img src="<%= row.get("books_img") %>" alt="책 이미지"></div>
-                        <div><a href="javascript:void(0);" onclick='showModal({
-                             img: "<%= row.get("books_img") %>",
-                             title: "<%= row.get("books_title") %>",
-                             author: "<%= row.get("books_author") %>",
-                             publisher: "<%= row.get("books_publisher") %>",
-                             category: "<%= row.get("books_category") %>",
-                             id: "<%= row.get("books_no") %>"
-                        })'><%= row.get("books_title") %></a></div>
-                    </div>
+                    <div class="ele_bw" onclick='showModal({
+					    img: "<%= row.get("books_img") %>",
+					    title: "<%= row.get("books_title") %>",
+					    author: "<%= row.get("books_author") %>",
+					    publisher: "<%= row.get("books_publisher") %>",
+					    category: "<%= row.get("books_category") %>",
+					    id: "<%= row.get("books_no") %>"
+					})'>
+					    <div><img src="<%= row.get("books_img") %>" alt="책 이미지"></div>
+					    <div><%= row.get("books_title") %></div>
+					</div>
                 <% }
                 }else {%>
                     <div class="no-results">검색한 결과가 없습니다.</div>
@@ -454,6 +460,6 @@
             </div>
         </div>
     </div>
-</div>
+</div>  
 </body>
 </html>

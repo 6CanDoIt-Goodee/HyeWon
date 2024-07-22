@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="com.book.member.user.vo.User" %>
 <!DOCTYPE html>
 <html> 
 <head>
 <meta charset="UTF-8">
 <title>아이디 찾기</title>
-<link href='../../resources/css/member/user/delete.css' rel="stylesheet" type="text/css">
+<link href='../../resources/css/user/delete.css' rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="container">
@@ -13,6 +14,7 @@
             <a href="/" id="main_logo">Knock Book</a>
         </nav>
         <div class="text-center">
+        <%User u= (User)session.getAttribute("user");%>
             <h2>회원 탈퇴</h2>
             <hr />
             <strong><p style="margin-top: -10px;">탈퇴 정책</p></strong>
@@ -22,6 +24,7 @@
             <form name="delete_form" action="/user/deleteEnd" method="post">
                 <div class="form-group">
                     <div style="width: 150px;font-weight: bold;">현재 아이디 :</div>
+                    <%=u.getUser_id() %>
                 </div>
                 <div class="form-group">
                     <label for="pw">현재 비밀번호 :</label>

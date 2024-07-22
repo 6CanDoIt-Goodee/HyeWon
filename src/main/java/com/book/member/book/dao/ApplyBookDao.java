@@ -139,9 +139,9 @@ public class ApplyBookDao {
             e.printStackTrace();
         }finally {
             try {
-                rs.close();
-                pstmt.close();
-                conn.close();
+            	if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
